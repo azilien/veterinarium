@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "veterinarium:block/hospital_hut_side",
+    "down": "veterinarium:block/hospital_hut_bottom",
+    "up": "veterinarium:block/hospital_hut_top",
+    "north": "veterinarium:block/hospital_hut_side",
+    "east": "veterinarium:block/hospital_hut_side",
+    "south": "veterinarium:block/hospital_hut_side",
+    "west": "veterinarium:block/hospital_hut_side"
+  }
+}

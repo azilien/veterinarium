@@ -2,6 +2,7 @@ package com.veterinarium.registry;
 
 import com.veterinarium.Veterinarium;
 import com.veterinarium.block.AnalysisTableBlock;
+import com.veterinarium.block.HospitalHutBlock;
 import com.veterinarium.block.InfirmaryBlock;
 import com.veterinarium.block.OperatingTableBlock;
 import net.minecraft.world.level.block.Block;
@@ -24,6 +25,9 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> INFIRMARY = BLOCKS.register("infirmary",
             () -> new InfirmaryBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).strength(1.5f).noOcclusion()));
+
+    public static final RegistryObject<Block> HOSPITAL_HUT = BLOCKS.register("hospital_hut",
+            () -> new HospitalHutBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BRICKS).strength(3.0f).requiresCorrectToolForDrops()));
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

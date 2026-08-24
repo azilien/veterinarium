@@ -2,11 +2,14 @@
   "block.veterinarium.operating_table": "Bloc Opératoire",
   "block.veterinarium.analysis_table": "Table d'Analyse",
   "block.veterinarium.infirmary": "Infirmerie",
+  "block.veterinarium.hospital_hut": "Hut Hôpital",
+  "entity.veterinarium.wounded_wolf": "Loup Blessé",
   "item.veterinarium.scalpel": "Scalpel",
   "item.veterinarium.suture_kit": "Kit de Suture",
   "item.veterinarium.syringe": "Seringue Diagnostique",
   "item.veterinarium.medical_file": "Dossier Médical",
   "item.veterinarium.bandage": "Bandage Stérile",
   "item.veterinarium.anesthetic": "Anesthésiant",
+  "item.veterinarium.wounded_wolf_spawn_egg": "Oeuf de Loup Blessé",
   "creativetab.veterinarium": "Veterinarium - Hôpital des Monstres"
 }

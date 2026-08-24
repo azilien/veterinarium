@@ -49,6 +49,11 @@ public class SutureKitItem extends Item {
                 level.playSound(null, target.blockPosition(), SoundEvents.WOOL_PLACE, SoundSource.PLAYERS, 1.0f, 0.9f);
                 player.displayClientMessage(Component.literal("§d[Kit de Suture] §aSuture réussie sur " + target.getName().getString() + " §a+3 coeurs + Régénération"), true);
 
+                // Si c'est notre Loup Blessé custom, marque healed pour texture
+                if (target instanceof com.veterinarium.entity.WoundedWolfEntity woundedWolf) {
+                    woundedWolf.setHealed(true);
+                }
+
                 if (target instanceof TamableAnimal tamable && !tamable.isTame()) {
                     if (level.random.nextFloat() < 0.33f) {
                         tamable.tame(player);
@@ -66,8 +71,8 @@ public class SutureKitItem extends Item {
                 target.removeTag("veterinarium_needs_scalpel");
                 target.removeTag("veterinarium_needs_scalpel");
                 try { com.veterinarium.integration.ArsNouveauIntegration.applyArsBonus(target, player); } catch (Exception ignored) {}
-                // Enlève le nom "Blessé" et met "Soigné"
-                if (target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
+                // Enlève le nom "Blessé" et met "Soigné" (sauf si déjà fait par WoundedWolf)
+                if (!(target instanceof com.veterinarium.entity.WoundedWolfEntity) && target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
                     target.setCustomName(Component.literal("§a❤ Soigné §7- " + target.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§a❤ Soigné §7- ", "")));
                     target.setCustomNameVisible(true);
                 }

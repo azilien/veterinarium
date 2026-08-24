@@ -2,11 +2,14 @@
   "block.veterinarium.operating_table": "Operating Table",
   "block.veterinarium.analysis_table": "Analysis Table",
   "block.veterinarium.infirmary": "Infirmary",
+  "block.veterinarium.hospital_hut": "Hospital Hut",
+  "entity.veterinarium.wounded_wolf": "Wounded Wolf",
   "item.veterinarium.scalpel": "Scalpel",
   "item.veterinarium.suture_kit": "Suture Kit",
   "item.veterinarium.syringe": "Diagnostic Syringe",
   "item.veterinarium.medical_file": "Medical File",
   "item.veterinarium.bandage": "Sterile Bandage",
   "item.veterinarium.anesthetic": "Anesthetic",
+  "item.veterinarium.wounded_wolf_spawn_egg": "Wounded Wolf Spawn Egg",
   "creativetab.veterinarium": "Veterinarium - Monster Hospital"
 }

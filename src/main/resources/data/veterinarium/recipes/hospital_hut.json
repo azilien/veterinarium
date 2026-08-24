@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["WWW", "BIB", "WWW"],
+  "key": {
+    "W": { "item": "minecraft:white_wool" },
+    "B": { "item": "minecraft:brick" },
+    "I": { "item": "veterinarium:infirmary" }
+  },
+  "result": { "item": "veterinarium:hospital_hut", "count": 1 }
+}

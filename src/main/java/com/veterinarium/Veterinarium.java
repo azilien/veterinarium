@@ -1,8 +1,10 @@
 package com.veterinarium;
 
 import com.mojang.logging.LogUtils;
+import com.veterinarium.registry.ModBlockEntities;
 import com.veterinarium.registry.ModBlocks;
 import com.veterinarium.registry.ModCreativeTabs;
+import com.veterinarium.registry.ModEntities;
 import com.veterinarium.registry.ModItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,7 +22,9 @@ public class Veterinarium {
         IEventBus modEventBus = context.getModEventBus();
 
         ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
         ModItems.register(modEventBus);
+        ModEntities.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);

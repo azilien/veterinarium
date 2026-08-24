@@ -27,6 +27,8 @@ public class ModCreativeTabs {
                         pOutput.accept(ModItems.OPERATING_TABLE.get());
                         pOutput.accept(ModItems.ANALYSIS_TABLE.get());
                         pOutput.accept(ModItems.INFIRMARY.get());
+                        pOutput.accept(ModItems.HOSPITAL_HUT.get());
+                        pOutput.accept(ModItems.WOUNDED_WOLF_SPAWN_EGG.get());
                     })
                     .build());
 

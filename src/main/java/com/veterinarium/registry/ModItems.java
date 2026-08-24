@@ -7,6 +7,7 @@ import com.veterinarium.item.SutureKitItem;
 import com.veterinarium.item.SyringeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -43,6 +44,12 @@ public class ModItems {
 
     public static final RegistryObject<Item> ANESTHETIC = ITEMS.register("anesthetic",
             () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> WOUNDED_WOLF_SPAWN_EGG = ITEMS.register("wounded_wolf_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_WOLF, 0xD7C9B5, 0xB22222, new Item.Properties()));
+
+    public static final RegistryObject<Item> HOSPITAL_HUT = ITEMS.register("hospital_hut",
+            () -> new BlockItem(ModBlocks.HOSPITAL_HUT.get(), new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
