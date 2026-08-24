@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["PP", "BB"],
+  "key": {
+    "P": { "item": "minecraft:paper" },
+    "B": { "item": "minecraft:book" }
+  },
+  "result": { "item": "veterinarium:medical_file", "count": 1 }
+}

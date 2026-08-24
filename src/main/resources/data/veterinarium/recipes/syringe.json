@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [" G", "I ", "I "],
+  "key": {
+    "G": { "item": "minecraft:glass" },
+    "I": { "item": "minecraft:iron_nugget" }
+  },
+  "result": { "item": "veterinarium:syringe", "count": 1 }
+}

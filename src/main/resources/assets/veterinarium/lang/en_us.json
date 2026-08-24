@@ -1,0 +1,12 @@
+{
+  "block.veterinarium.operating_table": "Operating Table",
+  "block.veterinarium.analysis_table": "Analysis Table",
+  "block.veterinarium.infirmary": "Infirmary",
+  "item.veterinarium.scalpel": "Scalpel",
+  "item.veterinarium.suture_kit": "Suture Kit",
+  "item.veterinarium.syringe": "Diagnostic Syringe",
+  "item.veterinarium.medical_file": "Medical File",
+  "item.veterinarium.bandage": "Sterile Bandage",
+  "item.veterinarium.anesthetic": "Anesthetic",
+  "creativetab.veterinarium": "Veterinarium - Monster Hospital"
+}

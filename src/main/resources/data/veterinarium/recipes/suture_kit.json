@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["S", "P", "S"],
+  "key": {
+    "S": { "item": "minecraft:string" },
+    "P": { "item": "minecraft:paper" }
+  },
+  "result": { "item": "veterinarium:suture_kit", "count": 1 }
+}
