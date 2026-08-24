@@ -1,4 +1,4 @@
 {
   "parent": "minecraft:item/generated",
-  "textures": { "layer0": "minecraft:item/book" }
+  "textures": { "layer0": "veterinarium:item/medical_file" }
 }

@@ -28,6 +28,18 @@ public class SutureKitItem extends Item {
         Level level = player.level();
         if (!level.isClientSide) {
             boolean isOperated = target.getTags().contains("veterinarium_operated");
+            boolean needsScalpel = target.getTags().contains("veterinarium_needs_scalpel") && !isOperated;
+            // Infection si on suture sans scalpel alors que la blessure le nécessite
+            if (needsScalpel) {
+                target.addEffect(new MobEffectInstance(MobEffects.POISON, 120, 0));
+                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 120, 1));
+                target.hurt(level.damageSources().magic(), 2.0f);
+                level.playSound(null, target.blockPosition(), SoundEvents.ZOMBIE_HURT, SoundSource.PLAYERS, 1.0f, 0.8f);
+                player.displayClientMessage(Component.literal("§c☠ Infection ! §7Il fallait opérer au §cScalpel §7d'abord ! §f" + target.getName().getString() + " s'aggrave."), true);
+                EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+                stack.hurtAndBreak(1, player, slot);
+                return InteractionResult.SUCCESS;
+            }
             if (target.getHealth() < target.getMaxHealth() * 0.9f || isOperated) {
                 target.heal(6.0f);
                 target.removeEffect(MobEffects.POISON);
@@ -50,6 +62,18 @@ public class SutureKitItem extends Item {
 
                 target.addTag("veterinarium_healed");
                 target.addTag("veterinarium_sutured");
+                target.removeTag("veterinarium_wounded");
+                target.removeTag("veterinarium_needs_scalpel");
+                target.removeTag("veterinarium_needs_scalpel");
+                try { com.veterinarium.integration.ArsNouveauIntegration.applyArsBonus(target, player); } catch (Exception ignored) {}
+                // Enlève le nom "Blessé" et met "Soigné"
+                if (target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
+                    target.setCustomName(Component.literal("§a❤ Soigné §7- " + target.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§a❤ Soigné §7- ", "")));
+                    target.setCustomNameVisible(true);
+                }
+                // Bonus: si wolf, enlève lenteur
+                target.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                target.removeEffect(MobEffects.WEAKNESS);
 
                 EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                 stack.hurtAndBreak(1, player, slot);

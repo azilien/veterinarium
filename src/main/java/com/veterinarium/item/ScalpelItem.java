@@ -32,6 +32,12 @@ public class ScalpelItem extends Item {
                 EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                 stack.hurtAndBreak(1, player, slot);
                 target.addTag("veterinarium_operated");
+                target.removeTag("veterinarium_needs_scalpel");
+                // Enlève lenteur partielle
+                target.removeEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN);
+                // Bonus Ars Nouveau si présent
+                try { com.veterinarium.integration.ArsNouveauIntegration.applyArsBonus(target, player); } catch (Exception ignored) {}
+                player.displayClientMessage(Component.literal("§7→ Prêt pour suture ! Utilise le §dKit de Suture§7 maintenant."), false);
                 return InteractionResult.SUCCESS;
             } else {
                 player.displayClientMessage(Component.literal("§7[Scalpel] §f" + target.getName().getString() + " n'a pas besoin de chirurgie (PV max)"), true);

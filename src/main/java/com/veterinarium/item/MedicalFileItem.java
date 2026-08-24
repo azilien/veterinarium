@@ -21,14 +21,23 @@ public class MedicalFileItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!level.isClientSide) {
-            player.displayClientMessage(Component.literal("§6═══════ §lDOSSIER MÉDICAL §r§6═══════"), false);
-            player.displayClientMessage(Component.literal("§7Patients soignés dans ce monde :"), false);
-            player.displayClientMessage(Component.literal(" §8- §fUtilise Seringue sur une créature pour diagnostic"), false);
-            player.displayClientMessage(Component.literal(" §8- §fScalpel (opère) -> Kit de Suture (soigne + tame)"), false);
-            player.displayClientMessage(Component.literal(" §8- §fTags: veterinarium_healed / operated / sutured"), false);
-            player.displayClientMessage(Component.literal("§eProchaine MAJ: Bestiaire complet avec pathologies, élevege, mutations DarkGod."), false);
-            level.playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 1.0f, 1.0f);
+        if (level.isClientSide) {
+            // Ouverture GUI côté client via reflection pour éviter le chargement côté serveur (DEDICATED_SERVER)
+            try {
+                Class<?> mcClass = Class.forName("net.minecraft.client.Minecraft");
+                Object mc = mcClass.getMethod("getInstance").invoke(null);
+                Class<?> screenClass = Class.forName("com.veterinarium.client.MedicalFileScreen");
+                Object screen = screenClass.getDeclaredConstructor().newInstance();
+                Class<?> screenBase = Class.forName("net.minecraft.client.gui.screens.Screen");
+                mcClass.getMethod("setScreen", screenBase).invoke(mc, screen);
+            } catch (Exception e) {
+                // Fallback: message si GUI échoue
+                player.displayClientMessage(Component.literal("§c[Erreur GUI] " + e.getMessage()), false);
+            }
+            level.playSound(player, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 1.0f, 1.0f);
+        } else {
+            player.displayClientMessage(Component.literal("§6[Dossier Médical] §7Ouverture du dossier... (GUI côté client)"), false);
+            player.displayClientMessage(Component.literal("§7Utilise Seringue→Scalpel→Suture. Infirmerie = heal de zone."), false);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
@@ -36,7 +45,7 @@ public class MedicalFileItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.literal("§6Bestiaire Médical - Dossier patient"));
-        tooltip.add(Component.literal("§8Clic droit -> ouvre le dossier"));
+        tooltip.add(Component.literal("§8Clic droit -> ouvre le dossier (GUI)"));
         tooltip.add(Component.literal("§7Contient l'historique de tes soins"));
     }
 }

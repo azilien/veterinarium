@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [{ "type": "forge:mod_loaded", "modid": "ars_nouveau" }],
+  "pattern": ["PGP", "WGW", "PPP"],
+  "key": {
+    "P": { "item": "minecraft:oak_planks" },
+    "G": { "item": "ars_nouveau:source_gem" },
+    "W": { "item": "minecraft:white_wool" }
+  },
+  "result": { "item": "veterinarium:analysis_table", "count": 1 }
+}

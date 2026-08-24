@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "minecraft:block/iron_block",
-    "down": "minecraft:block/iron_block",
-    "up": "minecraft:block/white_wool",
-    "north": "minecraft:block/iron_block",
-    "east": "minecraft:block/iron_block",
-    "south": "minecraft:block/iron_block",
-    "west": "minecraft:block/iron_block"
+    "particle": "veterinarium:block/operating_table_side",
+    "down": "veterinarium:block/operating_table_bottom",
+    "up": "veterinarium:block/operating_table_top",
+    "north": "veterinarium:block/operating_table_side",
+    "east": "veterinarium:block/operating_table_side",
+    "south": "veterinarium:block/operating_table_side",
+    "west": "veterinarium:block/operating_table_side"
   }
 }
