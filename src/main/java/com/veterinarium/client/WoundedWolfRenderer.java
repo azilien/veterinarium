@@ -11,6 +11,7 @@ public class WoundedWolfRenderer extends MobRenderer<WoundedWolfEntity, WolfMode
     private static final ResourceLocation WOUNDED_TEXTURE = ResourceLocation.fromNamespaceAndPath("veterinarium", "textures/entity/wounded_wolf.png");
     private static final ResourceLocation HEALED_TEXTURE = ResourceLocation.fromNamespaceAndPath("veterinarium", "textures/entity/wounded_wolf_healed.png");
     private static final ResourceLocation WOUNDED_TAME_TEXTURE = ResourceLocation.fromNamespaceAndPath("veterinarium", "textures/entity/wounded_wolf_tame.png");
+    private static final ResourceLocation HEALED_TAME_TEXTURE = ResourceLocation.fromNamespaceAndPath("veterinarium", "textures/entity/wounded_wolf_healed_tame.png");
 
     public WoundedWolfRenderer(EntityRendererProvider.Context context) {
         super(context, new WolfModel<>(context.bakeLayer(ModelLayers.WOLF)), 0.5F);
@@ -18,12 +19,11 @@ public class WoundedWolfRenderer extends MobRenderer<WoundedWolfEntity, WolfMode
 
     @Override
     public ResourceLocation getTextureLocation(WoundedWolfEntity entity) {
-        if (entity.isTame()) {
-            return WOUNDED_TAME_TEXTURE;
-        }
-        if (entity.isHealed()) {
-            return HEALED_TEXTURE;
-        }
+        boolean tame = entity.isTame();
+        boolean healed = entity.isHealed();
+        if (tame && healed) return HEALED_TAME_TEXTURE;
+        if (tame) return WOUNDED_TAME_TEXTURE;
+        if (healed) return HEALED_TEXTURE;
         return WOUNDED_TEXTURE;
     }
 }
