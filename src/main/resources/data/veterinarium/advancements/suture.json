@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": { "id": "veterinarium:suture_kit" },
+    "title": { "translate": "advancements.veterinarium.suture.title" },
+    "description": { "translate": "advancements.veterinarium.suture.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "veterinarium:operate",
+  "criteria": {
+    "has_kit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": ["veterinarium:suture_kit"] }] }
+    }
+  },
+  "requirements": [["has_kit"]]
+}

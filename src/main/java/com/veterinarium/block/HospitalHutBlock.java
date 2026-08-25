@@ -63,8 +63,27 @@ public class HospitalHutBlock extends Block implements EntityBlock {
             }
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof HospitalHutBlockEntity hut) {
-                player.displayClientMessage(Component.literal("§c[Hut Hôpital] §7Patients: " + hut.getPatientCount() + "/3 | §aSoignés: " + hut.getHealedCount() + " | §7Rayon 16 blocs"), false);
-                player.displayClientMessage(Component.literal("§7Sneak-clic pour construire le Hut 9x9. §7L'hôpital soigne 1❤/2s + bonus MineColonies."), false);
+                // Tentative d'upgrade si le joueur tient brique/bandage/diamant
+                net.minecraft.world.item.ItemStack held = player.getMainHandItem();
+                boolean isUpgradeItem = held.is(net.minecraft.world.item.Items.BRICK) || held.is(com.veterinarium.registry.ModItems.BANDAGE.get()) || held.is(net.minecraft.world.item.Items.DIAMOND);
+                if (isUpgradeItem && hut.getHutLevel() < 3) {
+                    if (hut.tryUpgrade(player)) {
+                        player.displayClientMessage(Component.literal("§a[Hut Hôpital] §fNiveau " + hut.getHutLevel() + " ! §7Rayon " + hut.getRadius() + " blocs, soin " + hut.getHealAmount() + "❤/2s"), false);
+                        level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1.0f, 1.2f);
+                        return InteractionResult.SUCCESS;
+                    } else {
+                        int needB = 8, needBa = hut.getHutLevel()==1?4:8;
+                        boolean needD = hut.getHutLevel()==2;
+                        player.displayClientMessage(Component.literal("§c[Hut Hôpital] §7Manque: " + needB + " briques + " + needBa + " bandages" + (needD ? " + 1 diamant" : "") + " pour Lv" + (hut.getHutLevel()+1)), false);
+                        return InteractionResult.FAIL;
+                    }
+                }
+                if (hut.getHutLevel() >= 3 && isUpgradeItem) {
+                    player.displayClientMessage(Component.literal("§a[Hut Hôpital] §7Niveau max (3) ! §7Rayon " + hut.getRadius() + " blocs"), false);
+                    return InteractionResult.SUCCESS;
+                }
+                player.displayClientMessage(Component.literal("§c[Hut Hôpital Lv" + hut.getHutLevel() + "] §7Patients: " + hut.getPatientCount() + " | §aSoignés: " + hut.getHealedCount() + " | §7Rayon " + hut.getRadius() + " blocs §7(Soin " + hut.getHealAmount() + "❤/2s)"), false);
+                player.displayClientMessage(Component.literal("§7Sneak-clic: construire 9x9 | Clic avec brique/bandage/diamant: upgrade Lv" + (hut.getHutLevel()+1) + (hut.getHutLevel()==1?" (8 briques+4 bandages)":" (8 briques+8 bandages+1 diamant)") + " | + bonus MineColonies."), false);
                 level.playSound(null, pos, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0f, 1.0f);
             }
         }

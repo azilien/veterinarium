@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": { "id": "veterinarium:scalpel" },
+    "title": { "translate": "advancements.veterinarium.operate.title" },
+    "description": { "translate": "advancements.veterinarium.operate.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "veterinarium:diagnose",
+  "criteria": {
+    "has_scalpel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": ["veterinarium:scalpel"] }] }
+    }
+  },
+  "requirements": [["has_scalpel"]]
+}

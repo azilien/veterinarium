@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": { "id": "veterinarium:medical_file" },
+    "title": { "translate": "advancements.veterinarium.root.title" },
+    "description": { "translate": "advancements.veterinarium.root.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/block/white_wool.png"
+  },
+  "criteria": {
+    "has_file": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [{ "items": ["veterinarium:medical_file"] }]
+      }
+    }
+  },
+  "requirements": [["has_file"]]
+}

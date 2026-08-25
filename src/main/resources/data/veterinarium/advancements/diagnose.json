@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": { "id": "veterinarium:syringe" },
+    "title": { "translate": "advancements.veterinarium.diagnose.title" },
+    "description": { "translate": "advancements.veterinarium.diagnose.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "veterinarium:root",
+  "criteria": {
+    "has_syringe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": ["veterinarium:syringe"] }] }
+    }
+  },
+  "requirements": [["has_syringe"]]
+}

@@ -1,7 +1,7 @@
 package com.veterinarium.item;
 
+import com.veterinarium.registry.ModSounds;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,7 +27,11 @@ public class ScalpelItem extends Item {
             if (target.getHealth() < target.getMaxHealth()) {
                 float heal = 2.0f;
                 target.heal(heal);
-                level.playSound(null, target.blockPosition(), SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 0.8f, 1.5f);
+                try {
+                    level.playSound(null, target.blockPosition(), ModSounds.SCALPEL_CUT.get(), SoundSource.PLAYERS, 0.8f, 1.2f);
+                } catch (Exception e) {
+                    level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 0.8f, 1.5f);
+                }
                 player.displayClientMessage(Component.literal("§c[Scalpel] §aIncision précise -> §f" + target.getName().getString() + " §a+" + heal + " HP"), true);
                 EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                 stack.hurtAndBreak(1, player, slot);

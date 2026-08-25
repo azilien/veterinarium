@@ -6,6 +6,7 @@ import com.veterinarium.registry.ModBlocks;
 import com.veterinarium.registry.ModCreativeTabs;
 import com.veterinarium.registry.ModEntities;
 import com.veterinarium.registry.ModItems;
+import com.veterinarium.registry.ModSounds;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -25,6 +26,7 @@ public class Veterinarium {
         ModBlockEntities.register(modEventBus);
         ModItems.register(modEventBus);
         ModEntities.register(modEventBus);
+        ModSounds.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);

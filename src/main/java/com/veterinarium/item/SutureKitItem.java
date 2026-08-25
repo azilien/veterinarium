@@ -1,7 +1,7 @@
 package com.veterinarium.item;
 
+import com.veterinarium.registry.ModSounds;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,7 +34,7 @@ public class SutureKitItem extends Item {
                 target.addEffect(new MobEffectInstance(MobEffects.POISON, 120, 0));
                 target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 120, 1));
                 target.hurt(level.damageSources().magic(), 2.0f);
-                level.playSound(null, target.blockPosition(), SoundEvents.ZOMBIE_HURT, SoundSource.PLAYERS, 1.0f, 0.8f);
+                level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.ZOMBIE_HURT, SoundSource.PLAYERS, 1.0f, 0.8f);
                 player.displayClientMessage(Component.literal("§c☠ Infection ! §7Il fallait opérer au §cScalpel §7d'abord ! §f" + target.getName().getString() + " s'aggrave."), true);
                 EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                 stack.hurtAndBreak(1, player, slot);
@@ -46,12 +46,22 @@ public class SutureKitItem extends Item {
                 target.removeEffect(MobEffects.WITHER);
                 target.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 1));
                 target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 0));
-                level.playSound(null, target.blockPosition(), SoundEvents.WOOL_PLACE, SoundSource.PLAYERS, 1.0f, 0.9f);
+                try {
+                    level.playSound(null, target.blockPosition(), ModSounds.SUTURE.get(), SoundSource.PLAYERS, 1.0f, 0.9f);
+                } catch (Exception e) {
+                    level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.WOOL_PLACE, SoundSource.PLAYERS, 1.0f, 0.9f);
+                }
                 player.displayClientMessage(Component.literal("§d[Kit de Suture] §aSuture réussie sur " + target.getName().getString() + " §a+3 coeurs + Régénération"), true);
 
-                // Si c'est notre Loup Blessé custom, marque healed pour texture
+                // Si c'est nos entités blessées custom, marque healed pour texture
                 if (target instanceof com.veterinarium.entity.WoundedWolfEntity woundedWolf) {
                     woundedWolf.setHealed(true);
+                }
+                if (target instanceof com.veterinarium.entity.WoundedCatEntity woundedCat) {
+                    woundedCat.setHealed(true);
+                }
+                if (target instanceof com.veterinarium.entity.WoundedHorseEntity woundedHorse) {
+                    woundedHorse.setHealed(true);
                 }
 
                 if (target instanceof TamableAnimal tamable && !tamable.isTame()) {
@@ -59,7 +69,16 @@ public class SutureKitItem extends Item {
                         tamable.tame(player);
                         tamable.setOrderedToSit(false);
                         player.displayClientMessage(Component.literal("§6★ " + target.getName().getString() + " vous fait confiance après les soins ! (Apprivoisé)"), false);
-                        level.playSound(null, target.blockPosition(), SoundEvents.WOLF_WHINE, SoundSource.NEUTRAL, 1.0f, 1.0f);
+                        try { level.playSound(null, target.blockPosition(), ModSounds.HEAL_SUCCESS.get(), SoundSource.NEUTRAL, 0.8f, 1.2f); } catch (Exception e) { level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.WOLF_WHINE, SoundSource.NEUTRAL, 1.0f, 1.0f); }
+                    } else {
+                        player.displayClientMessage(Component.literal("§7La créature est soignée mais reste méfiante... Réessayez après un autre soin."), false);
+                    }
+                } else if (target instanceof net.minecraft.world.entity.animal.horse.AbstractHorse horse && !horse.isTamed()) {
+                    if (level.random.nextFloat() < 0.33f) {
+                        horse.setTamed(true);
+                        horse.setOwnerUUID(player.getUUID());
+                        player.displayClientMessage(Component.literal("§6★ " + target.getName().getString() + " vous fait confiance après les soins ! (Apprivoisé)"), false);
+                        try { level.playSound(null, target.blockPosition(), ModSounds.HEAL_SUCCESS.get(), SoundSource.NEUTRAL, 0.8f, 1.0f); } catch (Exception e) { level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.HORSE_ANGRY, SoundSource.NEUTRAL, 1.0f, 1.0f); }
                     } else {
                         player.displayClientMessage(Component.literal("§7La créature est soignée mais reste méfiante... Réessayez après un autre soin."), false);
                     }
@@ -71,8 +90,9 @@ public class SutureKitItem extends Item {
                 target.removeTag("veterinarium_needs_scalpel");
                 target.removeTag("veterinarium_needs_scalpel");
                 try { com.veterinarium.integration.ArsNouveauIntegration.applyArsBonus(target, player); } catch (Exception ignored) {}
-                // Enlève le nom "Blessé" et met "Soigné" (sauf si déjà fait par WoundedWolf)
-                if (!(target instanceof com.veterinarium.entity.WoundedWolfEntity) && target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
+                // Enlève le nom "Blessé" et met "Soigné" (sauf si déjà fait par nos entités custom)
+                boolean isCustomWounded = target instanceof com.veterinarium.entity.WoundedWolfEntity || target instanceof com.veterinarium.entity.WoundedCatEntity || target instanceof com.veterinarium.entity.WoundedHorseEntity;
+                if (!isCustomWounded && target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
                     target.setCustomName(Component.literal("§a❤ Soigné §7- " + target.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§a❤ Soigné §7- ", "")));
                     target.setCustomNameVisible(true);
                 }
