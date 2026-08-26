@@ -29,6 +29,7 @@ public class SyringeItem extends Item {
         if (target instanceof com.veterinarium.entity.WoundedHorseEntity h) return h.getWoundType();
         if (target instanceof com.veterinarium.entity.WoundedFoxEntity f) return f.getWoundType();
         if (target instanceof com.veterinarium.entity.WoundedVillagerEntity v) return v.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedDrakeEntity d) return d.getWoundType();
         if (target.getPersistentData().contains("VetWound")) return WoundType.fromId(target.getPersistentData().getInt("VetWound"));
         if (target.getTags().contains("veterinarium_wound_hemorragie")) return WoundType.HEMORRAGIE;
         if (target.getTags().contains("veterinarium_wound_fracture")) return WoundType.FRACTURE;

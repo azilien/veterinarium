@@ -47,5 +47,19 @@
   "item.veterinarium.hellfire_ravager_spawn_egg": "Hellfire Ravager Spawn Egg",
   "advancements.veterinarium.mutate.title": "DarkGod Mutation",
   "advancements.veterinarium.mutate.description": "Mutate a healed creature into a Hellfire Ravager (DNA + Serum + Operating Table)",
-  "subtitles.veterinarium.mutation": "Infernal mutation"
+  "subtitles.veterinarium.mutation": "Infernal mutation",
+  "entity.veterinarium.wounded_drake": "Wounded Drake",
+  "item.veterinarium.wounded_drake_spawn_egg": "Wounded Drake Spawn Egg",
+  "item.veterinarium.vet_sphere": "Vet Sphere",
+  "item.veterinarium.vet_sphere_filled": "Filled Vet Sphere",
+  "advancements.veterinarium.capture.title": "Palworld Capture",
+  "advancements.veterinarium.capture.description": "Capture a healed creature with the Sphere",
+  "advancements.veterinarium.urgency.title": "Vital Emergency",
+  "advancements.veterinarium.urgency.description": "Save an urgent patient before timer",
+  "advancements.veterinarium.drake.title": "Drake Boss",
+  "advancements.veterinarium.drake.description": "Heal the Boss Drake (60HP)",
+  "subtitles.veterinarium.sphere_capture": "Sphere capture",
+  "subtitles.veterinarium.sphere_release": "Sphere release",
+  "subtitles.veterinarium.urgency_bell": "Emergency bell",
+  "subtitles.veterinarium.epidemic": "Contagion"
 }

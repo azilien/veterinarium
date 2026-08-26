@@ -26,6 +26,7 @@ public class DnaSyringeItem extends Item {
         if (t instanceof com.veterinarium.entity.WoundedHorseEntity h) return h.getWoundType();
         if (t instanceof com.veterinarium.entity.WoundedFoxEntity f) return f.getWoundType();
         if (t instanceof com.veterinarium.entity.WoundedVillagerEntity v) return v.getWoundType();
+        if (t instanceof com.veterinarium.entity.WoundedDrakeEntity d) return d.getWoundType();
         if (t.getPersistentData().contains("VetWound")) return WoundType.fromId(t.getPersistentData().getInt("VetWound"));
         if (t.getTags().contains("veterinarium_wound_brulure")) return WoundType.BRULURE;
         if (t.getTags().contains("veterinarium_wound_hemorragie")) return WoundType.HEMORRAGIE;

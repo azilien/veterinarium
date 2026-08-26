@@ -3,6 +3,7 @@ package com.veterinarium.registry;
 import com.veterinarium.Veterinarium;
 import com.veterinarium.entity.HellfireRavagerEntity;
 import com.veterinarium.entity.WoundedCatEntity;
+import com.veterinarium.entity.WoundedDrakeEntity;
 import com.veterinarium.entity.WoundedFoxEntity;
 import com.veterinarium.entity.WoundedHorseEntity;
 import com.veterinarium.entity.WoundedVillagerEntity;
@@ -67,6 +68,15 @@ public class ModEntities {
                             .fireImmune()
                             .clientTrackingRange(10)
                             .build("hellfire_ravager"));
+
+    public static final RegistryObject<EntityType<WoundedDrakeEntity>> WOUNDED_DRAKE =
+            ENTITY_TYPES.register("wounded_drake",
+                    () -> EntityType.Builder.of(WoundedDrakeEntity::new, MobCategory.CREATURE)
+                            .sized(1.8F, 1.2F)
+                            .eyeHeight(1.0F)
+                            .fireImmune()
+                            .clientTrackingRange(10)
+                            .build("wounded_drake"));
 
     public static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);

@@ -1,13 +1,7 @@
 package com.veterinarium.registry;
 
 import com.veterinarium.Veterinarium;
-import com.veterinarium.item.DnaSyringeFilledItem;
-import com.veterinarium.item.DnaSyringeItem;
-import com.veterinarium.item.HellfireSerumItem;
-import com.veterinarium.item.MedicalFileItem;
-import com.veterinarium.item.ScalpelItem;
-import com.veterinarium.item.SutureKitItem;
-import com.veterinarium.item.SyringeItem;
+import com.veterinarium.item.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -80,6 +74,15 @@ public class ModItems {
 
     public static final RegistryObject<Item> HELLFIRE_RAVAGER_SPAWN_EGG = ITEMS.register("hellfire_ravager_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.HELLFIRE_RAVAGER, 0x2B0000, 0xFF4500, new Item.Properties()));
+
+    public static final RegistryObject<Item> WOUNDED_DRAKE_SPAWN_EGG = ITEMS.register("wounded_drake_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_DRAKE, 0x1A1A2E, 0xFF6B35, new Item.Properties()));
+
+    public static final RegistryObject<Item> VET_SPHERE = ITEMS.register("vet_sphere",
+            () -> new VetSphereItem(new Item.Properties().stacksTo(16)));
+
+    public static final RegistryObject<Item> VET_SPHERE_FILLED = ITEMS.register("vet_sphere_filled",
+            () -> new VetSphereFilledItem(new Item.Properties().stacksTo(1)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

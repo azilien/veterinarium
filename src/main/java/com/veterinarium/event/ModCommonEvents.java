@@ -3,6 +3,7 @@ package com.veterinarium.event;
 import com.veterinarium.Veterinarium;
 import com.veterinarium.entity.HellfireRavagerEntity;
 import com.veterinarium.entity.WoundedCatEntity;
+import com.veterinarium.entity.WoundedDrakeEntity;
 import com.veterinarium.entity.WoundedFoxEntity;
 import com.veterinarium.entity.WoundedHorseEntity;
 import com.veterinarium.entity.WoundedVillagerEntity;
@@ -27,6 +28,7 @@ public class ModCommonEvents {
         event.put(ModEntities.WOUNDED_FOX.get(), WoundedFoxEntity.createAttributes().build());
         event.put(ModEntities.WOUNDED_VILLAGER.get(), WoundedVillagerEntity.createAttributes().build());
         event.put(ModEntities.HELLFIRE_RAVAGER.get(), HellfireRavagerEntity.createAttributes().build());
+        event.put(ModEntities.WOUNDED_DRAKE.get(), WoundedDrakeEntity.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -60,6 +62,11 @@ public class ModCommonEvents {
                 SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Animal::checkAnimalSpawnRules,
+                SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(ModEntities.WOUNDED_DRAKE.get(),
+                SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                (type, lvl, st, pos, rand) -> true,
                 SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 }

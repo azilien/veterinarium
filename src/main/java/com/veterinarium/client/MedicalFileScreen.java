@@ -17,7 +17,7 @@ import java.util.List;
 
 public class MedicalFileScreen extends Screen {
     private int currentPage = 0;
-    private static final int TOTAL_PAGES = 9; // 0 cover, 1-5 creatures, 6 pathologies, 7 protocole, 8 progression
+    private static final int TOTAL_PAGES = 10; // 0 cover, 1-6 creatures, 7 pathologies, 8 protocole, 9 progression
     private int worldWounded = 0, worldHealed = 0, worldOperated = 0;
     private int tickCounter = 0;
 
@@ -33,7 +33,8 @@ public class MedicalFileScreen extends Screen {
         new CreatureEntry("wounded_cat","Chat Blessé","Felis catus - Agilité","Villages / Jungle","Miaulement discret", new ItemStack(ModItems.WOUNDED_CAT_SPAWN_EGG.get()), 0xFFE6C8A0),
         new CreatureEntry("wounded_horse","Cheval Blessé","Equus ferus - Monture","Plaines / Savane","Galop ralenti", new ItemStack(ModItems.WOUNDED_HORSE_SPAWN_EGG.get()), 0xFFF0E6D2),
         new CreatureEntry("wounded_fox","Renard Blessé","Vulpes vulpes - Rusé","Taïga / Neige","Confiance à gagner", new ItemStack(ModItems.WOUNDED_FOX_SPAWN_EGG.get()), 0xFFD76F2D),
-        new CreatureEntry("wounded_villager","Villageois Blessé","Homo sapiens - Civil","Villages","Donne émeraude si soigné", new ItemStack(ModItems.WOUNDED_VILLAGER_SPAWN_EGG.get()), 0xFF8ACB8A)
+        new CreatureEntry("wounded_villager","Villageois Blessé","Homo sapiens - Civil","Villages","Donne émeraude si soigné", new ItemStack(ModItems.WOUNDED_VILLAGER_SPAWN_EGG.get()), 0xFF8ACB8A),
+        new CreatureEntry("wounded_drake","Drake Blessé","Draco nocturnus - Boss","End / Montagnes","Vol +60❤ Boss, souffle", new ItemStack(ModItems.WOUNDED_DRAKE_SPAWN_EGG.get()), 0xFF1A1A2E)
     };
 
     public MedicalFileScreen() {
@@ -116,10 +117,10 @@ public class MedicalFileScreen extends Screen {
         // header text
         String header = switch(currentPage) {
             case 0 -> "DOSSIER MEDICAL - COUVERTURE";
-            case 1,2,3,4,5 -> "BESTIAIRE - " + creatures[currentPage-1].name.toUpperCase();
-            case 6 -> "PATHOLOGIES - 5 BLESSURES";
-            case 7 -> "PROTOCOLE ASFAX - BLOQU+";
-            case 8 -> "PROGRESSION - STATS";
+            case 1,2,3,4,5,6 -> "BESTIAIRE - " + creatures[currentPage-1].name.toUpperCase();
+            case 7 -> "PATHOLOGIES - 5 BLESSURES";
+            case 8 -> "PROTOCOLE ASFAX - BLOQU+";
+            case 9 -> "PROGRESSION - STATS";
             default -> "DOSSIER MEDICAL";
         };
         gfx.drawCenteredString(this.font, "§l"+header, this.width/2, y+8, 0xFFFFFF);
@@ -127,10 +128,10 @@ public class MedicalFileScreen extends Screen {
 
         // contenu selon page
         if (currentPage==0) renderCover(gfx, x, y, w, h);
-        else if (currentPage>=1 && currentPage<=5) renderCreature(gfx, x, y, w, h, creatures[currentPage-1]);
-        else if (currentPage==6) renderPathologies(gfx, x, y, w, h);
-        else if (currentPage==7) renderProtocol(gfx, x, y, w, h);
-        else if (currentPage==8) renderProgress(gfx, x, y, w, h);
+        else if (currentPage>=1 && currentPage<=6) renderCreature(gfx, x, y, w, h, creatures[currentPage-1]);
+        else if (currentPage==7) renderPathologies(gfx, x, y, w, h);
+        else if (currentPage==8) renderProtocol(gfx, x, y, w, h);
+        else if (currentPage==9) renderProgress(gfx, x, y, w, h);
 
         // footer pagination dots
         int dotY = y+h-10;
@@ -183,7 +184,7 @@ public class MedicalFileScreen extends Screen {
             gfx.fill(barX, ty+2, barX+filled, ty+8, 0xFF2E8B57);
             gfx.drawString(this.font, Component.literal(String.format(" §7%.0f%% complété", comp)), barX+barW+4, ty+1, 0x000000, false);
             ty+=14;
-            gfx.drawString(this.font, Component.literal(" §7Créatures: " + BestiaryProgress.getUnlockedCreatureCount(p)+"/5  §7Pathologies: "+BestiaryProgress.getUnlockedWoundCount(p)+"/5"), x+12, ty, 0x000000, false); ty+=10;
+            gfx.drawString(this.font, Component.literal(" §7Créatures: " + BestiaryProgress.getUnlockedCreatureCount(p)+"/6  §7Pathologies: "+BestiaryProgress.getUnlockedWoundCount(p)+"/5"), x+12, ty, 0x000000, false); ty+=10;
         }
         gfx.drawString(this.font, Component.literal("§8→ Feuillette avec ▶ pour voir le bestiaire"), x+12, y+h-34, 0x000000, false);
     }

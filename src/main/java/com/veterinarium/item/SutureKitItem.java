@@ -31,6 +31,7 @@ public class SutureKitItem extends Item {
         if (target instanceof com.veterinarium.entity.WoundedHorseEntity h) return h.getWoundType();
         if (target instanceof com.veterinarium.entity.WoundedFoxEntity f) return f.getWoundType();
         if (target instanceof com.veterinarium.entity.WoundedVillagerEntity v) return v.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedDrakeEntity d) return d.getWoundType();
         if (target.getPersistentData().contains("VetWound")) return WoundType.fromId(target.getPersistentData().getInt("VetWound"));
         if (target.getTags().contains("veterinarium_wound_hemorragie")) return WoundType.HEMORRAGIE;
         if (target.getTags().contains("veterinarium_wound_fracture")) return WoundType.FRACTURE;
@@ -154,6 +155,14 @@ public class SutureKitItem extends Item {
                         } catch (Exception ignored2) {}
                     }
                 }
+                if (target instanceof com.veterinarium.entity.WoundedDrakeEntity woundedDrake) {
+                    woundedDrake.setHealed(true);
+                    player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 1200, 1));
+                    target.spawnAtLocation(net.minecraft.world.item.Items.DRAGON_BREATH, 2);
+                    player.displayClientMessage(Component.literal("§6☢ Drake Boss guéri ! Souffle de dragon obtenu + réputation légendaire !"), false);
+                }
+                // Ice & Fire dragon healed bonus
+                try { com.veterinarium.integration.IceAndFireIntegration.onDragonHealed(target, player); } catch (Exception ignored) {}
                 if (target instanceof com.veterinarium.entity.WoundedVillagerEntity woundedVillager) {
                     woundedVillager.setHealed(true);
                     // Réputation villageoise: effet hero + cadeau émeraude
@@ -193,8 +202,18 @@ public class SutureKitItem extends Item {
                 // Brûlure: Anti-feu
                 if (wt == WoundType.BRULURE) { target.clearFire(); target.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0)); }
                 try { com.veterinarium.data.BestiaryProgress.recordSuture(player, target, true); } catch (Exception ignored) {}
+                // Urgence récompense
+                if (target.getTags().contains("veterinarium_urgent")) {
+                    target.removeTag("veterinarium_urgent");
+                    target.getPersistentData().remove("VetUrgentExpiry");
+                    player.displayClientMessage(Component.literal("§a🚨 URGENCE RÉUSSIE ! §f" + target.getName().getString() + " §asauvé à temps ! §e+3 émeraudes + Héro du village"), false);
+                    target.spawnAtLocation(net.minecraft.world.item.Items.EMERALD, 3);
+                    player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 1200, 0));
+                    level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 1.0f, 1.2f);
+                    try { com.veterinarium.registry.ModSounds.HEAL_SUCCESS.get(); } catch (Exception ignored2) {}
+                }
                 // Enlève le nom "Blessé" et met "Soigné" (sauf si déjà fait par nos entités custom)
-                boolean isCustomWounded = target instanceof com.veterinarium.entity.WoundedWolfEntity || target instanceof com.veterinarium.entity.WoundedCatEntity || target instanceof com.veterinarium.entity.WoundedHorseEntity || target instanceof com.veterinarium.entity.WoundedFoxEntity || target instanceof com.veterinarium.entity.WoundedVillagerEntity;
+                boolean isCustomWounded = target instanceof com.veterinarium.entity.WoundedWolfEntity || target instanceof com.veterinarium.entity.WoundedCatEntity || target instanceof com.veterinarium.entity.WoundedHorseEntity || target instanceof com.veterinarium.entity.WoundedFoxEntity || target instanceof com.veterinarium.entity.WoundedVillagerEntity || target instanceof com.veterinarium.entity.WoundedDrakeEntity;
                 if (!isCustomWounded && target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
                     target.setCustomName(Component.literal("§a❤ Soigné §7- " + target.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§a❤ Soigné §7- ", "")));
                     target.setCustomNameVisible(true);

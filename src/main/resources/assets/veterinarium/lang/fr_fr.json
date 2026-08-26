@@ -47,5 +47,19 @@
   "item.veterinarium.hellfire_ravager_spawn_egg": "Oeuf de Hellfire Ravager",
   "advancements.veterinarium.mutate.title": "Mutation DarkGod",
   "advancements.veterinarium.mutate.description": "Mutate une créature soignée en Hellfire Ravager (ADN + Sérum + Bloc Opératoire)",
-  "subtitles.veterinarium.mutation": "Mutation infernale"
+  "subtitles.veterinarium.mutation": "Mutation infernale",
+  "entity.veterinarium.wounded_drake": "Drake Blessé",
+  "item.veterinarium.wounded_drake_spawn_egg": "Oeuf de Drake Blessé",
+  "item.veterinarium.vet_sphere": "Sphère Vétérinaire",
+  "item.veterinarium.vet_sphere_filled": "Sphère Vétérinaire Remplie",
+  "advancements.veterinarium.capture.title": "Capture Palworld",
+  "advancements.veterinarium.capture.description": "Capture une créature soignée avec la Sphère",
+  "advancements.veterinarium.urgency.title": "Urgence Vitale",
+  "advancements.veterinarium.urgency.description": "Sauve un patient urgent avant le timer",
+  "advancements.veterinarium.drake.title": "Boss Drake",
+  "advancements.veterinarium.drake.description": "Soigne le Drake Boss (60❤)",
+  "subtitles.veterinarium.sphere_capture": "Sphère capture",
+  "subtitles.veterinarium.sphere_release": "Sphère libère",
+  "subtitles.veterinarium.urgency_bell": "Cloche d'urgence",
+  "subtitles.veterinarium.epidemic": "Contagion"
 }

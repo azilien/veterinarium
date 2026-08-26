@@ -55,7 +55,8 @@
       "veterinarium:suture_kit_ars",
       "veterinarium:syringe",
       "veterinarium:dna_syringe",
-      "veterinarium:hellfire_serum"
+      "veterinarium:hellfire_serum",
+      "veterinarium:vet_sphere"
     ]
   }
 }

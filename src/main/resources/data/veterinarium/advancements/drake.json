@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": { "id": "veterinarium:wounded_drake_spawn_egg" },
+    "title": { "translate": "advancements.veterinarium.drake.title" },
+    "description": { "translate": "advancements.veterinarium.drake.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "veterinarium:mutate",
+  "criteria": {
+    "has_breath": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": ["minecraft:dragon_breath"] }] }
+    }
+  },
+  "requirements": [["has_breath"]]
+}

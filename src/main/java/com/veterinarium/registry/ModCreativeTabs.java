@@ -35,9 +35,12 @@ public class ModCreativeTabs {
                         pOutput.accept(ModItems.WOUNDED_FOX_SPAWN_EGG.get());
                         pOutput.accept(ModItems.WOUNDED_VILLAGER_SPAWN_EGG.get());
                         pOutput.accept(ModItems.HELLFIRE_RAVAGER_SPAWN_EGG.get());
+                        pOutput.accept(ModItems.WOUNDED_DRAKE_SPAWN_EGG.get());
                         pOutput.accept(ModItems.DNA_SYRINGE.get());
                         pOutput.accept(ModItems.DNA_SYRINGE_FILLED.get());
                         pOutput.accept(ModItems.HELLFIRE_SERUM.get());
+                        pOutput.accept(ModItems.VET_SPHERE.get());
+                        pOutput.accept(ModItems.VET_SPHERE_FILLED.get());
                     })
                     .build());
 

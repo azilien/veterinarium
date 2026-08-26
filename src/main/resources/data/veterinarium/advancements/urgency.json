@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": { "id": "veterinarium:syringe" },
+    "title": { "translate": "advancements.veterinarium.urgency.title" },
+    "description": { "translate": "advancements.veterinarium.urgency.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "veterinarium:hospital",
+  "criteria": {
+    "has_urgent_healed": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": ["minecraft:emerald"] }] }
+    }
+  },
+  "requirements": [["has_urgent_healed"]]
+}

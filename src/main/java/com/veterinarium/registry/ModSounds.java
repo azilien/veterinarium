@@ -22,6 +22,12 @@ public class ModSounds {
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Veterinarium.MODID, "heal_success")));
     public static final RegistryObject<SoundEvent> MUTATION = SOUNDS.register("mutation",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Veterinarium.MODID, "mutation")));
+    public static final RegistryObject<SoundEvent> SPHERE_CAPTURE = SOUNDS.register("sphere_capture",
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Veterinarium.MODID, "sphere_capture")));
+    public static final RegistryObject<SoundEvent> SPHERE_RELEASE = SOUNDS.register("sphere_release",
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Veterinarium.MODID, "sphere_release")));
+    public static final RegistryObject<SoundEvent> URGENCY_BELL = SOUNDS.register("urgency_bell",
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Veterinarium.MODID, "urgency_bell")));
 
     public static void register(IEventBus bus) {
         SOUNDS.register(bus);

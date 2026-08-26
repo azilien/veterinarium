@@ -19,6 +19,8 @@ public class BestiaryProgress {
         if (e instanceof com.veterinarium.entity.WoundedHorseEntity) return "wounded_horse";
         if (e instanceof com.veterinarium.entity.WoundedFoxEntity) return "wounded_fox";
         if (e instanceof com.veterinarium.entity.WoundedVillagerEntity) return "wounded_villager";
+        if (e instanceof com.veterinarium.entity.WoundedDrakeEntity) return "wounded_drake";
+        if (e instanceof com.veterinarium.entity.HellfireRavagerEntity) return "hellfire_ravager";
         // generic wounded (vanilla tag)
         if (e.getTags().contains("veterinarium_wounded") || e.getPersistentData().contains("VetWound")) {
             String name = e.getType().toString(); // fallback
@@ -80,8 +82,9 @@ public class BestiaryProgress {
 
     public static int getUnlockedCreatureCount(Player p) {
         int c = 0;
-        for (String k : new String[]{"wounded_wolf","wounded_cat","wounded_horse","wounded_fox","wounded_villager"}) if (hasSeen(p,k)) c++;
-        return c;
+        for (String k : new String[]{"wounded_wolf","wounded_cat","wounded_horse","wounded_fox","wounded_villager","wounded_drake"}) if (hasSeen(p,k)) c++;
+        if (hasSeen(p,"hellfire_ravager")) c = Math.min(c+1, 6); // hellfire compte comme bonus mais cap 6
+        return Math.min(c,6);
     }
     public static int getUnlockedWoundCount(Player p) {
         int c=0;
@@ -89,7 +92,7 @@ public class BestiaryProgress {
         return c;
     }
     public static float getCompletionPercent(Player p) {
-        int totalCreatures = 5;
+        int totalCreatures = 6;
         int totalWounds = WoundType.values().length;
         int seenC = getUnlockedCreatureCount(p);
         int seenW = getUnlockedWoundCount(p);

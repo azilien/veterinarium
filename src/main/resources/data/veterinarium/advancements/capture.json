@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": { "id": "veterinarium:vet_sphere" },
+    "title": { "translate": "advancements.veterinarium.capture.title" },
+    "description": { "translate": "advancements.veterinarium.capture.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "veterinarium:healer",
+  "criteria": {
+    "has_filled": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": ["veterinarium:vet_sphere_filled"] }] }
+    }
+  },
+  "requirements": [["has_filled"]]
+}
