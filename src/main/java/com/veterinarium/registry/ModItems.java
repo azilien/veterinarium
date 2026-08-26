@@ -54,6 +54,12 @@ public class ModItems {
     public static final RegistryObject<Item> WOUNDED_HORSE_SPAWN_EGG = ITEMS.register("wounded_horse_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_HORSE, 0xF0E6D2, 0xAA0000, new Item.Properties()));
 
+    public static final RegistryObject<Item> WOUNDED_FOX_SPAWN_EGG = ITEMS.register("wounded_fox_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_FOX, 0xD76F2D, 0x8B0000, new Item.Properties()));
+
+    public static final RegistryObject<Item> WOUNDED_VILLAGER_SPAWN_EGG = ITEMS.register("wounded_villager_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_VILLAGER, 0x8ACB8A, 0xFF4444, new Item.Properties()));
+
     public static final RegistryObject<Item> HOSPITAL_HUT = ITEMS.register("hospital_hut",
             () -> new BlockItem(ModBlocks.HOSPITAL_HUT.get(), new Item.Properties()));
 

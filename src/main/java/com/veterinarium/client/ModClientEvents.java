@@ -14,5 +14,7 @@ public class ModClientEvents {
         event.registerEntityRenderer(ModEntities.WOUNDED_WOLF.get(), WoundedWolfRenderer::new);
         event.registerEntityRenderer(ModEntities.WOUNDED_CAT.get(), WoundedCatRenderer::new);
         event.registerEntityRenderer(ModEntities.WOUNDED_HORSE.get(), WoundedHorseRenderer::new);
+        event.registerEntityRenderer(ModEntities.WOUNDED_FOX.get(), WoundedFoxRenderer::new);
+        event.registerEntityRenderer(ModEntities.WOUNDED_VILLAGER.get(), WoundedVillagerRenderer::new);
     }
 }

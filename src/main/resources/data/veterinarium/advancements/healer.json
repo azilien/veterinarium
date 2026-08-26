@@ -1,8 +1,14 @@
 {
   "display": {
-    "icon": { "id": "minecraft:bone" },
-    "title": { "translate": "advancements.veterinarium.healer.title" },
-    "description": { "translate": "advancements.veterinarium.healer.description" },
+    "icon": {
+      "id": "minecraft:bone"
+    },
+    "title": {
+      "translate": "advancements.veterinarium.healer.title"
+    },
+    "description": {
+      "translate": "advancements.veterinarium.healer.description"
+    },
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
@@ -10,9 +16,74 @@
   },
   "parent": "veterinarium:hospital",
   "criteria": {
-    "has_wolf": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["veterinarium:wounded_wolf_spawn_egg"] }] } },
-    "has_cat": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["veterinarium:wounded_cat_spawn_egg"] }] } },
-    "has_horse": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": ["veterinarium:wounded_horse_spawn_egg"] }] } }
+    "has_wolf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:wounded_wolf_spawn_egg"
+            ]
+          }
+        ]
+      }
+    },
+    "has_cat": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:wounded_cat_spawn_egg"
+            ]
+          }
+        ]
+      }
+    },
+    "has_horse": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:wounded_horse_spawn_egg"
+            ]
+          }
+        ]
+      }
+    },
+    "has_fox": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:wounded_fox_spawn_egg"
+            ]
+          }
+        ]
+      }
+    },
+    "has_villager": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:wounded_villager_spawn_egg"
+            ]
+          }
+        ]
+      }
+    }
   },
-  "requirements": [["has_wolf", "has_cat", "has_horse"]]
+  "requirements": [
+    [
+      "has_wolf",
+      "has_cat",
+      "has_horse",
+      "has_fox",
+      "has_villager"
+    ]
+  ]
 }

@@ -2,7 +2,9 @@ package com.veterinarium.registry;
 
 import com.veterinarium.Veterinarium;
 import com.veterinarium.entity.WoundedCatEntity;
+import com.veterinarium.entity.WoundedFoxEntity;
 import com.veterinarium.entity.WoundedHorseEntity;
+import com.veterinarium.entity.WoundedVillagerEntity;
 import com.veterinarium.entity.WoundedWolfEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -39,6 +41,22 @@ public class ModEntities {
                             .eyeHeight(1.5F)
                             .clientTrackingRange(10)
                             .build("wounded_horse"));
+
+    public static final RegistryObject<EntityType<WoundedFoxEntity>> WOUNDED_FOX =
+            ENTITY_TYPES.register("wounded_fox",
+                    () -> EntityType.Builder.of(WoundedFoxEntity::new, MobCategory.CREATURE)
+                            .sized(0.6F, 0.7F)
+                            .eyeHeight(0.5F)
+                            .clientTrackingRange(10)
+                            .build("wounded_fox"));
+
+    public static final RegistryObject<EntityType<WoundedVillagerEntity>> WOUNDED_VILLAGER =
+            ENTITY_TYPES.register("wounded_villager",
+                    () -> EntityType.Builder.of(WoundedVillagerEntity::new, MobCategory.CREATURE)
+                            .sized(0.6F, 1.95F)
+                            .eyeHeight(1.62F)
+                            .clientTrackingRange(10)
+                            .build("wounded_villager"));
 
     public static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);

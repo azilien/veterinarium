@@ -63,6 +63,30 @@ public class SutureKitItem extends Item {
                 if (target instanceof com.veterinarium.entity.WoundedHorseEntity woundedHorse) {
                     woundedHorse.setHealed(true);
                 }
+                if (target instanceof com.veterinarium.entity.WoundedFoxEntity woundedFox) {
+                    woundedFox.setHealed(true);
+                    // confiance renard: tag custom (évite API Fox 1.21.1 instable)
+                    woundedFox.addTag("veterinarium_trusted");
+                    // tente d'ajouter trust natif via réflexion si dispo
+                    try {
+                        var m = woundedFox.getClass().getMethod("addTrustedUUID", java.util.UUID.class);
+                        m.invoke(woundedFox, player.getUUID());
+                    } catch (Exception ignored) {
+                        try {
+                            var m2 = woundedFox.getClass().getMethod("addTrusted", java.util.UUID.class);
+                            m2.invoke(woundedFox, player.getUUID());
+                        } catch (Exception ignored2) {}
+                    }
+                }
+                if (target instanceof com.veterinarium.entity.WoundedVillagerEntity woundedVillager) {
+                    woundedVillager.setHealed(true);
+                    // Réputation villageoise: effet hero + cadeau émeraude
+                    player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 600, 0));
+                    if (level.random.nextFloat() < 0.5f) {
+                        target.spawnAtLocation(net.minecraft.world.item.Items.EMERALD, 1);
+                        player.displayClientMessage(Component.literal("§e★ Le villageois reconnaissant vous offre une émeraude !"), false);
+                    }
+                }
 
                 if (target instanceof TamableAnimal tamable && !tamable.isTame()) {
                     if (level.random.nextFloat() < 0.33f) {
@@ -91,7 +115,7 @@ public class SutureKitItem extends Item {
                 target.removeTag("veterinarium_needs_scalpel");
                 try { com.veterinarium.integration.ArsNouveauIntegration.applyArsBonus(target, player); } catch (Exception ignored) {}
                 // Enlève le nom "Blessé" et met "Soigné" (sauf si déjà fait par nos entités custom)
-                boolean isCustomWounded = target instanceof com.veterinarium.entity.WoundedWolfEntity || target instanceof com.veterinarium.entity.WoundedCatEntity || target instanceof com.veterinarium.entity.WoundedHorseEntity;
+                boolean isCustomWounded = target instanceof com.veterinarium.entity.WoundedWolfEntity || target instanceof com.veterinarium.entity.WoundedCatEntity || target instanceof com.veterinarium.entity.WoundedHorseEntity || target instanceof com.veterinarium.entity.WoundedFoxEntity || target instanceof com.veterinarium.entity.WoundedVillagerEntity;
                 if (!isCustomWounded && target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
                     target.setCustomName(Component.literal("§a❤ Soigné §7- " + target.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§a❤ Soigné §7- ", "")));
                     target.setCustomNameVisible(true);

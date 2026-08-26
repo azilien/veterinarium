@@ -27,9 +27,13 @@
   "advancements.veterinarium.hospital.title": "Hôpital de Campagne",
   "advancements.veterinarium.hospital.description": "Construis un Hut Hôpital (sneak-clic)",
   "advancements.veterinarium.healer.title": "Guérisseur Légendaire",
-  "advancements.veterinarium.healer.description": "Collectionne les 3 oeufs blessés",
+  "advancements.veterinarium.healer.description": "Collectionne les 5 oeufs blessés (loup/chat/cheval/renard/villageois)",
   "subtitles.veterinarium.monitor_beep": "Monitor bip",
   "subtitles.veterinarium.scalpel_cut": "Scalpel incise",
   "subtitles.veterinarium.suture": "Suture",
-  "subtitles.veterinarium.heal_success": "Guérison"
+  "subtitles.veterinarium.heal_success": "Guérison",
+  "entity.veterinarium.wounded_fox": "Renard Blessé",
+  "entity.veterinarium.wounded_villager": "Villageois Blessé",
+  "item.veterinarium.wounded_fox_spawn_egg": "Oeuf de Renard Blessé",
+  "item.veterinarium.wounded_villager_spawn_egg": "Oeuf de Villageois Blessé"
 }

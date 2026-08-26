@@ -1,0 +1,16 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "minecraft:plains",
+    "minecraft:savanna",
+    "minecraft:desert",
+    "minecraft:taiga",
+    "minecraft:snowy_plains"
+  ],
+  "spawners": {
+    "type": "veterinarium:wounded_villager",
+    "weight": 6,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

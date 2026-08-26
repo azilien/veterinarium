@@ -27,9 +27,13 @@
   "advancements.veterinarium.hospital.title": "Field Hospital",
   "advancements.veterinarium.hospital.description": "Build a Hospital Hut (sneak-click)",
   "advancements.veterinarium.healer.title": "Legendary Healer",
-  "advancements.veterinarium.healer.description": "Collect the 3 wounded spawn eggs",
+  "advancements.veterinarium.healer.description": "Collect the 5 wounded eggs (wolf/cat/horse/fox/villager)",
   "subtitles.veterinarium.monitor_beep": "Monitor bip",
   "subtitles.veterinarium.scalpel_cut": "Scalpel incise",
   "subtitles.veterinarium.suture": "Suture",
-  "subtitles.veterinarium.heal_success": "Guérison"
+  "subtitles.veterinarium.heal_success": "Guérison",
+  "entity.veterinarium.wounded_fox": "Wounded Fox",
+  "entity.veterinarium.wounded_villager": "Wounded Villager",
+  "item.veterinarium.wounded_fox_spawn_egg": "Wounded Fox Spawn Egg",
+  "item.veterinarium.wounded_villager_spawn_egg": "Wounded Villager Spawn Egg"
 }

@@ -31,6 +31,8 @@ public class ModCreativeTabs {
                         pOutput.accept(ModItems.WOUNDED_WOLF_SPAWN_EGG.get());
                         pOutput.accept(ModItems.WOUNDED_CAT_SPAWN_EGG.get());
                         pOutput.accept(ModItems.WOUNDED_HORSE_SPAWN_EGG.get());
+                        pOutput.accept(ModItems.WOUNDED_FOX_SPAWN_EGG.get());
+                        pOutput.accept(ModItems.WOUNDED_VILLAGER_SPAWN_EGG.get());
                     })
                     .build());
 

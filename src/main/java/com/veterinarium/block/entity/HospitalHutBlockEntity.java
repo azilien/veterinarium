@@ -72,7 +72,9 @@ public class HospitalHutBlockEntity extends BlockEntity {
         List<LivingEntity> wounded = level.getEntitiesOfClass(LivingEntity.class, area,
                 e -> e.getTags().contains("veterinarium_wounded") || e instanceof com.veterinarium.entity.WoundedWolfEntity w && !w.isHealed()
                         || e instanceof com.veterinarium.entity.WoundedCatEntity c && !c.isHealed()
-                        || e instanceof com.veterinarium.entity.WoundedHorseEntity h && !h.isHealed());
+                        || e instanceof com.veterinarium.entity.WoundedHorseEntity h && !h.isHealed()
+                        || e instanceof com.veterinarium.entity.WoundedFoxEntity f && !f.isHealed()
+                        || e instanceof com.veterinarium.entity.WoundedVillagerEntity v && !v.isHealed());
 
         for (LivingEntity e : wounded) {
             e.heal(heal);
@@ -87,6 +89,8 @@ public class HospitalHutBlockEntity extends BlockEntity {
                 if (e instanceof com.veterinarium.entity.WoundedWolfEntity w) w.setHealed(true);
                 if (e instanceof com.veterinarium.entity.WoundedCatEntity c) c.setHealed(true);
                 if (e instanceof com.veterinarium.entity.WoundedHorseEntity h) h.setHealed(true);
+                if (e instanceof com.veterinarium.entity.WoundedFoxEntity f) f.setHealed(true);
+                if (e instanceof com.veterinarium.entity.WoundedVillagerEntity v) v.setHealed(true);
             }
         }
 
