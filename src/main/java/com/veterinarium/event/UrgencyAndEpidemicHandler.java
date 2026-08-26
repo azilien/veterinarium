@@ -41,6 +41,7 @@ public class UrgencyAndEpidemicHandler {
         if (level.getGameTime() % 40 == 0) {
             handleInfectionSpread(level);
             handleUrgentExpiry(level);
+            handleWoundParticles(level);
         }
         // tick urgence cooldown décrément
         if (!level.players().isEmpty()) {
@@ -145,13 +146,68 @@ public class UrgencyAndEpidemicHandler {
                     e.removeTag("veterinarium_urgent");
                 }
             } else {
-                // tick particules urgentes
-                if (level instanceof ServerLevel sl && level.getGameTime() % 60 == 0) {
-                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ANGRY_VILLAGER, e.getX(), e.getY()+1.2, e.getZ(), 1, 0.3,0.3,0.3,0.1);
-                    // bip si proche
-                    if (level.random.nextFloat() < 0.2f) level.playSound(null, e.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.BLOCKS, 0.5f, 2.0f);
+                // tick particules urgentes + timer actionbar
+                if (level instanceof ServerLevel sl) {
+                    if (level.getGameTime() % 60 == 0) {
+                        sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ANGRY_VILLAGER, e.getX(), e.getY()+1.2, e.getZ(), 1, 0.3,0.3,0.3,0.1);
+                        if (level.random.nextFloat() < 0.2f) level.playSound(null, e.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.BLOCKS, 0.5f, 2.0f);
+                    }
+                    if (level.getGameTime() % 20 == 0) {
+                        long remaining = expiry - level.getGameTime();
+                        int secs = (int)(remaining / 20);
+                        if (secs < 0) secs = 0;
+                        int m = secs / 60; int s = secs % 60;
+                        String time = String.format("%d:%02d", m, s);
+                        String col = remaining > 2400 ? "§a" : remaining > 1200 ? "§e" : "§c";
+                        // bip accéléré si <1min
+                        if (remaining < 1200 && level.getGameTime() % 40 == 0) {
+                            level.playSound(null, e.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.BLOCKS, 0.7f, remaining < 600 ? 2.0f : 1.5f);
+                            // particule rouge
+                            sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ANGRY_VILLAGER, e.getX(), e.getY()+1.8, e.getZ(), 2, 0.2,0.2,0.2,0.1);
+                        }
+                        String nameClean = e.getName().getString().replace("§c🚨 URGENCE §7- ", "").replace(" §8(5-8 min)", "").replace("§c☠ Blessé §7- ", "");
+                        Component timer = Component.literal(col + "🚨 URGENCE " + nameClean + " " + time + " §7[" + e.blockPosition().getX() + "/" + e.blockPosition().getZ() + "]");
+                        for (var p : level.players()) {
+                            if (p.distanceToSqr(e) < 10000) { // 100 blocs
+                                p.displayClientMessage(timer, true); // actionbar
+                            }
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    private static void handleWoundParticles(Level level) {
+        if (!(level instanceof ServerLevel sl)) return;
+        // particules wound-spécifiques toutes les 2s pour immersion Asfax (couleur thumbail)
+        List<LivingEntity> wounded = level.getEntitiesOfClass(LivingEntity.class,
+                new AABB(-30000000, -64, -30000000, 30000000, 320, 30000000),
+                e -> e.getTags().contains("veterinarium_wounded") && e.isAlive());
+        if (wounded.size() > 30) wounded = wounded.subList(0, 30);
+        for (LivingEntity e : wounded) {
+            WoundType wt = getWound(e);
+            if (level.random.nextFloat() > 0.25f) continue; // 25% chance par tick pour pas spam
+            var pos = e.position().add(0, e.getBbHeight()*0.6, 0);
+            switch (wt) {
+                case HEMORRAGIE -> sl.sendParticles(net.minecraft.core.particles.ParticleTypes.DAMAGE_INDICATOR, pos.x, pos.y, pos.z, 1, 0.2,0.1,0.2,0.1);
+                case FRACTURE -> {
+                    // particule os ? on utilise crit
+                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.CRIT, pos.x, pos.y, pos.z, 2, 0.2,0.2,0.2,0.2);
+                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.WHITE_SMOKE, pos.x, pos.y, pos.z, 1, 0.1,0.1,0.1,0.02);
+                }
+                case INFECTION -> sl.sendParticles(net.minecraft.core.particles.ParticleTypes.MYCELIUM, pos.x, pos.y, pos.z, 2, 0.2,0.1,0.2,0.1);
+                case BRULURE -> sl.sendParticles(net.minecraft.core.particles.ParticleTypes.FLAME, pos.x, pos.y, pos.z, 2, 0.15,0.15,0.15,0.02);
+                case CONTUSION -> {
+                    if (level.random.nextFloat()<0.1f) sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ANGRY_VILLAGER, pos.x, pos.y, pos.z, 1, 0.2,0.1,0.2,0.1);
+                }
+            }
+        }
+        // aussi pour urgents on a déjà, mais pour boss drake wounded on ajoute flamme violette
+        List<LivingEntity> drakes = level.getEntitiesOfClass(LivingEntity.class, new AABB(-30000000,-64,-30000000,30000000,320,30000000),
+                e -> e.getTags().contains("veterinarium_boss") && e.getTags().contains("veterinarium_wounded"));
+        for (LivingEntity d : drakes) {
+            if (level.random.nextFloat()<0.4f) sl.sendParticles(net.minecraft.core.particles.ParticleTypes.DRAGON_BREATH, d.getX(), d.getY()+1.5, d.getZ(), 1, 0.3,0.3,0.3,0.02);
         }
     }
 
@@ -261,6 +317,7 @@ public class UrgencyAndEpidemicHandler {
         if (e instanceof com.veterinarium.entity.WoundedHorseEntity h) return h.getWoundType();
         if (e instanceof com.veterinarium.entity.WoundedFoxEntity f) return f.getWoundType();
         if (e instanceof com.veterinarium.entity.WoundedVillagerEntity v) return v.getWoundType();
+        if (e instanceof com.veterinarium.entity.WoundedDrakeEntity d) return d.getWoundType();
         if (e.getPersistentData().contains("VetWound")) return WoundType.fromId(e.getPersistentData().getInt("VetWound"));
         if (e.getTags().contains("veterinarium_wound_brulure")) return WoundType.BRULURE;
         if (e.getTags().contains("veterinarium_wound_infection")) return WoundType.INFECTION;
