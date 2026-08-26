@@ -226,18 +226,10 @@ public class HospitalHutBlockEntity extends BlockEntity {
         for (LivingEntity e : wounded) {
             e.heal(heal);
             e.removeEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN);
-            if (e.getHealth() >= e.getMaxHealth() * 0.95f) {
-                e.addTag("veterinarium_healed");
-                e.removeTag("veterinarium_wounded");
-                e.removeTag("veterinarium_needs_scalpel");
-                e.setCustomName(Component.literal("§a❤ Soigné au Hut Lv"+hutLevel));
-                e.setCustomNameVisible(true);
-                healedCount++;
-                if (e instanceof com.veterinarium.entity.WoundedWolfEntity w) w.setHealed(true);
-                if (e instanceof com.veterinarium.entity.WoundedCatEntity c) c.setHealed(true);
-                if (e instanceof com.veterinarium.entity.WoundedHorseEntity h) h.setHealed(true);
-                if (e instanceof com.veterinarium.entity.WoundedFoxEntity f) f.setHealed(true);
-                if (e instanceof com.veterinarium.entity.WoundedVillagerEntity v) v.setHealed(true);
+            // Hut aide à régénérer mais ne valide pas le soin (il faut Scalpel→Suture en survie)
+            // On garde le tag wounded jusqu'à action manuelle, juste un petit bonus visuel si full HP
+            if (e.getHealth() >= e.getMaxHealth() * 0.99f) {
+                e.removeEffect(net.minecraft.world.effect.MobEffects.WEAKNESS);
             }
         }
 

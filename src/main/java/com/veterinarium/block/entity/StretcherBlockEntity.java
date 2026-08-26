@@ -26,15 +26,7 @@ public class StretcherBlockEntity extends BlockEntity {
             if (level instanceof net.minecraft.server.level.ServerLevel sl) {
                 sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HEART, e.getX(), e.getY()+1.0, e.getZ(), 1, 0.2, 0.1, 0.2, 0.1);
             }
-            if (e.getHealth() >= e.getMaxHealth()*0.95f) {
-                e.addTag("veterinarium_healed");
-                e.removeTag("veterinarium_wounded");
-                if (e instanceof com.veterinarium.entity.WoundedWolfEntity w) w.setHealed(true);
-                if (e instanceof com.veterinarium.entity.WoundedCatEntity c) c.setHealed(true);
-                if (e instanceof com.veterinarium.entity.WoundedHorseEntity h) h.setHealed(true);
-                if (e instanceof com.veterinarium.entity.WoundedFoxEntity f) f.setHealed(true);
-                if (e instanceof com.veterinarium.entity.WoundedVillagerEntity v) v.setHealed(true);
-            }
+            // Brancard aide HP mais ne valide pas le soin (survie: il faut opérer)
         }
     }
 }
