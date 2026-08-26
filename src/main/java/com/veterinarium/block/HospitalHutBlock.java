@@ -91,6 +91,18 @@ public class HospitalHutBlock extends Block implements EntityBlock {
                     return InteractionResult.SUCCESS;
                 }
                 player.displayClientMessage(Component.literal("§c[Hut Hôpital Lv" + hut.getHutLevel() + "] §7Patients: " + hut.getPatientCount() + " | §aSoignés: " + hut.getHealedCount() + " | §7Rayon " + hut.getRadius() + " blocs §7(Soin " + hut.getHealAmount() + "❤/2s)"), false);
+                // Contrat journalier
+                player.displayClientMessage(hut.getContractDisplay(), false);
+                if (hut.isContractCompleted()) {
+                    player.displayClientMessage(Component.literal("§e▶ Clic droit à nouveau pour récupérer la récompense !"), false);
+                    if (hut.tryClaimContract(player)) {
+                        player.displayClientMessage(Component.literal("§a📋 Contrat validé ! Récompense donnée."), false);
+                        level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1.0f, 1.5f);
+                        return InteractionResult.SUCCESS;
+                    }
+                } else {
+                    player.displayClientMessage(Component.literal("§7→ Soigne/capture près du Hut (64 blocs) pour progresser"), false);
+                }
                 if (hut.getHutLevel() < 5) {
                     int lv = hut.getHutLevel();
                     String next = switch (lv) {
@@ -100,9 +112,9 @@ public class HospitalHutBlock extends Block implements EntityBlock {
                         case 4 -> "16 briques+16 bandages+4 émeraudes+1 netherite";
                         default -> "";
                     };
-                    player.displayClientMessage(Component.literal("§7Sneak-clic: 9x9 | Clic upgrade Lv" + (lv+1) + " (" + next + ") | Bonus MineColonies"), false);
+                    player.displayClientMessage(Component.literal("§7Sneak-clic: 9x9 | Clic upgrade Lv" + (lv+1) + " (" + next + ") | Contrat quotidien"), false);
                 } else {
-                    player.displayClientMessage(Component.literal("§7Sneak-clic: 9x9 | Niveau max atteint — merci docteur !"), false);
+                    player.displayClientMessage(Component.literal("§7Sneak-clic: 9x9 | Niveau max atteint — merci docteur ! | Contrat quotidien"), false);
                 }
                 level.playSound(null, pos, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0f, 1.0f);
             }

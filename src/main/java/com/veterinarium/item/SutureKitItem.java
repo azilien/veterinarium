@@ -202,6 +202,10 @@ public class SutureKitItem extends Item {
                 // Brûlure: Anti-feu
                 if (wt == WoundType.BRULURE) { target.clearFire(); target.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0)); }
                 try { com.veterinarium.data.BestiaryProgress.recordSuture(player, target, true); } catch (Exception ignored) {}
+                try {
+                    String ek = com.veterinarium.data.BestiaryProgress.entityKey(target);
+                    com.veterinarium.block.entity.HospitalHutBlockEntity.notifyNearbyHuts(level, target.blockPosition(), ek, wt, false);
+                } catch (Exception ignored) {}
                 // Urgence récompense
                 if (target.getTags().contains("veterinarium_urgent")) {
                     target.removeTag("veterinarium_urgent");

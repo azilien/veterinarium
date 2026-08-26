@@ -120,8 +120,12 @@ public class VetSphereItem extends Item {
         } else {
             if (!player.addItem(filled)) player.drop(filled, false);
         }
-        // bestiaire
+        // bestiaire + contrat
         try { player.getPersistentData().putInt("VetCaptures", player.getPersistentData().getInt("VetCaptures")+1); } catch (Exception ignored) {}
+        try {
+            String ek = com.veterinarium.data.BestiaryProgress.entityKey(target);
+            com.veterinarium.block.entity.HospitalHutBlockEntity.notifyNearbyHuts(level, target.blockPosition(), ek, com.veterinarium.wound.WoundType.CONTUSION, true);
+        } catch (Exception ignored) {}
         return InteractionResult.SUCCESS;
     }
 
