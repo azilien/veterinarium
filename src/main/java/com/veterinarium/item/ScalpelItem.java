@@ -1,6 +1,9 @@
 package com.veterinarium.item;
 
+import com.veterinarium.registry.ModItems;
 import com.veterinarium.registry.ModSounds;
+import com.veterinarium.wound.WoundType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -20,11 +23,91 @@ public class ScalpelItem extends Item {
         super(properties);
     }
 
+    private WoundType getWound(LivingEntity target) {
+        if (target instanceof com.veterinarium.entity.WoundedWolfEntity w) return w.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedCatEntity c) return c.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedHorseEntity h) return h.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedFoxEntity f) return f.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedVillagerEntity v) return v.getWoundType();
+        if (target.getPersistentData().contains("VetWound")) return WoundType.fromId(target.getPersistentData().getInt("VetWound"));
+        if (target.getTags().contains("veterinarium_wound_hemorragie")) return WoundType.HEMORRAGIE;
+        if (target.getTags().contains("veterinarium_wound_fracture")) return WoundType.FRACTURE;
+        if (target.getTags().contains("veterinarium_wound_infection")) return WoundType.INFECTION;
+        return WoundType.CONTUSION;
+    }
+    private int countItem(Player p, net.minecraft.world.item.Item it) {
+        int c=0; for (var s: p.getInventory().items) if (!s.isEmpty() && s.is(it)) c+=s.getCount();
+        for (var s: p.getInventory().offhand) if (!s.isEmpty() && s.is(it)) c+=s.getCount();
+        return c;
+    }
+    private void consumeItem(Player p, net.minecraft.world.item.Item it) {
+        for (var s: p.getInventory().items) if (!s.isEmpty() && s.is(it)) { s.shrink(1); if (s.isEmpty()) p.getInventory().setItem(p.getInventory().selected, net.minecraft.world.item.ItemStack.EMPTY); return; }
+        for (var s: p.getInventory().offhand) if (!s.isEmpty() && s.is(it)) { s.shrink(1); return; }
+    }
+    private boolean tryConsumeFromTable(Level level, BlockPos center, WoundType wt, boolean isScalpel) {
+        // cherche OperatingTable dans 5 blocs
+        for (int dx=-5;dx<=5;dx++) for (int dy=-2;dy<=2;dy++) for (int dz=-5;dz<=5;dz++) {
+            BlockPos p = center.offset(dx,dy,dz);
+            var be = level.getBlockEntity(p);
+            if (be instanceof com.veterinarium.block.entity.OperatingTableBlockEntity table) {
+                if (table.consumeIfNeeded(wt, isScalpel)) return true;
+                // si table existe mais stock vide et besoin -> on laisse retomber sur inventaire joueur, mais on indique table vide
+            }
+        }
+        return false;
+    }
+    private boolean hasNearbyTableWithStock(Level level, BlockPos center, WoundType wt, boolean isScalpel) {
+        for (int dx=-5;dx<=5;dx++) for (int dy=-2;dy<=2;dy++) for (int dz=-5;dz<=5;dz++) {
+            BlockPos p = center.offset(dx,dy,dz);
+            var be = level.getBlockEntity(p);
+            if (be instanceof com.veterinarium.block.entity.OperatingTableBlockEntity table) {
+                // check if table has required item
+                for (int i=0;i<table.getHandler().getSlots();i++) {
+                    var s = table.getHandler().getStackInSlot(i);
+                    if (isScalpel && s.is(ModItems.ANESTHETIC.get()) && s.getCount()>0) return true;
+                    if (!isScalpel && s.is(ModItems.BANDAGE.get()) && s.getCount()>0) return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         Level level = player.level();
         if (!level.isClientSide) {
             if (target.getHealth() < target.getMaxHealth()) {
+                WoundType wt = getWound(target);
+                if (wt.needsAnesthetic()) {
+                    boolean fromTable = tryConsumeFromTable(level, target.blockPosition(), wt, true);
+                    if (fromTable) {
+                        player.displayClientMessage(Component.literal("§d[Bloc Opératoire] §a1 Anesthésiant fourni par la table → incision sans douleur"), false);
+                        target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 200, 0));
+                    } else {
+                        boolean hasTableNearby = hasNearbyTableWithStock(level, target.blockPosition(), wt, true);
+                        int has = countItem(player, ModItems.ANESTHETIC.get());
+                        if (has < 1) {
+                            String src = hasTableNearby ? "dans la table/inventaire" : "dans l'inventaire (ou charge la table à 5 blocs)";
+                            player.displayClientMessage(Component.literal("§c⚠ " + wt.getDisplay() + " §7nécessite §d1 Anesthésiant §7" + src + " ! (50% douleur)"), true);
+                            if (level.random.nextFloat() < 0.5f) {
+                                target.hurt(level.damageSources().magic(), 2.0f);
+                                target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.WEAKNESS, 200, 1));
+                                target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, 300, 2));
+                                level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.VILLAGER_HURT, SoundSource.PLAYERS, 1.0f, 0.7f);
+                                player.displayClientMessage(Component.literal("§c☠ Échec anesthésie: la créature hurle, soin réduit!"), false);
+                                EquipmentSlot sl = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+                                stack.hurtAndBreak(1, player, sl);
+                                return InteractionResult.SUCCESS;
+                            } else {
+                                player.displayClientMessage(Component.literal("§e→ Chanceux: incision réussie malgré la douleur..."), false);
+                            }
+                        } else {
+                            consumeItem(player, ModItems.ANESTHETIC.get());
+                            player.displayClientMessage(Component.literal("§d[Anesthésie] §a1 Anesthésiant consommé → incision sans douleur"), false);
+                            target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 200, 0));
+                        }
+                    }
+                }
                 float heal = 2.0f;
                 target.heal(heal);
                 try {
@@ -55,5 +138,6 @@ public class ScalpelItem extends Item {
         tooltip.add(Component.literal("§7Outil chirurgical de précision"));
         tooltip.add(Component.literal("§8Clic droit sur créature blessée -> soigne 1 coeur"));
         tooltip.add(Component.literal("§8Marque la créature comme 'opérée'"));
+        tooltip.add(Component.literal("§dFracture/Infection → §7nécessite §dAnesthésiant §7dans l'inventaire"));
     }
 }

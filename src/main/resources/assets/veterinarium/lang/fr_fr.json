@@ -35,5 +35,7 @@
   "entity.veterinarium.wounded_fox": "Renard Blessé",
   "entity.veterinarium.wounded_villager": "Villageois Blessé",
   "item.veterinarium.wounded_fox_spawn_egg": "Oeuf de Renard Blessé",
-  "item.veterinarium.wounded_villager_spawn_egg": "Oeuf de Villageois Blessé"
+  "item.veterinarium.wounded_villager_spawn_egg": "Oeuf de Villageois Blessé",
+  "block.veterinarium.stretcher": "Brancard",
+  "item.veterinarium.stretcher": "Brancard"
 }

@@ -2,6 +2,7 @@ package com.veterinarium.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import com.veterinarium.wound.WoundType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -20,12 +21,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class WoundedVillagerEntity extends Villager {
     private static final EntityDataAccessor<Boolean> DATA_HEALED = SynchedEntityData.defineId(WoundedVillagerEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DATA_WOUND_TYPE = SynchedEntityData.defineId(WoundedVillagerEntity.class, EntityDataSerializers.INT);
 
     public WoundedVillagerEntity(EntityType<? extends Villager> type, Level level) {
         super(type, level);
         this.setCustomName(Component.literal("§c☠ Villageois Blessé"));
         this.setCustomNameVisible(true);
         this.setPersistenceRequired();
+        this.setWoundType(WoundType.random(this.random));
         this.addTag("veterinarium_wounded");
         this.addTag("veterinarium_needs_scalpel");
     }
@@ -40,6 +43,7 @@ public class WoundedVillagerEntity extends Villager {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_HEALED, false);
+        builder.define(DATA_WOUND_TYPE, 0);
     }
 
     @Override
@@ -65,15 +69,20 @@ public class WoundedVillagerEntity extends Villager {
         }
     }
 
+    public WoundType getWoundType() { return WoundType.fromId(this.entityData.get(DATA_WOUND_TYPE)); }
+    public void setWoundType(WoundType t) { this.entityData.set(DATA_WOUND_TYPE, t.getId()); this.addTag(t.getTag()); }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("VetHealed", isHealed());
+        tag.putInt("VetWound", getWoundType().getId());
     }
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("VetHealed")) this.entityData.set(DATA_HEALED, tag.getBoolean("VetHealed"));
+        if (tag.contains("VetWound")) this.entityData.set(DATA_WOUND_TYPE, tag.getInt("VetWound"));
     }
 
     @Override

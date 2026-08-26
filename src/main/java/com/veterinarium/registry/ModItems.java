@@ -63,6 +63,9 @@ public class ModItems {
     public static final RegistryObject<Item> HOSPITAL_HUT = ITEMS.register("hospital_hut",
             () -> new BlockItem(ModBlocks.HOSPITAL_HUT.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> STRETCHER = ITEMS.register("stretcher",
+            () -> new BlockItem(ModBlocks.STRETCHER.get(), new Item.Properties()));
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

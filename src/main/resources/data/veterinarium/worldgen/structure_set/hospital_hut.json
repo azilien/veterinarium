@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "veterinarium:hospital_hut",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 34,
+    "separation": 8,
+    "salt": 40012
+  }
+}

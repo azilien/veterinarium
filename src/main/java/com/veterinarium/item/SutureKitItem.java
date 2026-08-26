@@ -1,6 +1,8 @@
 package com.veterinarium.item;
 
+import com.veterinarium.registry.ModItems;
 import com.veterinarium.registry.ModSounds;
+import com.veterinarium.wound.WoundType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -23,6 +25,50 @@ public class SutureKitItem extends Item {
         super(properties);
     }
 
+    private WoundType getWound(LivingEntity target) {
+        if (target instanceof com.veterinarium.entity.WoundedWolfEntity w) return w.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedCatEntity c) return c.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedHorseEntity h) return h.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedFoxEntity f) return f.getWoundType();
+        if (target instanceof com.veterinarium.entity.WoundedVillagerEntity v) return v.getWoundType();
+        if (target.getPersistentData().contains("VetWound")) return WoundType.fromId(target.getPersistentData().getInt("VetWound"));
+        if (target.getTags().contains("veterinarium_wound_hemorragie")) return WoundType.HEMORRAGIE;
+        if (target.getTags().contains("veterinarium_wound_fracture")) return WoundType.FRACTURE;
+        if (target.getTags().contains("veterinarium_wound_infection")) return WoundType.INFECTION;
+        return WoundType.CONTUSION;
+    }
+    private int countItem(net.minecraft.world.entity.player.Player p, net.minecraft.world.item.Item it) {
+        int c=0; for (var s: p.getInventory().items) if (!s.isEmpty() && s.is(it)) c+=s.getCount();
+        for (var s: p.getInventory().offhand) if (!s.isEmpty() && s.is(it)) c+=s.getCount();
+        return c;
+    }
+    private void consumeItem(net.minecraft.world.entity.player.Player p, net.minecraft.world.item.Item it) {
+        for (var s: p.getInventory().items) if (!s.isEmpty() && s.is(it)) { s.shrink(1); return; }
+        for (var s: p.getInventory().offhand) if (!s.isEmpty() && s.is(it)) { s.shrink(1); return; }
+    }
+    private boolean tryConsumeFromTable(Level level, net.minecraft.core.BlockPos center, WoundType wt, boolean isScalpel) {
+        for (int dx=-5;dx<=5;dx++) for (int dy=-2;dy<=2;dy++) for (int dz=-5;dz<=5;dz++) {
+            var be = level.getBlockEntity(center.offset(dx,dy,dz));
+            if (be instanceof com.veterinarium.block.entity.OperatingTableBlockEntity table) {
+                if (table.consumeIfNeeded(wt, isScalpel)) return true;
+            }
+        }
+        return false;
+    }
+    private boolean hasNearbyTableWithStock(Level level, net.minecraft.core.BlockPos center, WoundType wt, boolean isScalpel) {
+        for (int dx=-5;dx<=5;dx++) for (int dy=-2;dy<=2;dy++) for (int dz=-5;dz<=5;dz++) {
+            var be = level.getBlockEntity(center.offset(dx,dy,dz));
+            if (be instanceof com.veterinarium.block.entity.OperatingTableBlockEntity table) {
+                for (int i=0;i<table.getHandler().getSlots();i++) {
+                    var s = table.getHandler().getStackInSlot(i);
+                    if (isScalpel && s.is(ModItems.ANESTHETIC.get()) && s.getCount()>0) return true;
+                    if (!isScalpel && s.is(ModItems.BANDAGE.get()) && s.getCount()>0) return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         Level level = player.level();
@@ -41,6 +87,35 @@ public class SutureKitItem extends Item {
                 return InteractionResult.SUCCESS;
             }
             if (target.getHealth() < target.getMaxHealth() * 0.9f || isOperated) {
+                WoundType wt = getWound(target);
+                if (wt.needsBandage()) {
+                    boolean fromTable = tryConsumeFromTable(level, target.blockPosition(), wt, false);
+                    if (fromTable) {
+                        player.displayClientMessage(Component.literal("§c[Bloc Opératoire] §a1 Bandage fourni par la table → suture étanche"), false);
+                    } else {
+                        boolean hasTableNearby = hasNearbyTableWithStock(level, target.blockPosition(), wt, false);
+                        int has = countItem(player, ModItems.BANDAGE.get());
+                        if (has < 1) {
+                            String src = hasTableNearby ? "dans la table/inventaire" : "dans l'inventaire (ou charge la table à 5 blocs)";
+                            player.displayClientMessage(Component.literal("§c⚠ " + wt.getDisplay() + " §7nécessite §e1 Bandage §7" + src + " ! (50% rechute)"), true);
+                            if (level.random.nextFloat() < 0.5f) {
+                                target.hurt(level.damageSources().magic(), 3.0f);
+                                target.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 0));
+                                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
+                                level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.PLAYER_HURT, SoundSource.PLAYERS, 1.0f, 0.7f);
+                                player.displayClientMessage(Component.literal("§c☠ Hémorragie: sans bandage la plaie se rouvre!"), false);
+                                EquipmentSlot sl = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+                                stack.hurtAndBreak(1, player, sl);
+                                return InteractionResult.SUCCESS;
+                            } else {
+                                player.displayClientMessage(Component.literal("§e→ Suture réussie de justesse sans bandage..."), false);
+                            }
+                        } else {
+                            consumeItem(player, ModItems.BANDAGE.get());
+                            player.displayClientMessage(Component.literal("§e[Bandage] §a1 Bandage consommé → suture étanche"), false);
+                        }
+                    }
+                }
                 target.heal(6.0f);
                 target.removeEffect(MobEffects.POISON);
                 target.removeEffect(MobEffects.WITHER);
@@ -141,5 +216,6 @@ public class SutureKitItem extends Item {
         tooltip.add(Component.literal("§8-> Soigne 3 coeurs + Régénération"));
         tooltip.add(Component.literal("§8-> 33% de chance d'apprivoiser"));
         tooltip.add(Component.literal("§eNécessite: Scalpel d'abord"));
+        tooltip.add(Component.literal("§eHémorragie/Infection → §7nécessite §eBandage"));
     }
 }

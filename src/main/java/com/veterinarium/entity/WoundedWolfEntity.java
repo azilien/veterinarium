@@ -2,6 +2,7 @@ package com.veterinarium.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import com.veterinarium.wound.WoundType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -34,6 +35,7 @@ public class WoundedWolfEntity extends Wolf {
         this.setCustomName(Component.literal("§c☠ Loup Blessé"));
         this.setCustomNameVisible(true);
         this.setPersistenceRequired();
+        this.setWoundType(WoundType.random(this.random));
         // Ajoute tags pour compatibilité avec ancien système
         this.addTag("veterinarium_wounded");
         this.addTag("veterinarium_needs_scalpel");
@@ -88,10 +90,14 @@ public class WoundedWolfEntity extends Wolf {
         }
     }
 
+    public WoundType getWoundType() { return WoundType.fromId(this.entityData.get(DATA_WOUND_TYPE)); }
+    public void setWoundType(WoundType t) { this.entityData.set(DATA_WOUND_TYPE, t.getId()); this.addTag(t.getTag()); }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("VetHealed", this.isHealed());
+        tag.putInt("VetWound", getWoundType().getId());
     }
 
     @Override
@@ -105,6 +111,7 @@ public class WoundedWolfEntity extends Wolf {
                 this.setCustomName(Component.literal("§a❤ Loup Soigné"));
             }
         }
+        if (tag.contains("VetWound")) this.entityData.set(DATA_WOUND_TYPE, tag.getInt("VetWound"));
     }
 
     @Override

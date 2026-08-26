@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "veterinarium:block/stretcher" },
+    "facing=south": { "model": "veterinarium:block/stretcher", "y": 180 },
+    "facing=west": { "model": "veterinarium:block/stretcher", "y": 270 },
+    "facing=east": { "model": "veterinarium:block/stretcher", "y": 90 }
+  }
+}

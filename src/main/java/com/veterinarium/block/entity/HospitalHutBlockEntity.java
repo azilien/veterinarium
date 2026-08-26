@@ -15,29 +15,33 @@ import java.util.List;
 public class HospitalHutBlockEntity extends BlockEntity {
     private int healedCount = 0;
     private int tickCounter = 0;
-    private int hutLevel = 1; // 1-3
+    private int hutLevel = 1; // 1-5
 
     public HospitalHutBlockEntity(BlockPos pos, BlockState state) {
         super(com.veterinarium.registry.ModBlockEntities.HOSPITAL_HUT.get(), pos, state);
     }
 
-    public int getRadius() { return 12 + hutLevel * 4; } // 16,20,24
-    public float getHealAmount() { return 1.0f + hutLevel * 0.5f; } // 1.5,2.0,2.5 -> 0.75-1.25 coeur
+    public int getRadius() { return 12 + hutLevel * 4; } // 16,20,24,28,32
+    public float getHealAmount() { return 1.0f + hutLevel * 0.5f; } // 1.5,2.0,2.5,3.0,3.5
     public int getHutLevel() { return hutLevel; }
     public boolean tryUpgrade(net.minecraft.world.entity.player.Player player) {
-        if (hutLevel >= 3) return false;
-        int needBricks = 8;
-        int needBandage = hutLevel == 1 ? 4 : 8;
-        boolean needDiamond = hutLevel == 2;
-        // Check inventory
+        if (hutLevel >= 5) return false;
+        int needBricks = switch (hutLevel) { case 1 -> 8; case 2 -> 8; case 3 -> 12; case 4 -> 16; default -> 99; };
+        int needBandage = switch (hutLevel) { case 1 -> 4; case 2 -> 8; case 3 -> 12; case 4 -> 16; default -> 99; };
+        int needDiamond = (hutLevel == 2) ? 1 : 0;
+        int needEmerald = switch (hutLevel) { case 3 -> 2; case 4 -> 4; default -> 0; };
+        int needNetherite = (hutLevel == 4) ? 1 : 0;
         int hasBricks = countItem(player, net.minecraft.world.item.Items.BRICK);
         int hasBandage = countItem(player, com.veterinarium.registry.ModItems.BANDAGE.get());
         int hasDiamond = countItem(player, net.minecraft.world.item.Items.DIAMOND);
-        if (hasBricks < needBricks || hasBandage < needBandage || (needDiamond && hasDiamond < 1)) return false;
-        // Consume
+        int hasEmerald = countItem(player, net.minecraft.world.item.Items.EMERALD);
+        int hasNetherite = countItem(player, net.minecraft.world.item.Items.NETHERITE_INGOT);
+        if (hasBricks < needBricks || hasBandage < needBandage || hasDiamond < needDiamond || hasEmerald < needEmerald || hasNetherite < needNetherite) return false;
         consumeItem(player, net.minecraft.world.item.Items.BRICK, needBricks);
         consumeItem(player, com.veterinarium.registry.ModItems.BANDAGE.get(), needBandage);
-        if (needDiamond) consumeItem(player, net.minecraft.world.item.Items.DIAMOND, 1);
+        if (needDiamond>0) consumeItem(player, net.minecraft.world.item.Items.DIAMOND, needDiamond);
+        if (needEmerald>0) consumeItem(player, net.minecraft.world.item.Items.EMERALD, needEmerald);
+        if (needNetherite>0) consumeItem(player, net.minecraft.world.item.Items.NETHERITE_INGOT, needNetherite);
         hutLevel++;
         setChanged();
         if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
@@ -101,10 +105,19 @@ public class HospitalHutBlockEntity extends BlockEntity {
                 if (c.getHealth() < c.getMaxHealth()) c.heal(heal*0.5f);
             }
         }
+        // Effet particules coeur si patients (Lv3+)
+        if (!wounded.isEmpty() && hutLevel >= 3 && level instanceof net.minecraft.server.level.ServerLevel sl) {
+            if (tickCounter % 20 == 0) {
+                for (LivingEntity e : wounded) {
+                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HEART, e.getX(), e.getY()+1.2, e.getZ(), 1, 0.2, 0.2, 0.2, 0.1);
+                }
+                sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER, pos.getX()+0.5, pos.getY()+1.2, pos.getZ()+0.5, 3, 0.5, 0.3, 0.5, 0.1);
+            }
+        }
         // Son monitor toutes les 10s si des patients (custom si dispo)
         if (!wounded.isEmpty() && tickCounter % 200 == 0) {
             try {
-                level.playSound(null, pos, com.veterinarium.registry.ModSounds.MONITOR_BEEP.get(), net.minecraft.sounds.SoundSource.BLOCKS, 0.5f, 1.2f);
+                level.playSound(null, pos, com.veterinarium.registry.ModSounds.MONITOR_BEEP.get(), net.minecraft.sounds.SoundSource.BLOCKS, 0.5f, 1.2f + hutLevel*0.1f);
             } catch (Exception e) {
                 level.playSound(null, pos, net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), net.minecraft.sounds.SoundSource.BLOCKS, 0.5f, 1.5f);
             }
@@ -132,6 +145,6 @@ public class HospitalHutBlockEntity extends BlockEntity {
         super.loadAdditional(tag, registries);
         healedCount = tag.getInt("HealedCount");
         hutLevel = tag.contains("HutLevel") ? tag.getInt("HutLevel") : 1;
-        if (hutLevel <1) hutLevel=1; if (hutLevel>3) hutLevel=3;
+        if (hutLevel <1) hutLevel=1; if (hutLevel>5) hutLevel=5;
     }
 }

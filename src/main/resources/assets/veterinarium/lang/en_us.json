@@ -35,5 +35,7 @@
   "entity.veterinarium.wounded_fox": "Wounded Fox",
   "entity.veterinarium.wounded_villager": "Wounded Villager",
   "item.veterinarium.wounded_fox_spawn_egg": "Wounded Fox Spawn Egg",
-  "item.veterinarium.wounded_villager_spawn_egg": "Wounded Villager Spawn Egg"
+  "item.veterinarium.wounded_villager_spawn_egg": "Wounded Villager Spawn Egg",
+  "block.veterinarium.stretcher": "Stretcher",
+  "item.veterinarium.stretcher": "Stretcher"
 }

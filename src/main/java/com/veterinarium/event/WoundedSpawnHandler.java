@@ -1,5 +1,6 @@
 package com.veterinarium.event;
 
+import com.veterinarium.wound.WoundType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -43,14 +44,17 @@ public class WoundedSpawnHandler {
         // 8% chance
         if (living.getRandom().nextDouble() > WOUND_CHANCE) return;
         
-        // Devient blessé
+        // Devient blessé + type de plaie aléatoire
         float max = living.getMaxHealth();
         float woundedHealth = max * (0.25f + living.getRandom().nextFloat() * 0.35f); // 25-60%
         living.setHealth(woundedHealth);
         living.addTag("veterinarium_wounded");
         living.addTag("veterinarium_needs_scalpel"); // doit être opéré d'abord
-        // Nom visible
-        living.setCustomName(Component.literal("§c☠ Blessé §7- " + living.getName().getString()));
+        WoundType wt = WoundType.random(living.getRandom());
+        living.addTag(wt.getTag());
+        living.getPersistentData().putInt("VetWound", wt.getId());
+        // Nom visible avec type
+        living.setCustomName(Component.literal("§c☠ Blessé " + wt.getDisplay() + " §7- " + living.getName().getString()));
         living.setCustomNameVisible(true);
         // Effets
         living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 600, 1));
