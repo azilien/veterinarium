@@ -25,15 +25,19 @@ public class UrgencyAndEpidemicHandler {
 
     // cooldown partagé (ticks) avant prochaine urgence
     private static int ticksUntilNextUrgency = 6000; // 5 min initial
+    private static int getUrgencyCooldownMin() { try { return com.veterinarium.config.VeterinariumConfig.COMMON.urgencyCooldownMin.get(); } catch (Exception e) { return 8000; } }
+    private static int getUrgencyCooldownMax() { try { return com.veterinarium.config.VeterinariumConfig.COMMON.urgencyCooldownMax.get(); } catch (Exception e) { return 14000; } }
+    private static int getUrgencyTimerMin() { try { return com.veterinarium.config.VeterinariumConfig.COMMON.urgencyTimerMin.get(); } catch (Exception e) { return 6000; } }
+    private static int getUrgencyTimerRange() { try { int min = com.veterinarium.config.VeterinariumConfig.COMMON.urgencyTimerMin.get(); int max = com.veterinarium.config.VeterinariumConfig.COMMON.urgencyTimerMax.get(); return Math.max(0, max-min); } catch (Exception e) { return 4000; } }
+    private static double getInfectionChance() { try { return com.veterinarium.config.VeterinariumConfig.COMMON.infectionSpreadChance.get(); } catch (Exception e) { return 0.04; } }
+    private static double getInfectionRange() { try { return com.veterinarium.config.VeterinariumConfig.COMMON.infectionSpreadRange.get(); } catch (Exception e) { return 4.0; } }
+    private static int getQuarantineLevel() { try { return com.veterinarium.config.VeterinariumConfig.COMMON.infectionQuarantineHutLevel.get(); } catch (Exception e) { return 3; } }
 
     @SubscribeEvent
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         Level level = event.level;
         if (level.isClientSide) return;
-        if (level.getGameTime() % 40 != 0 && level.getGameTime() % 6000 != 0) {
-            // on laisse passer mais on veut infection à 40 et urgence à 6000 - on gère séparément
-        }
         if (level.getGameTime() % 40 == 0) {
             handleInfectionSpread(level);
             handleUrgentExpiry(level);
@@ -43,7 +47,10 @@ public class UrgencyAndEpidemicHandler {
             ticksUntilNextUrgency--;
             if (ticksUntilNextUrgency <= 0) {
                 if (trySpawnUrgency(level)) {
-                    ticksUntilNextUrgency = 8000 + level.random.nextInt(6000); // 6-11 min
+                    int min = getUrgencyCooldownMin();
+                    int max = getUrgencyCooldownMax();
+                    int range = Math.max(0, max - min);
+                    ticksUntilNextUrgency = min + (range>0 ? level.random.nextInt(range) : 0);
                 } else {
                     ticksUntilNextUrgency = 2000; // retry sooner si pas de spot
                 }
@@ -61,14 +68,15 @@ public class UrgencyAndEpidemicHandler {
                 });
         // limite pour perf : si >20 carriers, on sample 20
         if (carriers.size() > 20) carriers = carriers.subList(0, 20);
+        double infectionChance = getInfectionChance();
+        double infectionRange = getInfectionRange();
         for (LivingEntity carrier : carriers) {
-            // si isolé dans hut ? on considère que Hut Lv3+ isole (pas de contagion si dans rayon hut 12)
+            // si isolé dans hut ? on considère que Hut Lv requis isole
             if (isInsideHospitalHut(level, carrier.blockPosition())) continue;
-            AABB area = new AABB(carrier.blockPosition()).inflate(4, 2, 4);
+            AABB area = new AABB(carrier.blockPosition()).inflate(infectionRange, 2, infectionRange);
             List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, area, e -> e != carrier && e.isAlive() && !e.getTags().contains("veterinarium_wounded") && e.getHealth() > 0);
             for (LivingEntity target : nearby) {
-                // 4% par tick (toutes 2s) => ~48% par min si collés
-                if (level.random.nextFloat() < 0.04f) {
+                if (level.random.nextFloat() < infectionChance) {
                     // filtre animal/villageois uniquement
                     if (!(target instanceof net.minecraft.world.entity.animal.Animal) && !(target instanceof net.minecraft.world.entity.npc.Villager) && !(target instanceof net.minecraft.world.entity.animal.horse.AbstractHorse)) continue;
                     // infecte
@@ -100,14 +108,13 @@ public class UrgencyAndEpidemicHandler {
     }
 
     private static boolean isInsideHospitalHut(Level level, BlockPos pos) {
+        int reqLevel = getQuarantineLevel();
+        if (reqLevel > 5) return false;
         // si un hut dans 14 blocs, on considère isolé (quarantaine)
         for (BlockPos p : BlockPos.betweenClosed(pos.offset(-14, -6, -14), pos.offset(14, 6, 14))) {
             if (level.getBlockState(p).is(com.veterinarium.registry.ModBlocks.HOSPITAL_HUT.get())) {
-                // check HutLevel >=3 isolé, sinon pas d'isolement complet
                 var be = level.getBlockEntity(p);
-                if (be instanceof com.veterinarium.block.entity.HospitalHutBlockEntity hut && hut.getHutLevel() >= 3) return true;
-                // sinon stretcher aussi isole si très proche 2.5
-                // on laisse passer
+                if (be instanceof com.veterinarium.block.entity.HospitalHutBlockEntity hut && hut.getHutLevel() >= reqLevel) return true;
             }
             if (level.getBlockState(p).is(com.veterinarium.registry.ModBlocks.STRETCHER.get())) {
                 if (p.distManhattan(pos) <= 3) return true;
@@ -184,7 +191,7 @@ public class UrgencyAndEpidemicHandler {
             LivingEntity spawned = spawnRandomWounded(sl, pos);
             if (spawned == null) continue;
             spawned.addTag("veterinarium_urgent");
-            long expiry = level.getGameTime() + 6000 + level.random.nextInt(4000); // 5-8 min
+            long expiry = level.getGameTime() + getUrgencyTimerMin() + (getUrgencyTimerRange()>0 ? level.random.nextInt(getUrgencyTimerRange()) : 0);
             spawned.getPersistentData().putLong("VetUrgentExpiry", expiry);
             spawned.setCustomName(Component.literal("§c🚨 URGENCE §7- " + spawned.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§c🚨 URGENCE §7- ", "") + " §8(5-8 min)"));
             spawned.setCustomNameVisible(true);

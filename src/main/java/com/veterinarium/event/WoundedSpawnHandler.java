@@ -15,8 +15,11 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public class WoundedSpawnHandler {
-    // 8% des animaux spawn blessés (pour filmer facilement)
-    private static final double WOUND_CHANCE = 0.08;
+    // 8% par défaut, overridable via veterinarium-common.toml
+    private static final double WOUND_CHANCE_FALLBACK = 0.08;
+    private static double getChance() {
+        try { return com.veterinarium.config.VeterinariumConfig.COMMON.woundedSpawnChance.get(); } catch (Exception e) { return WOUND_CHANCE_FALLBACK; }
+    }
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinLevelEvent event) {
@@ -41,8 +44,7 @@ public class WoundedSpawnHandler {
                 || living instanceof Creeper; // creeper blessé = marrant pour Asfax
         
         if (!isCandidate) return;
-        // 8% chance
-        if (living.getRandom().nextDouble() > WOUND_CHANCE) return;
+        if (living.getRandom().nextDouble() > getChance()) return;
         
         // Devient blessé + type de plaie aléatoire
         float max = living.getMaxHealth();

@@ -35,12 +35,15 @@ public class VetSphereItem extends Item {
                 || target instanceof com.veterinarium.entity.WoundedHorseEntity h && h.isHealed()
                 || target instanceof com.veterinarium.entity.WoundedFoxEntity f && f.isHealed()
                 || target instanceof com.veterinarium.entity.WoundedVillagerEntity v && v.isHealed()
+                || target instanceof com.veterinarium.entity.WoundedDrakeEntity d && d.isHealed()
                 || target instanceof com.veterinarium.entity.HellfireRavagerEntity
                 || (target.getHealth() >= target.getMaxHealth()*0.95f && target.getTags().contains("veterinarium_operated"));
+        boolean requiresHealed = true;
+        try { requiresHealed = com.veterinarium.config.VeterinariumConfig.COMMON.sphereRequiresHealed.get(); } catch (Exception ignored) {}
 
         boolean isTamableHealed = target instanceof net.minecraft.world.entity.TamableAnimal ta && ta.isTame();
 
-        if (!isHealed && !isTamableHealed) {
+        if (requiresHealed && !isHealed && !isTamableHealed) {
             // Vérifie si c'est un WoundedDrake boss etc
             if (target.getTags().contains("veterinarium_wounded")) {
                 player.displayClientMessage(Component.literal("§c[Sphère Vétérinaire] §7Cible encore §cblessée §7! Soigne-la (Scalpel→Suture) d'abord."), true);
@@ -56,6 +59,16 @@ public class VetSphereItem extends Item {
             return InteractionResult.FAIL;
         }
 
+        // Fail chance si PV pas 100% (config)
+        try {
+            double fc = com.veterinarium.config.VeterinariumConfig.COMMON.sphereFailChanceIfNotFullHealth.get();
+            if (fc > 0 && target.getHealth() < target.getMaxHealth() && level.random.nextDouble() < fc) {
+                player.displayClientMessage(Component.literal("§c[Sphère] §7La capture échoue : " + target.getName().getString() + " n'est pas à 100% PV !"), true);
+                level.playSound(null, target.blockPosition(), SoundEvents.NOTE_BLOCK_BASS.value(), SoundSource.PLAYERS, 0.8f, 0.5f);
+                if (!player.getAbilities().instabuild) stack.shrink(1);
+                return InteractionResult.FAIL;
+            }
+        } catch (Exception ignored) {}
         // Capturable : soignée ou apprivoisée après soin
         // Interdit de capturer un joueur
         if (target instanceof Player) return InteractionResult.PASS;
