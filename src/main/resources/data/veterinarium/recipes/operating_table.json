@@ -1,9 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["III", "W W", "I I"],
+  "pattern": [
+    "III",
+    "W W",
+    "I I"
+  ],
   "key": {
-    "I": { "item": "minecraft:iron_block" },
-    "W": { "item": "minecraft:white_wool" }
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    }
   },
-  "result": { "item": "veterinarium:operating_table", "count": 1 }
+  "result": {
+    "count": 1,
+    "id": "veterinarium:operating_table"
+  }
 }

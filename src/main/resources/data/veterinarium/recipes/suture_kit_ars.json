@@ -1,11 +1,29 @@
 {
   "type": "minecraft:crafting_shaped",
-  "conditions": [{ "type": "forge:mod_loaded", "modid": "ars_nouveau" }],
-  "pattern": [" S ", "PGP", " S "],
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ars_nouveau"
+    }
+  ],
+  "pattern": [
+    " S ",
+    "PGP",
+    " S "
+  ],
   "key": {
-    "S": { "item": "minecraft:string" },
-    "P": { "item": "minecraft:paper" },
-    "G": { "item": "ars_nouveau:source_gem" }
+    "S": {
+      "item": "minecraft:string"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "G": {
+      "item": "ars_nouveau:source_gem"
+    }
   },
-  "result": { "item": "veterinarium:suture_kit", "count": 2 }
+  "result": {
+    "count": 2,
+    "id": "veterinarium:suture_kit"
+  }
 }

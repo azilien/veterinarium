@@ -1,10 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["WWW", "SAS", "SSS"],
+  "pattern": [
+    "WWW",
+    "SAS",
+    "SSS"
+  ],
   "key": {
-    "W": { "item": "minecraft:white_wool" },
-    "S": { "item": "minecraft:stick" },
-    "A": { "item": "minecraft:iron_ingot" }
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "A": {
+      "item": "minecraft:iron_ingot"
+    }
   },
-  "result": { "id": "veterinarium:stretcher", "count": 1 }
+  "result": {
+    "id": "veterinarium:stretcher",
+    "count": 1
+  }
 }

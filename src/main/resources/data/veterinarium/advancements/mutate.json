@@ -1,0 +1,50 @@
+{
+  "display": {
+    "icon": {
+      "id": "veterinarium:hellfire_serum"
+    },
+    "title": {
+      "translate": "advancements.veterinarium.mutate.title"
+    },
+    "description": {
+      "translate": "advancements.veterinarium.mutate.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "veterinarium:healer",
+  "criteria": {
+    "has_serum": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:hellfire_serum"
+            ]
+          }
+        ]
+      }
+    },
+    "has_dna_filled": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:dna_syringe_filled"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_serum",
+      "has_dna_filled"
+    ]
+  ]
+}

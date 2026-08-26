@@ -26,5 +26,13 @@
       { "name": "minecraft:entity/experience_orb/pickup", "pitch": 1.5, "volume": 0.6 }
     ],
     "subtitle": "subtitles.veterinarium.heal_success"
+  },
+  "mutation": {
+    "sounds": [
+      { "name": "minecraft:entity/wither/spawn", "pitch": 0.8, "volume": 1.0 },
+      { "name": "minecraft:entity/blaze/shoot", "pitch": 1.2, "volume": 0.8 },
+      { "name": "minecraft:block/lava/pop", "pitch": 0.9, "volume": 0.6 }
+    ],
+    "subtitle": "subtitles.veterinarium.mutation"
   }
 }

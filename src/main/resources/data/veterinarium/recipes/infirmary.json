@@ -1,9 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["WWW", "R R", "WWW"],
+  "pattern": [
+    "WWW",
+    "R R",
+    "WWW"
+  ],
   "key": {
-    "W": { "item": "minecraft:white_wool" },
-    "R": { "item": "minecraft:red_wool" }
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "R": {
+      "item": "minecraft:red_wool"
+    }
   },
-  "result": { "item": "veterinarium:infirmary", "count": 1 }
+  "result": {
+    "count": 1,
+    "id": "veterinarium:infirmary"
+  }
 }

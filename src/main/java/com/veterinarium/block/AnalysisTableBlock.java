@@ -44,6 +44,7 @@ public class AnalysisTableBlock extends Block implements EntityBlock {
             String target = player.getPersistentData().getString("VetLastTarget");
             WoundType wt = WoundType.fromId(id);
             table.setAnalysis(wt, target);
+            try { com.veterinarium.data.BestiaryProgress.recordAnalysis(player, wt, target); } catch (Exception ignored) {}
             player.displayClientMessage(Component.literal("§b[Table d'Analyse] §aAnalyse enregistrée: §f" + target + " → " + wt.getDisplay()), false);
             player.displayClientMessage(wt.getDescription(), false);
             String req = wt.needsAnesthetic() ? "§dAnesthésiant " : "";

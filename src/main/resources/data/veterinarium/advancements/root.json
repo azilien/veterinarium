@@ -1,11 +1,17 @@
 {
   "display": {
-    "icon": { "id": "veterinarium:medical_file" },
-    "title": { "translate": "advancements.veterinarium.root.title" },
-    "description": { "translate": "advancements.veterinarium.root.description" },
+    "icon": {
+      "id": "veterinarium:medical_file"
+    },
+    "title": {
+      "translate": "advancements.veterinarium.root.title"
+    },
+    "description": {
+      "translate": "advancements.veterinarium.root.description"
+    },
     "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
+    "show_toast": false,
+    "announce_to_chat": false,
     "hidden": false,
     "background": "minecraft:textures/block/white_wool.png"
   },
@@ -13,9 +19,19 @@
     "has_file": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "items": [{ "items": ["veterinarium:medical_file"] }]
+        "items": [
+          {
+            "items": [
+              "veterinarium:medical_file"
+            ]
+          }
+        ]
       }
     }
   },
-  "requirements": [["has_file"]]
+  "requirements": [
+    [
+      "has_file"
+    ]
+  ]
 }

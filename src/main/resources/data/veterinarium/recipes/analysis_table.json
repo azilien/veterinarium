@@ -1,10 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["PGP", "WWW", "PPP"],
+  "pattern": [
+    "PGP",
+    "WWW",
+    "PPP"
+  ],
   "key": {
-    "P": { "item": "minecraft:oak_planks" },
-    "G": { "item": "minecraft:glass" },
-    "W": { "item": "minecraft:white_wool" }
+    "P": {
+      "item": "minecraft:oak_planks"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    }
   },
-  "result": { "item": "veterinarium:analysis_table", "count": 1 }
+  "result": {
+    "count": 1,
+    "id": "veterinarium:analysis_table"
+  }
 }

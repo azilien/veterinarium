@@ -1,6 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [" I", "I "],
-  "key": { "I": { "item": "minecraft:iron_ingot" } },
-  "result": { "item": "veterinarium:scalpel", "count": 1 }
+  "pattern": [
+    " I",
+    "I "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "veterinarium:scalpel"
+  }
 }

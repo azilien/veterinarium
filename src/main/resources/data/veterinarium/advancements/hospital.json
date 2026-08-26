@@ -1,19 +1,37 @@
 {
   "display": {
-    "icon": { "id": "veterinarium:hospital_hut" },
-    "title": { "translate": "advancements.veterinarium.hospital.title" },
-    "description": { "translate": "advancements.veterinarium.hospital.description" },
+    "icon": {
+      "id": "veterinarium:hospital_hut"
+    },
+    "title": {
+      "translate": "advancements.veterinarium.hospital.title"
+    },
+    "description": {
+      "translate": "advancements.veterinarium.hospital.description"
+    },
     "frame": "challenge",
-    "show_toast": true,
-    "announce_to_chat": true,
+    "show_toast": false,
+    "announce_to_chat": false,
     "hidden": false
   },
   "parent": "veterinarium:suture",
   "criteria": {
     "has_hut": {
       "trigger": "minecraft:inventory_changed",
-      "conditions": { "items": [{ "items": ["veterinarium:hospital_hut"] }] }
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:hospital_hut"
+            ]
+          }
+        ]
+      }
     }
   },
-  "requirements": [["has_hut"]]
+  "requirements": [
+    [
+      "has_hut"
+    ]
+  ]
 }

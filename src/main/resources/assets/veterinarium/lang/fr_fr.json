@@ -37,5 +37,15 @@
   "item.veterinarium.wounded_fox_spawn_egg": "Oeuf de Renard Blessé",
   "item.veterinarium.wounded_villager_spawn_egg": "Oeuf de Villageois Blessé",
   "block.veterinarium.stretcher": "Brancard",
-  "item.veterinarium.stretcher": "Brancard"
+  "item.veterinarium.stretcher": "Brancard",
+  "advancements.veterinarium.unlock_all.title": "Infirmier vétérinaire",
+  "advancements.veterinarium.unlock_all.description": "Obtenez un outil vétérinaire pour débloquer toutes les recettes",
+  "entity.veterinarium.hellfire_ravager": "Hellfire Ravager",
+  "item.veterinarium.dna_syringe": "Seringue ADN",
+  "item.veterinarium.dna_syringe_filled": "Seringue ADN Remplie",
+  "item.veterinarium.hellfire_serum": "Sérum Hellfire",
+  "item.veterinarium.hellfire_ravager_spawn_egg": "Oeuf de Hellfire Ravager",
+  "advancements.veterinarium.mutate.title": "Mutation DarkGod",
+  "advancements.veterinarium.mutate.description": "Mutate une créature soignée en Hellfire Ravager (ADN + Sérum + Bloc Opératoire)",
+  "subtitles.veterinarium.mutation": "Mutation infernale"
 }

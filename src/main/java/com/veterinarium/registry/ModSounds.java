@@ -20,6 +20,8 @@ public class ModSounds {
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Veterinarium.MODID, "suture")));
     public static final RegistryObject<SoundEvent> HEAL_SUCCESS = SOUNDS.register("heal_success",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Veterinarium.MODID, "heal_success")));
+    public static final RegistryObject<SoundEvent> MUTATION = SOUNDS.register("mutation",
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Veterinarium.MODID, "mutation")));
 
     public static void register(IEventBus bus) {
         SOUNDS.register(bus);

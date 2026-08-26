@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "veterinarium:dna_syringe_filled"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:nether_wart"
+    },
+    {
+      "item": "minecraft:magma_cream"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "veterinarium:hellfire_serum"
+  }
+}

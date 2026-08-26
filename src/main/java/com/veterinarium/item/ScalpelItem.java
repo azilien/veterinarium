@@ -33,6 +33,7 @@ public class ScalpelItem extends Item {
         if (target.getTags().contains("veterinarium_wound_hemorragie")) return WoundType.HEMORRAGIE;
         if (target.getTags().contains("veterinarium_wound_fracture")) return WoundType.FRACTURE;
         if (target.getTags().contains("veterinarium_wound_infection")) return WoundType.INFECTION;
+        if (target.getTags().contains("veterinarium_wound_brulure")) return WoundType.BRULURE;
         return WoundType.CONTUSION;
     }
     private int countItem(Player p, net.minecraft.world.item.Item it) {
@@ -122,8 +123,11 @@ public class ScalpelItem extends Item {
                 target.removeTag("veterinarium_needs_scalpel");
                 // Enlève lenteur partielle
                 target.removeEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN);
+                // Brûlure: éteint le feu
+                if (wt == WoundType.BRULURE) { target.clearFire(); target.removeEffect(net.minecraft.world.effect.MobEffects.WITHER); }
                 // Bonus Ars Nouveau si présent
                 try { com.veterinarium.integration.ArsNouveauIntegration.applyArsBonus(target, player); } catch (Exception ignored) {}
+                try { com.veterinarium.data.BestiaryProgress.recordOperate(player, target); } catch (Exception ignored) {}
                 player.displayClientMessage(Component.literal("§7→ Prêt pour suture ! Utilise le §dKit de Suture§7 maintenant."), false);
                 return InteractionResult.SUCCESS;
             } else {

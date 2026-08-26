@@ -1,19 +1,37 @@
 {
   "display": {
-    "icon": { "id": "veterinarium:suture_kit" },
-    "title": { "translate": "advancements.veterinarium.suture.title" },
-    "description": { "translate": "advancements.veterinarium.suture.description" },
+    "icon": {
+      "id": "veterinarium:suture_kit"
+    },
+    "title": {
+      "translate": "advancements.veterinarium.suture.title"
+    },
+    "description": {
+      "translate": "advancements.veterinarium.suture.description"
+    },
     "frame": "goal",
-    "show_toast": true,
-    "announce_to_chat": true,
+    "show_toast": false,
+    "announce_to_chat": false,
     "hidden": false
   },
   "parent": "veterinarium:operate",
   "criteria": {
     "has_kit": {
       "trigger": "minecraft:inventory_changed",
-      "conditions": { "items": [{ "items": ["veterinarium:suture_kit"] }] }
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:suture_kit"
+            ]
+          }
+        ]
+      }
     }
   },
-  "requirements": [["has_kit"]]
+  "requirements": [
+    [
+      "has_kit"
+    ]
+  ]
 }

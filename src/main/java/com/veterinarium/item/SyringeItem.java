@@ -33,6 +33,7 @@ public class SyringeItem extends Item {
         if (target.getTags().contains("veterinarium_wound_hemorragie")) return WoundType.HEMORRAGIE;
         if (target.getTags().contains("veterinarium_wound_fracture")) return WoundType.FRACTURE;
         if (target.getTags().contains("veterinarium_wound_infection")) return WoundType.INFECTION;
+        if (target.getTags().contains("veterinarium_wound_brulure")) return WoundType.BRULURE;
         if (target.getTags().contains("veterinarium_wounded")) return WoundType.CONTUSION;
         return WoundType.CONTUSION;
     }
@@ -67,6 +68,7 @@ public class SyringeItem extends Item {
             target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100, 0));
             level.playSound(null, target.blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0f, 1.3f);
             player.displayClientMessage(Component.literal("§7-> Anesthésie injectée (Lenteur 5s)"), true);
+            try { com.veterinarium.data.BestiaryProgress.recordDiagnose(player, target, wt); } catch (Exception ignored) {}
 
             EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
             stack.hurtAndBreak(1, player, slot);

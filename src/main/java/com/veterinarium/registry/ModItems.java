@@ -1,6 +1,9 @@
 package com.veterinarium.registry;
 
 import com.veterinarium.Veterinarium;
+import com.veterinarium.item.DnaSyringeFilledItem;
+import com.veterinarium.item.DnaSyringeItem;
+import com.veterinarium.item.HellfireSerumItem;
 import com.veterinarium.item.MedicalFileItem;
 import com.veterinarium.item.ScalpelItem;
 import com.veterinarium.item.SutureKitItem;
@@ -65,6 +68,18 @@ public class ModItems {
 
     public static final RegistryObject<Item> STRETCHER = ITEMS.register("stretcher",
             () -> new BlockItem(ModBlocks.STRETCHER.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> DNA_SYRINGE = ITEMS.register("dna_syringe",
+            () -> new DnaSyringeItem(new Item.Properties().stacksTo(16)));
+
+    public static final RegistryObject<Item> DNA_SYRINGE_FILLED = ITEMS.register("dna_syringe_filled",
+            () -> new DnaSyringeFilledItem(new Item.Properties().stacksTo(1)));
+
+    public static final RegistryObject<Item> HELLFIRE_SERUM = ITEMS.register("hellfire_serum",
+            () -> new HellfireSerumItem(new Item.Properties().stacksTo(16)));
+
+    public static final RegistryObject<Item> HELLFIRE_RAVAGER_SPAWN_EGG = ITEMS.register("hellfire_ravager_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.HELLFIRE_RAVAGER, 0x2B0000, 0xFF4500, new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

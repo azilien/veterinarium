@@ -7,7 +7,8 @@ public enum WoundType {
     CONTUSION(0, "§7Contusion légère", "contusion", false, false),
     HEMORRAGIE(1, "§cHémorragie", "hemorragie", false, true),      // besoin bandage après suture sinon resaignement
     FRACTURE(2, "§6Fracture", "fracture", true, false),            // besoin anesthésie AVANT scalpel
-    INFECTION(3, "§5Infection", "infection", true, true);          // anesthésie + bandage recommandés
+    INFECTION(3, "§5Infection", "infection", true, true),          // anesthésie + bandage recommandés
+    BRULURE(4, "§6Brûlure", "brulure", true, true);                // brûlure grave: anesthésie + bandage + effet feu
 
     private final int id;
     private final String display;
@@ -34,6 +35,7 @@ public enum WoundType {
             case HEMORRAGIE -> Component.literal("§cHémorragie: saignement! Suture+Bandage requis sinon rechute");
             case FRACTURE -> Component.literal("§6Fracture: Anesthésie AVANT Scalpel ou échec 50% + cri");
             case INFECTION -> Component.literal("§5Infection: Anesthésie+Suture+Bandage, sinon poison");
+            case BRULURE -> Component.literal("§6Brûlure: feu! Anesthésie+Bandage sinon dégâts feu continu");
         };
     }
     public static WoundType fromId(int id) {
@@ -41,11 +43,12 @@ public enum WoundType {
         return CONTUSION;
     }
     public static WoundType random(RandomSource r) {
-        // pondération: 40% contusion, 25% hémorragie, 20% fracture, 15% infection
+        // pondération: 35% contusion, 22% hémorragie, 18% fracture, 13% infection, 12% brûlure
         float f = r.nextFloat();
-        if (f < 0.40f) return CONTUSION;
-        if (f < 0.65f) return HEMORRAGIE;
-        if (f < 0.85f) return FRACTURE;
-        return INFECTION;
+        if (f < 0.35f) return CONTUSION;
+        if (f < 0.57f) return HEMORRAGIE;
+        if (f < 0.75f) return FRACTURE;
+        if (f < 0.88f) return INFECTION;
+        return BRULURE;
     }
 }

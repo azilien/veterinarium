@@ -35,6 +35,7 @@ public class SutureKitItem extends Item {
         if (target.getTags().contains("veterinarium_wound_hemorragie")) return WoundType.HEMORRAGIE;
         if (target.getTags().contains("veterinarium_wound_fracture")) return WoundType.FRACTURE;
         if (target.getTags().contains("veterinarium_wound_infection")) return WoundType.INFECTION;
+        if (target.getTags().contains("veterinarium_wound_brulure")) return WoundType.BRULURE;
         return WoundType.CONTUSION;
     }
     private int countItem(net.minecraft.world.entity.player.Player p, net.minecraft.world.item.Item it) {
@@ -189,6 +190,9 @@ public class SutureKitItem extends Item {
                 target.removeTag("veterinarium_needs_scalpel");
                 target.removeTag("veterinarium_needs_scalpel");
                 try { com.veterinarium.integration.ArsNouveauIntegration.applyArsBonus(target, player); } catch (Exception ignored) {}
+                // Brûlure: Anti-feu
+                if (wt == WoundType.BRULURE) { target.clearFire(); target.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0)); }
+                try { com.veterinarium.data.BestiaryProgress.recordSuture(player, target, true); } catch (Exception ignored) {}
                 // Enlève le nom "Blessé" et met "Soigné" (sauf si déjà fait par nos entités custom)
                 boolean isCustomWounded = target instanceof com.veterinarium.entity.WoundedWolfEntity || target instanceof com.veterinarium.entity.WoundedCatEntity || target instanceof com.veterinarium.entity.WoundedHorseEntity || target instanceof com.veterinarium.entity.WoundedFoxEntity || target instanceof com.veterinarium.entity.WoundedVillagerEntity;
                 if (!isCustomWounded && target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
