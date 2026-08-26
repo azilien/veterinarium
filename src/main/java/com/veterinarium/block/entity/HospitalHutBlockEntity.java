@@ -248,6 +248,85 @@ public class HospitalHutBlockEntity extends BlockEntity {
                 e.removeEffect(net.minecraft.world.effect.MobEffects.WEAKNESS);
             }
         }
+        // Réputation paliers 25/50/75/100 (une fois par joueur)
+        if (tickCounter % 100 == 0) {
+            var nearest = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 32, false);
+            if (nearest != null) {
+                float rep = com.veterinarium.data.BestiaryProgress.getCompletionPercent(nearest);
+                var pd = nearest.getPersistentData();
+                if (rep >= 25 && !pd.getBoolean("VetRep25")) {
+                    pd.putBoolean("VetRep25", true);
+                    nearest.displayClientMessage(net.minecraft.network.chat.Component.literal("§a🏥 Réputation 25% — Hut te donne 1 bandage/jour (dans coffre)"), false);
+                    // donne 2 bandages direct
+                    var b = new net.minecraft.world.item.ItemStack(com.veterinarium.registry.ModItems.BANDAGE.get(), 2);
+                    if (!nearest.addItem(b)) nearest.drop(b, false);
+                    level.playSound(null, pos, net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.2f);
+                }
+                if (rep >= 50 && !pd.getBoolean("VetRep50")) {
+                    pd.putBoolean("VetRep50", true);
+                    nearest.displayClientMessage(net.minecraft.network.chat.Component.literal("§a🏥 Réputation 50% — Villageois soignés -50% trades (Héros du village prolongé)"), false);
+                    nearest.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.HERO_OF_THE_VILLAGE, 6000, 0));
+                    // bonus sphères
+                    var s = new net.minecraft.world.item.ItemStack(com.veterinarium.registry.ModItems.VET_SPHERE.get(), 2);
+                    if (!nearest.addItem(s)) nearest.drop(s, false);
+                }
+                if (rep >= 75 && !pd.getBoolean("VetRep75")) {
+                    pd.putBoolean("VetRep75", true);
+                    nearest.displayClientMessage(net.minecraft.network.chat.Component.literal("§6🏥 Réputation 75% — Un Drake vient te rendre visite !"), false);
+                    if (level instanceof net.minecraft.server.level.ServerLevel sl) {
+                        var drake = com.veterinarium.registry.ModEntities.WOUNDED_DRAKE.get().create(sl);
+                        if (drake != null) {
+                            drake.moveTo(pos.getX()+2, pos.getY()+5, pos.getZ()+2, 0, 0);
+                            drake.setCustomName(net.minecraft.network.chat.Component.literal("§6Drake Réputation 75% - Soigne-le !"));
+                            drake.setCustomNameVisible(true);
+                            sl.addFreshEntity(drake);
+                        }
+                    }
+                }
+                if (rep >= 100 && !pd.getBoolean("VetRep100")) {
+                    pd.putBoolean("VetRep100", true);
+                    nearest.displayClientMessage(net.minecraft.network.chat.Component.literal("§6★ Réputation 100% — Infirmier Chef ! Cape + Netherite offerts"), false);
+                    var nether = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT, 1);
+                    if (!nearest.addItem(nether)) nearest.drop(nether, false);
+                    nearest.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.HERO_OF_THE_VILLAGE, 12000, 1));
+                    level.playSound(null, pos, net.minecraft.sounds.SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.0f);
+                }
+            }
+        }
+        // Ambulance drop-off : joueur qui porte un blessé arrive au Hut
+        for (var p : level.getEntitiesOfClass(net.minecraft.world.entity.player.Player.class, area)) {
+            if (p.getPassengers().isEmpty()) continue;
+            for (var passenger : java.util.List.copyOf(p.getPassengers())) {
+                if (passenger instanceof LivingEntity le && le.getTags().contains("vet_on_stretcher")) {
+                    long start = p.getPersistentData().getLong("VetAmbulanceStart");
+                    long elapsed = level.getGameTime() - start;
+                    boolean isFast = start != 0 && elapsed < 1200; // <60s bonus
+                    le.stopRiding();
+                    le.removeTag("vet_on_stretcher");
+                    // dépose à côté du Hut
+                    BlockPos drop = pos.offset(level.random.nextInt(3)-1, 1, level.random.nextInt(3)-1);
+                    le.moveTo(drop.getX()+0.5, drop.getY(), drop.getZ()+0.5, level.random.nextFloat()*360, 0);
+                    p.removeEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN);
+                    p.getPersistentData().remove("VetAmbulanceStart");
+                    p.getPersistentData().remove("VetAmbulanceEntity");
+                    le.heal(4.0f);
+                    le.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.REGENERATION, 100, 1));
+                    if (isFast) {
+                        le.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 200, 0));
+                        p.displayClientMessage(net.minecraft.network.chat.Component.literal("§a🚑 Arrivée rapide ! Bonus heal + résistance (<60s) + émeraude"), false);
+                        le.spawnAtLocation(net.minecraft.world.item.Items.EMERALD, 1);
+                        level.playSound(null, pos, net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.5f);
+                    } else {
+                        p.displayClientMessage(net.minecraft.network.chat.Component.literal("§7🚑 Patient déposé au Hut. Opère-le maintenant !"), false);
+                    }
+                    if (level instanceof net.minecraft.server.level.ServerLevel sl) {
+                        sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HEART, le.getX(), le.getY()+1, le.getZ(), 3, 0.2,0.2,0.2,0.1);
+                        sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER, pos.getX()+0.5, pos.getY()+1.2, pos.getZ()+0.5, 3, 0.3,0.3,0.3,0.1);
+                    }
+                    level.playSound(null, pos, net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), net.minecraft.sounds.SoundSource.BLOCKS, 0.8f, 1.5f);
+                }
+            }
+        }
 
         if (com.veterinarium.integration.MineColoniesIntegration.isLoaded()) {
             List<LivingEntity> citizens = level.getEntitiesOfClass(LivingEntity.class, area,

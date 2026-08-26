@@ -61,7 +61,7 @@ public class ModItems {
             () -> new BlockItem(ModBlocks.HOSPITAL_HUT.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> STRETCHER = ITEMS.register("stretcher",
-            () -> new BlockItem(ModBlocks.STRETCHER.get(), new Item.Properties()));
+            () -> new com.veterinarium.item.StretcherItem(ModBlocks.STRETCHER.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> DNA_SYRINGE = ITEMS.register("dna_syringe",
             () -> new DnaSyringeItem(new Item.Properties().stacksTo(16)));

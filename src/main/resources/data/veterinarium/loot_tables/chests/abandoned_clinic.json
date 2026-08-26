@@ -1,0 +1,122 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:paper",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_custom_name",
+              "name": { "text": "Journal - Jour 3 : L'Infection", "color": "dark_red", "italic": false }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                { "text": "Jour 3 - 02h14", "color": "gray", "italic": false },
+                { "text": "L'infection se propage.", "color": "dark_gray" },
+                { "text": "La quarantaine au Hut Lv3 bloque.", "color": "gray" },
+                { "text": "Ne colle pas les lits !", "color": "red" }
+              ],
+              "mode": "replace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:paper",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_custom_name",
+              "name": { "text": "Journal - Jour 12 : Le Drake", "color": "dark_blue", "italic": false }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                { "text": "Jour 12 - 18h30", "color": "gray", "italic": false },
+                { "text": "Un Drake 60PV survole.", "color": "dark_gray" },
+                { "text": "Seringue -> Scalpel -> Suture", "color": "gray" },
+                { "text": "Sphère verte si soigné.", "color": "green" }
+              ],
+              "mode": "replace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:paper",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_custom_name",
+              "name": { "text": "Journal - Jour 21 : Le Sérum", "color": "dark_purple", "italic": false }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                { "text": "Jour 21 - 23h59", "color": "gray", "italic": false },
+                { "text": "ADN + blaze + nether wart", "color": "dark_gray" },
+                { "text": "+ magma = Sérum Hellfire", "color": "red" },
+                { "text": "Au Bloc avec bandage.", "color": "gray" }
+              ],
+              "mode": "replace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 2,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veterinarium:bandage",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "min": 2, "max": 5 }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veterinarium:anesthetic",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "min": 1, "max": 3 }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "min": 1, "max": 2 }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "veterinarium:chests/abandoned_clinic"
+}

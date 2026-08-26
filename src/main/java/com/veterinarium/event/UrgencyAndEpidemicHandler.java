@@ -43,6 +43,9 @@ public class UrgencyAndEpidemicHandler {
             handleUrgentExpiry(level);
             handleWoundParticles(level);
         }
+        if (level.getGameTime() % 20 == 0) {
+            handleAmbulanceSiren(level);
+        }
         // tick urgence cooldown décrément
         if (!level.players().isEmpty()) {
             ticksUntilNextUrgency--;
@@ -235,6 +238,35 @@ public class UrgencyAndEpidemicHandler {
                 e -> e.getTags().contains("veterinarium_boss") && e.getTags().contains("veterinarium_wounded"));
         for (LivingEntity d : drakes) {
             if (level.random.nextFloat()<0.4f) sl.sendParticles(net.minecraft.core.particles.ParticleTypes.DRAGON_BREATH, d.getX(), d.getY()+1.5, d.getZ(), 1, 0.3,0.3,0.3,0.02);
+        }
+    }
+
+    private static void handleAmbulanceSiren(Level level) {
+        for (var p : level.players()) {
+            if (p.getPassengers().isEmpty()) continue;
+            boolean hasStretcherPassenger = false;
+            for (var pass : p.getPassengers()) {
+                if (pass instanceof LivingEntity le && le.getTags().contains("vet_on_stretcher")) { hasStretcherPassenger = true; break; }
+            }
+            if (!hasStretcherPassenger) continue;
+            // maintient lenteur
+            p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 0, false, false, true));
+            // sirène toutes les 2s
+            if (level.getGameTime() % 40 == 0) {
+                level.playSound(null, p.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.PLAYERS, 0.8f, 2.0f);
+                level.playSound(null, p.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 0.4f, 1.2f);
+                if (level instanceof ServerLevel sl) {
+                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, p.getX(), p.getY()+1.5, p.getZ(), 1, 0.3,0.3,0.3,0.5);
+                }
+                // actionbar rappel
+                long start = p.getPersistentData().getLong("VetAmbulanceStart");
+                if (start != 0) {
+                    long elapsed = level.getGameTime() - start;
+                    long remaining = 1200 - elapsed;
+                    int secs = (int)Math.max(0, remaining/20);
+                    p.displayClientMessage(Component.literal("§e🚑 Ambulance " + secs + "s restants pour bonus <60s → cours au Hut !"), true);
+                }
+            }
         }
     }
 
