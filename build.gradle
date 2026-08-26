@@ -60,3 +60,26 @@ tasks.withType(JavaCompile).configureEach {
     // This is done by default in Java 18+, but this ensures it no matter the Java or Gradle version
     options.encoding = 'UTF-8'
 }
+
+// Auto-sync vers instance Prism Veterinarium (pour tester en lançant Prism sans commande)
+def prismModsDir = System.getProperty("user.home") + "/.local/share/PrismLauncher/instances/Veterinarium/.minecraft/mods"
+tasks.register("copyToPrism") {
+    notCompatibleWithConfigurationCache("utilise fileTree + copy à l'exécution")
+    dependsOn("jar")
+    doLast {
+        def prismMods = file(prismModsDir)
+        if (prismMods.exists()) {
+            prismMods.listFiles()?.findAll { it.name.startsWith("veterinarium-") && it.name.endsWith(".jar") }?.each { it.delete() }
+            def jarFile = tasks.named("jar").get().archiveFile.get().getAsFile()
+            copy {
+                from jarFile
+                into prismMods
+            }
+            println(">>> Veterinarium sync Prism: " + prismMods + " -> " + jarFile.name)
+        } else {
+            println(">>> Prism instance non trouvée: " + prismModsDir)
+        }
+    }
+}
+tasks.named("build") { finalizedBy("copyToPrism") }
+tasks.named("jar") { finalizedBy("copyToPrism") }
