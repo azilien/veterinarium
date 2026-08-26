@@ -133,14 +133,41 @@ public class UrgencyAndEpidemicHandler {
             if (expiry == 0) continue;
             if (level.getGameTime() > expiry) {
                 if (e.getTags().contains("veterinarium_wounded")) {
-                    // échec
-                    e.hurt(level.damageSources().magic(), 100f);
-                    e.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 1));
-                    for (var p : level.players()) {
-                        p.displayClientMessage(Component.literal("§c☠ URGENCE ÉCHOUÉE ! §7" + e.getName().getString() + " n'a pas été sauvé à temps."), false);
-                        if (level instanceof ServerLevel sl) sl.sendParticles(net.minecraft.core.particles.ParticleTypes.SMOKE, e.getX(), e.getY()+1, e.getZ(), 10, 0.5,0.5,0.5,0.02);
+                    // échec drôle : villageois -> zombie, autres -> mort comique
+                    boolean isVillager = e instanceof com.veterinarium.entity.WoundedVillagerEntity || e instanceof net.minecraft.world.entity.npc.Villager;
+                    if (isVillager && level instanceof ServerLevel sl) {
+                        // transformation zombie drôle
+                        var zombie = net.minecraft.world.entity.EntityType.ZOMBIE_VILLAGER.create(sl);
+                        if (zombie != null) {
+                            zombie.moveTo(e.getX(), e.getY(), e.getZ(), e.getYRot(), e.getXRot());
+                            String name = e.hasCustomName() ? e.getCustomName().getString() : e.getName().getString();
+                            zombie.setCustomName(Component.literal(name.replace("🚨 URGENCE", "🧟 ZOMBIFIÉ").replace("☠", "🧟")));
+                            zombie.setCustomNameVisible(true);
+                            zombie.setPersistenceRequired();
+                            sl.addFreshEntity(zombie);
+                            sl.sendParticles(net.minecraft.core.particles.ParticleTypes.SOUL, e.getX(), e.getY()+1, e.getZ(), 15, 0.3,0.3,0.3,0.1);
+                            level.playSound(null, e.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.HOSTILE, 1.0f, 0.8f);
+                            for (var p : level.players()) {
+                                p.displayClientMessage(Component.literal("§c🧟 ÉCHEC : §f" + name.replace("§c🚨 URGENCE §7- ", "") + " §7s'est zombifié ! Vite, soigne le zombie !"), false);
+                            }
+                        }
+                        e.discard();
+                    } else {
+                        // mort comique pour autres (wolf hurle, etc)
+                        e.hurt(level.damageSources().magic(), 100f);
+                        e.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 1));
+                        for (var p : level.players()) {
+                            p.displayClientMessage(Component.literal("§c☠ URGENCE ÉCHOUÉE ! §7" + e.getName().getString() + " n'a pas été sauvé à temps."), false);
+                            if (level instanceof ServerLevel sl2) sl2.sendParticles(net.minecraft.core.particles.ParticleTypes.SMOKE, e.getX(), e.getY()+1, e.getZ(), 10, 0.5,0.5,0.5,0.02);
+                        }
+                        e.removeTag("veterinarium_urgent");
+                        // petit clin d'oeil: si loup, spawn os
+                        if (e instanceof com.veterinarium.entity.WoundedWolfEntity && level.random.nextFloat()<0.5f) {
+                            e.spawnAtLocation(net.minecraft.world.item.Items.BONE, 1);
+                        }
                     }
-                    e.removeTag("veterinarium_urgent");
+                    // on a discard pour villager, sinon remove tag déjà fait
+                    if (!isVillager) e.removeTag("veterinarium_urgent");
                 } else {
                     // déjà soigné, on nettoie tag et récompense déjà donnée via healed check ailleurs
                     e.removeTag("veterinarium_urgent");
