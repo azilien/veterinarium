@@ -36,7 +36,7 @@ public class Veterinarium {
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
 
-        LOGGER.info("Veterinarium chargé - Prêt à soigner les bêtes blessées ! Pour Asfax & les tamers infirmiers.");
+        LOGGER.info("Veterinarium chargé - Prêt à soigner les bêtes blessées ! Pour Asfax.");
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
