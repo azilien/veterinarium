@@ -174,26 +174,42 @@ public class HospitalHutBlockEntity extends BlockEntity {
         if (lvl.isClientSide) return;
         int currentDay = (int)(lvl.getDayTime() / 24000L);
         if (contractDay != currentDay) {
-            // nouveau jour
-            contractDay = currentDay;
-            contractType = lvl.random.nextInt(9); // 0-8
-            // pondération: 20% heal_any, 10% chaque spec, drake rare 5%
-            float r = lvl.random.nextFloat();
-            if (r < 0.20f) contractType = 0;
-            else if (r < 0.30f) contractType = 1;
-            else if (r < 0.40f) contractType = 2;
-            else if (r < 0.50f) contractType = 5;
-            else if (r < 0.60f) contractType = 7;
-            else if (r < 0.72f) contractType = 8;
-            else if (r < 0.82f) contractType = 4;
-            else if (r < 0.92f) contractType = 3;
-            else contractType = 6; // drake rare
-            contractNeeded = switch(contractType) {
-                case 6 -> 1;
-                case 7,8 -> 2;
-                default -> 2 + lvl.random.nextInt(2); // 2-3
-            };
-            if (hutLevel >= 4 && lvl.random.nextFloat()<0.3f) contractNeeded++;
+            // Courbe 10 épisodes Asfax (0-9) puis aléatoire
+            if (currentDay >= 0 && currentDay < 10) {
+                int[][] ordered = {
+                    {0,2}, // EP1 Contusion any
+                    {1,2}, // EP2 Loup
+                    {2,2}, // EP3 Chat (Fracture)
+                    {5,2}, // EP4 Villageois (Héros)
+                    {7,2}, // EP5 Infection quarantaine
+                    {8,2}, // EP6 Sphère
+                    {0,2}, // EP7 Brûlure (any mais burn via wound weight)
+                    {6,1}, // EP8 Drake Boss
+                    {8,2}, // EP9 Capture Drake
+                    {0,3}  // EP10 Finale 3 any + urgences
+                };
+                int idx = Math.min(currentDay, ordered.length-1);
+                contractType = ordered[idx][0];
+                contractNeeded = ordered[idx][1];
+            } else {
+                contractType = lvl.random.nextInt(9); // 0-8
+                float r = lvl.random.nextFloat();
+                if (r < 0.20f) contractType = 0;
+                else if (r < 0.30f) contractType = 1;
+                else if (r < 0.40f) contractType = 2;
+                else if (r < 0.50f) contractType = 5;
+                else if (r < 0.60f) contractType = 7;
+                else if (r < 0.72f) contractType = 8;
+                else if (r < 0.82f) contractType = 4;
+                else if (r < 0.92f) contractType = 3;
+                else contractType = 6; // drake rare
+                contractNeeded = switch(contractType) {
+                    case 6 -> 1;
+                    case 7,8 -> 2;
+                    default -> 2 + lvl.random.nextInt(2); // 2-3
+                };
+                if (hutLevel >= 4 && lvl.random.nextFloat()<0.3f) contractNeeded++;
+            }
             contractProgress = 0;
             contractClaimed = false;
             setChanged();

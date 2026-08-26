@@ -40,6 +40,6 @@ public class Veterinarium {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !."); // 1.7.0 bump
+        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !.."); // 1.7.1 ordered contrats 10ep
     }
 }
