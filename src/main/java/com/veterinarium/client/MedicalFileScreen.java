@@ -100,17 +100,15 @@ public class MedicalFileScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
-        // pas de blur du tout - fond uni opaque, net même en default options
-        gfx.fill(0, 0, this.width, this.height, 0xFF2B2B2B);
+        gfx.fill(0, 0, this.width, this.height, 0xFF1E1E1E);
     }
     @Override
     public void render(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(gfx, mouseX, mouseY, partialTick);
-        // livre vanilla net (texture book.png) au lieu de fill couleur
-        int x = this.width / 2 - 140;
-        int y = this.height / 2 - 95;
-        int w = 280;
-        int h = 190;
+        int x = this.width / 2 - 145;
+        int y = this.height / 2 - 100;
+        int w = 290;
+        int h = 200;
 
         // ombre
         gfx.fill(x+4, y+4, x+w+4, y+h+4, 0x44000000);
@@ -308,43 +306,36 @@ public class MedicalFileScreen extends Screen {
 
     private void renderRecipes(GuiGraphics gfx, int x, int y, int w, int h) {
         int ty = y + 30;
-        gfx.drawString(this.font, Component.literal("§lRecettes Survie - JEI @veterinarium"), x+12, ty, 0x8B0000, true); ty+=10;
-        gfx.drawString(this.font, Component.literal("§7Établi 3x3 + Livre recettes (vert)"), x+12, ty, 0x666666, true); ty+=14;
-        // Grilles compactes 2x3
-        // Seringue
-        drawMiniRecipe(gfx, x+12, ty, "Seringue", new ItemStack(ModItems.SYRINGE.get()),
+        gfx.drawString(this.font, Component.literal("§lRecettes Survie"), x+12, ty, 0xFFD700, true); ty+=10;
+        gfx.drawString(this.font, Component.literal("§7Établi 3x3 — livre vert"), x+12, ty, 0xAAAAAA, true); ty+=12;
+        // Grilles compactes 2x3 - espacées 68px horiz, 58px vert
+        drawMiniRecipe(gfx, x+10, ty, "Seringue", new ItemStack(ModItems.SYRINGE.get()),
                 new ItemStack(net.minecraft.world.item.Items.GLASS), null, null,
                 new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), null, null,
                 new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), null, null);
-        // Scalpel
-        drawMiniRecipe(gfx, x+82, ty, "Scalpel", new ItemStack(ModItems.SCALPEL.get()),
+        drawMiniRecipe(gfx, x+85, ty, "Scalpel", new ItemStack(ModItems.SCALPEL.get()),
                 null, new ItemStack(net.minecraft.world.item.Items.IRON_INGOT), null,
                 new ItemStack(net.minecraft.world.item.Items.IRON_INGOT), null, null,
                 null, null, null);
-        // Bandage
-        drawMiniRecipe(gfx, x+152, ty, "Bandage x4", new ItemStack(ModItems.BANDAGE.get(), 4),
+        drawMiniRecipe(gfx, x+160, ty, "Bandage x4", new ItemStack(ModItems.BANDAGE.get(), 4),
                 new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.STRING), null,
                 null, null, null,
                 null, null, null);
-        ty+=62;
-        // Suture
-        drawMiniRecipe(gfx, x+12, ty, "Suture", new ItemStack(ModItems.SUTURE_KIT.get()),
+        ty+=56;
+        drawMiniRecipe(gfx, x+10, ty, "Suture", new ItemStack(ModItems.SUTURE_KIT.get()),
                 new ItemStack(net.minecraft.world.item.Items.STRING), null, null,
                 new ItemStack(net.minecraft.world.item.Items.PAPER), null, null,
                 new ItemStack(net.minecraft.world.item.Items.STRING), null, null);
-        // Sphère
-        drawMiniRecipe(gfx, x+82, ty, "Sphère", new ItemStack(ModItems.VET_SPHERE.get()),
+        drawMiniRecipe(gfx, x+85, ty, "Sphère", new ItemStack(ModItems.VET_SPHERE.get()),
                 null, new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), null,
                 new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), new ItemStack(net.minecraft.world.item.Items.GLASS), new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET),
                 null, new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), null);
-        // Hut
-        drawMiniRecipe(gfx, x+152, ty, "Hut", new ItemStack(ModItems.HOSPITAL_HUT.get()),
+        drawMiniRecipe(gfx, x+160, ty, "Hut", new ItemStack(ModItems.HOSPITAL_HUT.get()),
                 new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL),
                 new ItemStack(net.minecraft.world.item.Items.BRICK), new ItemStack(ModItems.INFIRMARY.get()), new ItemStack(net.minecraft.world.item.Items.BRICK),
                 new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL));
-        ty+=62;
-        gfx.drawString(this.font, Component.literal("§eTip: Tape @veterinarium dans le livre recettes"), x+12, ty, 0x000000, true); ty+=9;
-        gfx.drawString(this.font, Component.literal("§7Clinique abandonnée coffre = kit démarrage"), x+12, ty, 0x000000, true);
+        ty+=60;
+        gfx.drawString(this.font, Component.literal("§7Clinique coffre = kit démarrage"), x+12, ty, 0xAAAAAA, true);
     }
     private void drawMiniRecipe(GuiGraphics gfx, int rx, int ry, String name, ItemStack result, ItemStack... grid) {
         // grid 9 slots (3x3) + result
