@@ -2,11 +2,10 @@
 modLoader="javafml"
 loaderVersion="[0,)"
 license="MIT"
-issueTrackerURL="https://github.com/veterinarium/veterinarium/issues"
 
 [[mods]]
 modId="veterinarium"
-version="1.9.7"
+version="1.9.8"
 displayName="Veterinarium - Chronicles of the Wounded Beasts"
 updateJSONURL=""
 displayURL=""
