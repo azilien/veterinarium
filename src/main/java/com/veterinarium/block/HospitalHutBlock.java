@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -50,6 +51,21 @@ public class HospitalHutBlock extends Block implements EntityBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide) {
+            BlockEntity beEarly = level.getBlockEntity(pos);
+            // Sneak + main vide sur Hut existant = voir stock Healer (pas construire)
+            if (beEarly instanceof HospitalHutBlockEntity hutEarly && player.isShiftKeyDown() && player.getMainHandItem().isEmpty()) {
+                var inv = hutEarly.getHealerInv();
+                int band=0, anest=0;
+                for(int i=0;i<inv.getSlots();i++) {
+                    var s=inv.getStackInSlot(i);
+                    if(s.is(com.veterinarium.registry.ModItems.BANDAGE.get())) band+=s.getCount();
+                    if(s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) anest+=s.getCount();
+                }
+                player.displayClientMessage(Component.literal("§e[Stock Healer] §7Bandages: " + band + " | Anesthésiants: " + anest + " §7(Healer Lv2+ consomme 1+1 /10s si patient)"), false);
+                player.displayClientMessage(hutEarly.getContractDisplay(), false);
+                level.playSound(null, pos, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.5f, 1.0f);
+                return InteractionResult.SUCCESS;
+            }
             // Sneak-clic = construire le hut 9x9
             if (player.isShiftKeyDown()) {
                 if (buildHut(level, pos, player)) {
@@ -88,7 +104,60 @@ public class HospitalHutBlock extends Block implements EntityBlock {
                 }
                 if (hut.getHutLevel() >= 5 && isUpgradeItem) {
                     player.displayClientMessage(Component.literal("§a[Hut Hôpital] §7Niveau max (5) ! §7Rayon " + hut.getRadius() + " blocs (3.5❤/2s)"), false);
+                    // même à max, on peut encore stocker pour healer
+                    if ((held.is(com.veterinarium.registry.ModItems.BANDAGE.get()) || held.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) && hut.getHutLevel() >= 2) {
+                        var inv = hut.getHealerInv();
+                        ItemStack copy = held.copy(); copy.setCount(1);
+                        for (int i=0;i<inv.getSlots();i++) {
+                            if (inv.insertItem(i, copy, true).isEmpty()) {
+                                inv.insertItem(i, copy, false);
+                                held.shrink(1);
+                                player.displayClientMessage(Component.literal("§a[Stock Healer] §7" + copy.getHoverName().getString() + " stocké (§7" + (inv.getStackInSlot(i).getCount()) + " total Healer)"), true);
+                                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7f, 1.2f);
+                                return InteractionResult.SUCCESS;
+                            }
+                        }
+                        player.displayClientMessage(Component.literal("§c[Stock Healer] §7Stock plein (6 slots)"), false);
+                        return InteractionResult.FAIL;
+                    }
                     return InteractionResult.SUCCESS;
+                }
+                // Dépôt stock healer (bandage/anesth) si Hut Lv2+ et pas upgrade
+                if ((held.is(com.veterinarium.registry.ModItems.BANDAGE.get()) || held.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) && hut.getHutLevel() >= 2) {
+                    var inv = hut.getHealerInv();
+                    ItemStack copy = held.copy(); copy.setCount(1);
+                    boolean inserted=false;
+                    for (int i=0;i<inv.getSlots();i++) {
+                        if (inv.insertItem(i, copy, true).isEmpty()) {
+                            // check if would insert, then do
+                            ItemStack rem = inv.insertItem(i, copy, false);
+                            if (rem.isEmpty()) {
+                                held.shrink(1);
+                                int total=0; for(int j=0;j<inv.getSlots();j++) if(inv.getStackInSlot(j).is(copy.getItem())) total+=inv.getStackInSlot(j).getCount();
+                                player.displayClientMessage(Component.literal("§a[Stock Healer] §7" + copy.getHoverName().getString() + " stocké (total " + total + ") — Healer auto soigne toutes les 10s si stock"), true);
+                                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.6f, 1.3f);
+                                inserted=true;
+                                return InteractionResult.SUCCESS;
+                            }
+                        }
+                    }
+                    if (!inserted) {
+                        player.displayClientMessage(Component.literal("§c[Stock Healer] §7Stock plein — attendez que le healer consomme"), false);
+                        return InteractionResult.FAIL;
+                    }
+                }
+                // Sneak + main vide = voir stock healer
+                if (player.isShiftKeyDown() && held.isEmpty()) {
+                    var inv = hut.getHealerInv();
+                    int band=0, anest=0;
+                    for(int i=0;i<inv.getSlots();i++) {
+                        var s=inv.getStackInSlot(i);
+                        if(s.is(com.veterinarium.registry.ModItems.BANDAGE.get())) band+=s.getCount();
+                        if(s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) anest+=s.getCount();
+                    }
+                    player.displayClientMessage(Component.literal("§e[Stock Healer] §7Bandages: " + band + " | Anesthésiants: " + anest + " §7(Healer Lv2+ consomme 1+1 /10s si patient)"), false);
+                    level.playSound(null, pos, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.5f, 1.0f);
+                    // ne return pas, continue vers affichage normal
                 }
                 player.displayClientMessage(Component.literal("§c[Hut Hôpital Lv" + hut.getHutLevel() + "] §7Patients: " + hut.getPatientCount() + " | §aSoignés: " + hut.getHealedCount() + " | §7Rayon " + hut.getRadius() + " blocs §7(Soin " + hut.getHealAmount() + "❤/2s)"), false);
                 // Contrat journalier

@@ -22,6 +22,15 @@ public class HospitalHutBlockEntity extends BlockEntity {
     private int contractNeeded = 2;
     private int contractProgress = 0;
     private boolean contractClaimed = false;
+    // Stock healer (personnel soignant)
+    private final net.minecraftforge.items.ItemStackHandler healerInv = new net.minecraftforge.items.ItemStackHandler(6) {
+        @Override protected void onContentsChanged(int slot) { setChanged(); if (level!=null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); }
+        @Override public boolean isItemValid(int slot, net.minecraft.world.item.ItemStack stack) {
+            return stack.is(com.veterinarium.registry.ModItems.BANDAGE.get()) || stack.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()) || stack.is(com.veterinarium.registry.ModItems.VET_SPHERE.get()) || stack.is(net.minecraft.world.item.Items.EMERALD);
+        }
+    };
+    private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.ItemStackHandler> healerHandler = net.minecraftforge.common.util.LazyOptional.of(() -> healerInv);
+    public net.minecraftforge.items.ItemStackHandler getHealerInv() { return healerInv; }
 
     public HospitalHutBlockEntity(BlockPos pos, BlockState state) {
         super(com.veterinarium.registry.ModBlockEntities.HOSPITAL_HUT.get(), pos, state);
@@ -69,6 +78,73 @@ public class HospitalHutBlockEntity extends BlockEntity {
             int take = Math.min(s.getCount(), need);
             s.shrink(take); need-=take; if (need<=0) return;
         }
+    }
+    private boolean consumeHealerStock(int needBandage, int needAnesthetic) {
+        int hasB=0, hasA=0;
+        for (int i=0;i<healerInv.getSlots();i++) {
+            var s = healerInv.getStackInSlot(i);
+            if (s.is(com.veterinarium.registry.ModItems.BANDAGE.get())) hasB += s.getCount();
+            if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) hasA += s.getCount();
+        }
+        if (hasB < needBandage || hasA < needAnesthetic) return false;
+        // consomme
+        for (int i=0;i<healerInv.getSlots() && (needBandage>0 || needAnesthetic>0);i++) {
+            var s = healerInv.getStackInSlot(i);
+            if (s.is(com.veterinarium.registry.ModItems.BANDAGE.get()) && needBandage>0) {
+                int take = Math.min(s.getCount(), needBandage);
+                s.shrink(take); needBandage-=take;
+            }
+            if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()) && needAnesthetic>0) {
+                int take = Math.min(s.getCount(), needAnesthetic);
+                s.shrink(take); needAnesthetic-=take;
+            }
+        }
+        return true;
+    }
+    private boolean consumeFromNearbyTable(Level lvl, BlockPos center, int needBandage, int needAnesthetic) {
+        for (int dx=-5;dx<=5;dx++) for(int dy=-2;dy<=2;dy++) for(int dz=-5;dz<=5;dz++) {
+            var be = lvl.getBlockEntity(center.offset(dx,dy,dz));
+            if (be instanceof com.veterinarium.block.entity.OperatingTableBlockEntity table) {
+                boolean hasB=false, hasA=false;
+                int slotB=-1, slotA=-1;
+                for(int i=0;i<table.getHandler().getSlots();i++) {
+                    var s = table.getHandler().getStackInSlot(i);
+                    if (s.is(com.veterinarium.registry.ModItems.BANDAGE.get()) && s.getCount()>=needBandage) { hasB=true; slotB=i; }
+                    if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()) && s.getCount()>=needAnesthetic) { hasA=true; slotA=i; }
+                }
+                if (hasB && hasA) {
+                    table.getHandler().extractItem(slotB, needBandage, false);
+                    table.getHandler().extractItem(slotA, needAnesthetic, false);
+                    return true;
+                }
+            }
+            // aussi chest à proximité
+            if (be instanceof net.minecraft.world.level.block.entity.ChestBlockEntity chest) {
+                var handler = chest.getCapability(net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER, null);
+                if (handler.isPresent()) {
+                    var h = handler.orElse(null);
+                    if (h != null) {
+                        int foundB=0, foundA=0;
+                        for(int i=0;i<h.getSlots();i++) {
+                            var s = h.getStackInSlot(i);
+                            if (s.is(com.veterinarium.registry.ModItems.BANDAGE.get())) foundB+=s.getCount();
+                            if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) foundA+=s.getCount();
+                        }
+                        if (foundB>=needBandage && foundA>=needAnesthetic) {
+                            // consomme (simplifié: extrait)
+                            int needB=needBandage, needAn=needAnesthetic;
+                            for(int i=0;i<h.getSlots() && (needB>0 || needAn>0);i++) {
+                                var s = h.getStackInSlot(i);
+                                if (s.is(com.veterinarium.registry.ModItems.BANDAGE.get()) && needB>0) { int take=Math.min(s.getCount(), needB); h.extractItem(i, take, false); needB-=take; }
+                                if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()) && needAn>0) { int take=Math.min(s.getCount(), needAn); h.extractItem(i, take, false); needAn-=take; }
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public String getContractName() {
@@ -248,6 +324,64 @@ public class HospitalHutBlockEntity extends BlockEntity {
                 e.removeEffect(net.minecraft.world.effect.MobEffects.WEAKNESS);
             }
         }
+        // Personnel soignant auto-opère (Hut Lv2+ toutes les 10s, besoin stock bande+anesth)
+        if (hutLevel >= 2 && tickCounter % 200 == 0 && !wounded.isEmpty()) {
+            boolean hasHealer = false;
+            net.minecraft.world.entity.LivingEntity healerEntity = null;
+            if (com.veterinarium.integration.MineColoniesIntegration.isLoaded()) {
+                var citizens = level.getEntitiesOfClass(LivingEntity.class, new AABB(pos).inflate(10,6,10), e -> e.getClass().getName().toLowerCase().contains("citizen"));
+                if (!citizens.isEmpty()) { hasHealer = true; healerEntity = citizens.get(level.random.nextInt(citizens.size())); }
+            } else {
+                hasHealer = true; // Hut lui-même = infirmier
+            }
+            if (hasHealer) {
+                LivingEntity target = wounded.get(level.random.nextInt(wounded.size()));
+                // consomme stock
+                boolean consumed = consumeHealerStock(1,1) || consumeFromNearbyTable(level, pos, 1, 1);
+                if (consumed) {
+                    // soin auto complet
+                    target.heal(10.0f);
+                    target.removeEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN);
+                    target.removeEffect(net.minecraft.world.effect.MobEffects.WEAKNESS);
+                    target.removeEffect(net.minecraft.world.effect.MobEffects.POISON);
+                    target.removeEffect(net.minecraft.world.effect.MobEffects.WITHER);
+                    target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.REGENERATION, 100, 1));
+                    target.addTag("veterinarium_healed");
+                    target.addTag("veterinarium_operated");
+                    target.removeTag("veterinarium_wounded");
+                    target.removeTag("veterinarium_needs_scalpel");
+                    target.setCustomName(Component.literal("§a❤ Soigné par Healer Hut Lv"+hutLevel));
+                    target.setCustomNameVisible(true);
+                    healedCount++;
+                    if (target instanceof com.veterinarium.entity.WoundedWolfEntity w) w.setHealed(true);
+                    if (target instanceof com.veterinarium.entity.WoundedCatEntity c) c.setHealed(true);
+                    if (target instanceof com.veterinarium.entity.WoundedHorseEntity h) h.setHealed(true);
+                    if (target instanceof com.veterinarium.entity.WoundedFoxEntity f) f.setHealed(true);
+                    if (target instanceof com.veterinarium.entity.WoundedVillagerEntity v) v.setHealed(true);
+                    if (target instanceof com.veterinarium.entity.WoundedDrakeEntity d) d.setHealed(true);
+                    // notif contrat
+                    try {
+                        String ek = com.veterinarium.data.BestiaryProgress.entityKey(target);
+                        onHealForContract(ek, com.veterinarium.wound.WoundType.CONTUSION, false);
+                    } catch (Exception ignored) {}
+                    if (healerEntity instanceof net.minecraft.world.entity.Mob mob) mob.getLookControl().setLookAt(target);
+                    if (level instanceof net.minecraft.server.level.ServerLevel sl) {
+                        sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HEART, target.getX(), target.getY()+1.2, target.getZ(), 3, 0.2,0.2,0.2,0.1);
+                        sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER, pos.getX()+0.5, pos.getY()+1.2, pos.getZ()+0.5, 2, 0.3,0.3,0.3,0.1);
+                    }
+                    level.playSound(null, pos, net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), net.minecraft.sounds.SoundSource.BLOCKS, 0.8f, 1.5f);
+                    // si MineColonies healer, boost vitesse
+                    if (healerEntity != null) {
+                        healerEntity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED, 60, 0));
+                    }
+                } else {
+                    // stock vide -> particule triste
+                    if (level instanceof net.minecraft.server.level.ServerLevel sl) {
+                        sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ANGRY_VILLAGER, pos.getX()+0.5, pos.getY()+1.5, pos.getZ()+0.5, 1, 0.2,0.2,0.2,0.1);
+                    }
+                }
+            }
+        }
         // Réputation paliers 25/50/75/100 (une fois par joueur)
         if (tickCounter % 100 == 0) {
             var nearest = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 32, false);
@@ -373,6 +507,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
         tag.putInt("ContractNeeded", contractNeeded);
         tag.putInt("ContractProgress", contractProgress);
         tag.putBoolean("ContractClaimed", contractClaimed);
+        tag.put("HealerInv", healerInv.serializeNBT(registries));
     }
 
     @Override
@@ -386,5 +521,13 @@ public class HospitalHutBlockEntity extends BlockEntity {
         contractNeeded = tag.contains("ContractNeeded") ? tag.getInt("ContractNeeded") : 2;
         contractProgress = tag.contains("ContractProgress") ? tag.getInt("ContractProgress") : 0;
         contractClaimed = tag.getBoolean("ContractClaimed");
+        if (tag.contains("HealerInv")) healerInv.deserializeNBT(registries, tag.getCompound("HealerInv"));
+    }
+    @Override public void onLoad() { super.onLoad(); healerHandler = net.minecraftforge.common.util.LazyOptional.of(() -> healerInv); }
+    @Override public void invalidateCaps() { super.invalidateCaps(); healerHandler.invalidate(); }
+    @SuppressWarnings("unchecked")
+    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, net.minecraft.core.Direction side) {
+        if (cap == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) return healerHandler.cast();
+        return super.getCapability(cap, side);
     }
 }
