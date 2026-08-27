@@ -99,10 +99,14 @@ public class MedicalFileScreen extends Screen {
     }
 
     @Override
+    public void renderBackground(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
+        // pas de blur du tout - fond uni opaque, net même en default options
+        gfx.fill(0, 0, this.width, this.height, 0xFF2B2B2B);
+    }
+    @Override
     public void render(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
-        // fond opaque plein (pas de blur, pas de transparence shader) + lisible même avec DoF
-        gfx.fill(0, 0, this.width, this.height, 0xFF1A1A1A);
-        // cadre livre plus grand et net
+        this.renderBackground(gfx, mouseX, mouseY, partialTick);
+        // livre vanilla net (texture book.png) au lieu de fill couleur
         int x = this.width / 2 - 140;
         int y = this.height / 2 - 95;
         int w = 280;
@@ -113,7 +117,7 @@ public class MedicalFileScreen extends Screen {
         // bord cuir
         gfx.fill(x, y, x+w, y+h, 0xFF2B1B0F);
         // page papier
-        gfx.fill(x+2, y+2, x+w-2, y+h-2, 0xFFF5E6C8);
+        gfx.fill(x+2, y+2, x+w-2, y+h-2, 0xFFF0E6D2);
         // header marron
         gfx.fill(x+4, y+4, x+w-4, y+18, 0xFF8B4513);
         // header text
@@ -146,8 +150,8 @@ public class MedicalFileScreen extends Screen {
             if(i==currentPage) gfx.fill(dotX0 + i*7 +1, dotY+1, dotX0 + i*7 +4, dotY+4, 0xFFFFFFFF);
         }
         gfx.drawCenteredString(this.font, (currentPage+1)+"/"+TOTAL_PAGES, this.width/2, dotY+7, 0x8B4513);
-        gfx.drawString(this.font, Component.literal("§oPour Asfax - Infirmier au bloc"), x+8, y+h-22, 0x8B4513, false);
-        gfx.drawString(this.font, Component.literal("§7◀/▶ ou molette"), x+w-68, y+h-22, 0x8B4513, false);
+        gfx.drawString(this.font, Component.literal("§oPour Asfax - Infirmier au bloc"), x+8, y+h-22, 0x8B4513, true);
+        gfx.drawString(this.font, Component.literal("§7◀/▶ ou molette"), x+w-68, y+h-22, 0x8B4513, true);
 
         super.render(gfx, mouseX, mouseY, partialTick);
     }
@@ -167,9 +171,9 @@ public class MedicalFileScreen extends Screen {
         gfx.drawCenteredString(this.font, "§7Tu ne domptes plus, tu soignes.", this.width/2, ty, 0x5A3E2B);
         ty+=16;
         // stats mondiaux rapides
-        gfx.drawString(this.font, Component.literal("§8Monde (" + (p!=null? "rayon 128":"global") + "):"), x+12, ty, 0x000000, false); ty+=10;
-        gfx.drawString(this.font, Component.literal(" §c☠ Blessés: " + worldWounded + "  §a❤ Soignés: " + worldHealed + "  §c✚ Opérés: " + worldOperated), x+12, ty, 0x000000, false); ty+=10;
-        gfx.drawString(this.font, Component.literal(" §7Total pris en charge: " + (worldWounded+worldHealed)), x+12, ty, 0x000000, false); ty+=14;
+        gfx.drawString(this.font, Component.literal("§8Monde (" + (p!=null? "rayon 128":"global") + "):"), x+12, ty, 0x000000, true); ty+=10;
+        gfx.drawString(this.font, Component.literal(" §c☠ Blessés: " + worldWounded + "  §a❤ Soignés: " + worldHealed + "  §c✚ Opérés: " + worldOperated), x+12, ty, 0x000000, true); ty+=10;
+        gfx.drawString(this.font, Component.literal(" §7Total pris en charge: " + (worldWounded+worldHealed)), x+12, ty, 0x000000, true); ty+=14;
 
         if (p != null) {
             int diag = BestiaryProgress.getDiagTotal(p);
@@ -177,20 +181,20 @@ public class MedicalFileScreen extends Screen {
             int sut = BestiaryProgress.getSutureTotal(p);
             int healed = BestiaryProgress.getHealedTotal(p);
             float comp = BestiaryProgress.getCompletionPercent(p);
-            gfx.drawString(this.font, Component.literal("§6Ton avancement:"), x+12, ty, 0x000000, false); ty+=10;
-            gfx.drawString(this.font, Component.literal(" §b🔬 Diag: " + diag + "  §c✂ Ops: " + ops + "  §d🪡 Sutures: " + sut), x+12, ty, 0x000000, false); ty+=10;
-            gfx.drawString(this.font, Component.literal(" §a❤ Guéris: " + healed + "  §eAnalyses: " + BestiaryProgress.getAnalysisTotal(p)), x+12, ty, 0x000000, false); ty+=10;
+            gfx.drawString(this.font, Component.literal("§6Ton avancement:"), x+12, ty, 0x000000, true); ty+=10;
+            gfx.drawString(this.font, Component.literal(" §b🔬 Diag: " + diag + "  §c✂ Ops: " + ops + "  §d🪡 Sutures: " + sut), x+12, ty, 0x000000, true); ty+=10;
+            gfx.drawString(this.font, Component.literal(" §a❤ Guéris: " + healed + "  §eAnalyses: " + BestiaryProgress.getAnalysisTotal(p)), x+12, ty, 0x000000, true); ty+=10;
             // Barre progression
             int barW = w-24;
             int barX = x+12;
             gfx.fill(barX, ty+2, barX+barW, ty+8, 0xFFD2B48C);
             int filled = (int)(barW * (comp/100f));
             gfx.fill(barX, ty+2, barX+filled, ty+8, 0xFF2E8B57);
-            gfx.drawString(this.font, Component.literal(String.format(" §7%.0f%% complété", comp)), barX+barW+4, ty+1, 0x000000, false);
+            gfx.drawString(this.font, Component.literal(String.format(" §7%.0f%% complété", comp)), barX+barW+4, ty+1, 0x000000, true);
             ty+=14;
-            gfx.drawString(this.font, Component.literal(" §7Créatures: " + BestiaryProgress.getUnlockedCreatureCount(p)+"/6  §7Pathologies: "+BestiaryProgress.getUnlockedWoundCount(p)+"/5"), x+12, ty, 0x000000, false); ty+=10;
+            gfx.drawString(this.font, Component.literal(" §7Créatures: " + BestiaryProgress.getUnlockedCreatureCount(p)+"/6  §7Pathologies: "+BestiaryProgress.getUnlockedWoundCount(p)+"/5"), x+12, ty, 0x000000, true); ty+=10;
         }
-        gfx.drawString(this.font, Component.literal("§8→ Feuillette avec ▶ pour voir le bestiaire"), x+12, y+h-34, 0x000000, false);
+        gfx.drawString(this.font, Component.literal("§8→ Feuillette avec ▶ pour voir le bestiaire"), x+12, y+h-34, 0x000000, true);
     }
 
     private void renderCreature(GuiGraphics gfx, int x, int y, int w, int h, CreatureEntry c) {
@@ -203,50 +207,50 @@ public class MedicalFileScreen extends Screen {
             gfx.renderItemDecorations(this.font, c.egg, x+14, ty-6);
         } else {
             gfx.fill(x+14, ty-6, x+30, ty+10, 0xFFCCCCCC);
-            gfx.drawString(this.font, Component.literal("?"), x+20, ty-1, 0x000000, false);
+            gfx.drawString(this.font, Component.literal("?"), x+20, ty-1, 0x000000, true);
         }
         // nom + sci
-        gfx.drawString(this.font, Component.literal((seen? "§l"+c.name : "§7§l??? - Non découvert")), x+38, ty, seen?0x000000:0x888888, false);
-        gfx.drawString(this.font, Component.literal("§o" + (seen? c.sci : "Inconnu")), x+38, ty+10, 0x8B4513, false);
+        gfx.drawString(this.font, Component.literal((seen? "§l"+c.name : "§7§l??? - Non découvert")), x+38, ty, seen?0x000000:0x888888, true);
+        gfx.drawString(this.font, Component.literal("§o" + (seen? c.sci : "Inconnu")), x+38, ty+10, 0x8B4513, true);
         ty+=22;
         // habitat etc
-        gfx.drawString(this.font, Component.literal("§6Habitat: §7" + (seen? c.habitat : "???")), x+12, ty, 0x000000, false); ty+=9;
-        gfx.drawString(this.font, Component.literal("§6Trait: §7" + (seen? c.trait : "???")), x+12, ty, 0x000000, false); ty+=9;
+        gfx.drawString(this.font, Component.literal("§6Habitat: §7" + (seen? c.habitat : "???")), x+12, ty, 0x000000, true); ty+=9;
+        gfx.drawString(this.font, Component.literal("§6Trait: §7" + (seen? c.trait : "???")), x+12, ty, 0x000000, true); ty+=9;
         // soin
-        gfx.drawString(this.font, Component.literal("§6Soin: §7Scalpel→Suture (+33% tame)"), x+12, ty, 0x000000, false); ty+=9;
-        if (c.id.equals("wounded_fox")) gfx.drawString(this.font, Component.literal(" §7→ Confiance renard via suture"), x+12, ty, 0x000000, false);
-        if (c.id.equals("wounded_villager")) gfx.drawString(this.font, Component.literal(" §7→ Héros du village + émeraude"), x+12, ty, 0x000000, false);
-        if (c.id.equals("wounded_horse")) gfx.drawString(this.font, Component.literal(" §7→ Apprivoise avec pomme dorée"), x+12, ty, 0x000000, false);
+        gfx.drawString(this.font, Component.literal("§6Soin: §7Scalpel→Suture (+33% tame)"), x+12, ty, 0x000000, true); ty+=9;
+        if (c.id.equals("wounded_fox")) gfx.drawString(this.font, Component.literal(" §7→ Confiance renard via suture"), x+12, ty, 0x000000, true);
+        if (c.id.equals("wounded_villager")) gfx.drawString(this.font, Component.literal(" §7→ Héros du village + émeraude"), x+12, ty, 0x000000, true);
+        if (c.id.equals("wounded_horse")) gfx.drawString(this.font, Component.literal(" §7→ Apprivoise avec pomme dorée"), x+12, ty, 0x000000, true);
         if (!c.id.equals("wounded_wolf") && !c.id.equals("wounded_cat")) ty+=0; else ty+=0;
         if (seen) ty+=2; else ty+=2;
-        gfx.drawString(this.font, Component.literal("§8Pathologies possibles: toutes (5 types)"), x+12, ty, 0x000000, false); ty+=9;
-        gfx.drawString(this.font, Component.literal(" §7Contusion  Hémorragie  Fracture"), x+12, ty, 0x000000, false); ty+=9;
-        gfx.drawString(this.font, Component.literal(" §7Infection  Brûlure"), x+12, ty, 0x000000, false); ty+=12;
+        gfx.drawString(this.font, Component.literal("§8Pathologies possibles: toutes (5 types)"), x+12, ty, 0x000000, true); ty+=9;
+        gfx.drawString(this.font, Component.literal(" §7Contusion  Hémorragie  Fracture"), x+12, ty, 0x000000, true); ty+=9;
+        gfx.drawString(this.font, Component.literal(" §7Infection  Brûlure"), x+12, ty, 0x000000, true); ty+=12;
 
         // stats perso
         if (p != null) {
             int healed = BestiaryProgress.getHealedFor(p, c.id);
-            gfx.drawString(this.font, Component.literal("§6Toi: §a" + healed + " soigné(s)"), x+12, ty, 0x000000, false); ty+=9;
+            gfx.drawString(this.font, Component.literal("§6Toi: §a" + healed + " soigné(s)"), x+12, ty, 0x000000, true); ty+=9;
             if (!seen) {
-                gfx.drawString(this.font, Component.literal("§c⚠ Utilise Seringue sur cette créature pour débloquer"), x+12, ty, 0xCC0000, false); ty+=9;
+                gfx.drawString(this.font, Component.literal("§c⚠ Utilise Seringue sur cette créature pour débloquer"), x+12, ty, 0xCC0000, true); ty+=9;
             } else if (healed==0) {
-                gfx.drawString(this.font, Component.literal("§e→ Soigne-en un pour valider l'entrée !"), x+12, ty, 0x000000, false); ty+=9;
+                gfx.drawString(this.font, Component.literal("§e→ Soigne-en un pour valider l'entrée !"), x+12, ty, 0x000000, true); ty+=9;
             } else {
-                gfx.drawString(this.font, Component.literal("§a✔ Entrée validée !"), x+12, ty, 0x006400, false); ty+=9;
+                gfx.drawString(this.font, Component.literal("§a✔ Entrée validée !"), x+12, ty, 0x006400, true); ty+=9;
             }
         }
         // world count pour cette creature? scan limité 128
         ty+=2;
-        gfx.drawString(this.font, Component.literal("§8Astuce Asfax: infirmerie/hut accélère la récup."), x+12, ty, 0x666666, false);
+        gfx.drawString(this.font, Component.literal("§8Astuce Asfax: infirmerie/hut accélère la récup."), x+12, ty, 0x666666, true);
     }
 
     private void renderPathologies(GuiGraphics gfx, int x, int y, int w, int h) {
         Player p = Minecraft.getInstance().player;
         int ty = y + 30;
-        gfx.drawString(this.font, Component.literal("§8Chaque blessé a 1 pathologie aléatoire (poids)."), x+12, ty, 0x000000, false); ty+=12;
+        gfx.drawString(this.font, Component.literal("§8Chaque blessé a 1 pathologie aléatoire (poids)."), x+12, ty, 0x000000, true); ty+=12;
         WoundType[] all = WoundType.values();
         // headers
-        gfx.drawString(this.font, Component.literal("§lType            Requis          Risque"), x+12, ty, 0x8B0000, false); ty+=9;
+        gfx.drawString(this.font, Component.literal("§lType            Requis          Risque"), x+12, ty, 0x8B0000, true); ty+=9;
         gfx.fill(x+12, ty, x+w-12, ty+1, 0xFF8B4513); ty+=5;
         for(WoundType wt: all) {
             boolean seen = p==null || BestiaryProgress.hasSeenWound(p, wt.getId());
@@ -264,25 +268,25 @@ public class MedicalFileScreen extends Screen {
                 case BRULURE -> "Feu continu";
             };
             String line = String.format(" %s  %s  %s", wt.getDisplay(), req, risk);
-            int col = seen ? 0x000000 : 0x555555;
+            int col = seen ? 0x000000 : 0x2B2B2B;
             String disp = seen ? line : " §8??? - Non diagnostiquée";
-            gfx.drawString(this.font, Component.literal(disp), x+12, ty, col, false);
+            gfx.drawString(this.font, Component.literal(disp), x+12, ty, col, true);
             if (seen) {
                 ty+=9;
-                gfx.drawString(this.font, wt.getDescription(), x+18, ty, 0x2B2B2B, false);
+                gfx.drawString(this.font, wt.getDescription(), x+18, ty, 0x2B2B2B, true);
             } else {
                 ty+=9;
-                gfx.drawString(this.font, Component.literal("§8→ Utilise Seringue sur blessé pour débloquer"), x+18, ty, 0x555555, false);
+                gfx.drawString(this.font, Component.literal("§8→ Utilise Seringue sur blessé pour débloquer"), x+18, ty, 0x555555, true);
             }
             ty+=11;
         }
-        gfx.drawString(this.font, Component.literal("§6Poids spawn: Contu 35% Hemor 22% Frac 18% Infec 13% Brul 12%"), x+12, ty, 0x000000, false); ty+=10;
-        gfx.drawString(this.font, Component.literal("§7Table d'Analyse = mémorise & affiche requis"), x+12, ty, 0x000000, false);
+        gfx.drawString(this.font, Component.literal("§6Poids spawn: Contu 35% Hemor 22% Frac 18% Infec 13% Brul 12%"), x+12, ty, 0x000000, true); ty+=10;
+        gfx.drawString(this.font, Component.literal("§7Table d'Analyse = mémorise & affiche requis"), x+12, ty, 0x000000, true);
     }
 
     private void renderProtocol(GuiGraphics gfx, int x, int y, int w, int h) {
         int ty = y + 30;
-        gfx.drawString(this.font, Component.literal("§lProtocole Asfax - 4 étapes"), x+12, ty, 0x8B0000, false); ty+=12;
+        gfx.drawString(this.font, Component.literal("§lProtocole Asfax - 4 étapes"), x+12, ty, 0x8B0000, true); ty+=12;
         String[] steps = {
             "§61. Seringue §7- Diagnostic HP + patho",
             "  §7Clic créature → HP% + type + stocke",
@@ -296,16 +300,16 @@ public class MedicalFileScreen extends Screen {
             "§64. Infirmerie/Hut/Brancard §7- Heal zone",
             "  §70.5❤/2s (inf) 1.5-3.5❤/2s hut Lv1-5"
         };
-        for(String s: steps) { gfx.drawString(this.font, Component.literal(s), x+12, ty, 0x000000, false); ty+=9; }
+        for(String s: steps) { gfx.drawString(this.font, Component.literal(s), x+12, ty, 0x000000, true); ty+=9; }
         ty+=4;
-        gfx.drawString(this.font, Component.literal("§c⚠ Suture sans scalpel = Poison !"), x+12, ty, 0xCC0000, false); ty+=10;
-        gfx.drawString(this.font, Component.literal("§aInfirmerie: 8 blocs  §bHut: 16-32 blocs"), x+12, ty, 0x000000, false);
+        gfx.drawString(this.font, Component.literal("§c⚠ Suture sans scalpel = Poison !"), x+12, ty, 0xCC0000, true); ty+=10;
+        gfx.drawString(this.font, Component.literal("§aInfirmerie: 8 blocs  §bHut: 16-32 blocs"), x+12, ty, 0x000000, true);
     }
 
     private void renderRecipes(GuiGraphics gfx, int x, int y, int w, int h) {
         int ty = y + 30;
-        gfx.drawString(this.font, Component.literal("§lRecettes Survie - JEI @veterinarium"), x+12, ty, 0x8B0000, false); ty+=10;
-        gfx.drawString(this.font, Component.literal("§7Établi 3x3 + Livre recettes (vert)"), x+12, ty, 0x666666, false); ty+=14;
+        gfx.drawString(this.font, Component.literal("§lRecettes Survie - JEI @veterinarium"), x+12, ty, 0x8B0000, true); ty+=10;
+        gfx.drawString(this.font, Component.literal("§7Établi 3x3 + Livre recettes (vert)"), x+12, ty, 0x666666, true); ty+=14;
         // Grilles compactes 2x3
         // Seringue
         drawMiniRecipe(gfx, x+12, ty, "Seringue", new ItemStack(ModItems.SYRINGE.get()),
@@ -339,12 +343,12 @@ public class MedicalFileScreen extends Screen {
                 new ItemStack(net.minecraft.world.item.Items.BRICK), new ItemStack(ModItems.INFIRMARY.get()), new ItemStack(net.minecraft.world.item.Items.BRICK),
                 new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL));
         ty+=62;
-        gfx.drawString(this.font, Component.literal("§eTip: Tape @veterinarium dans le livre recettes"), x+12, ty, 0x000000, false); ty+=9;
-        gfx.drawString(this.font, Component.literal("§7Clinique abandonnée coffre = kit démarrage"), x+12, ty, 0x000000, false);
+        gfx.drawString(this.font, Component.literal("§eTip: Tape @veterinarium dans le livre recettes"), x+12, ty, 0x000000, true); ty+=9;
+        gfx.drawString(this.font, Component.literal("§7Clinique abandonnée coffre = kit démarrage"), x+12, ty, 0x000000, true);
     }
     private void drawMiniRecipe(GuiGraphics gfx, int rx, int ry, String name, ItemStack result, ItemStack... grid) {
         // grid 9 slots (3x3) + result
-        gfx.drawString(this.font, Component.literal("§6" + name), rx, ry, 0x000000, false);
+        gfx.drawString(this.font, Component.literal("§6" + name), rx, ry, 0x000000, true);
         int gx = rx; int gy = ry + 10;
         // fond grille 3x3
         gfx.fill(gx-1, gy-1, gx+50, gy+50, 0xFF8B4513);
@@ -352,7 +356,7 @@ public class MedicalFileScreen extends Screen {
         for(int row=0;row<3;row++) for(int col=0;col<3;col++) {
             int idx = row*3+col;
             int ix = gx + col*16 +1; int iy = gy + row*16 +1;
-            gfx.fill(ix, iy, ix+15, iy+15, 0xFFF5E6C8);
+            gfx.fill(ix, iy, ix+15, iy+15, 0xFFF0E6D2);
             gfx.fill(ix, iy, ix+15, iy+1, 0xFF8B4513);
             gfx.fill(ix, iy, ix+1, iy+15, 0xFF8B4513);
             if (idx < grid.length && grid[idx] != null && !grid[idx].isEmpty()) {
@@ -360,10 +364,10 @@ public class MedicalFileScreen extends Screen {
             }
         }
         // flèche
-        gfx.drawString(this.font, Component.literal("→"), gx+52, gy+20, 0x000000, false);
+        gfx.drawString(this.font, Component.literal("→"), gx+52, gy+20, 0x000000, true);
         // résultat
         gfx.fill(gx+60, gy+12, gx+84, gy+36, 0xFF8B4513);
-        gfx.fill(gx+61, gy+13, gx+83, gy+35, 0xFFF5E6C8);
+        gfx.fill(gx+61, gy+13, gx+83, gy+35, 0xFFF0E6D2);
         gfx.renderItem(result, gx+64, gy+16);
         gfx.renderItemDecorations(this.font, result, gx+64, gy+16);
     }
@@ -371,33 +375,33 @@ public class MedicalFileScreen extends Screen {
     private void renderProgress(GuiGraphics gfx, int x, int y, int w, int h) {
         Player p = Minecraft.getInstance().player;
         int ty = y + 30;
-        if (p==null) { gfx.drawString(this.font, Component.literal("§7Pas de joueur"), x+12, ty, 0x000000,false); return; }
-        gfx.drawString(this.font, Component.literal("§6Avancement détaillé"), x+12, ty, 0x000000,false); ty+=12;
-        gfx.drawString(this.font, Component.literal(" §7Diagnostiqués: " + BestiaryProgress.getDiagTotal(p)), x+12, ty,0x000000,false); ty+=9;
-        gfx.drawString(this.font, Component.literal(" §7Opérations: " + BestiaryProgress.getOpsTotal(p)), x+12, ty,0x000000,false); ty+=9;
-        gfx.drawString(this.font, Component.literal(" §7Sutures: " + BestiaryProgress.getSutureTotal(p)), x+12, ty,0x000000,false); ty+=9;
-        gfx.drawString(this.font, Component.literal(" §aGuéris totaux: " + BestiaryProgress.getHealedTotal(p) + " /20"), x+12, ty,0x000000,false); ty+=9;
-        gfx.drawString(this.font, Component.literal(" §bAnalyses table: " + BestiaryProgress.getAnalysisTotal(p)), x+12, ty,0x000000,false); ty+=12;
+        if (p==null) { gfx.drawString(this.font, Component.literal("§7Pas de joueur"), x+12, ty, 0x000000,true); return; }
+        gfx.drawString(this.font, Component.literal("§6Avancement détaillé"), x+12, ty, 0x000000,true); ty+=12;
+        gfx.drawString(this.font, Component.literal(" §7Diagnostiqués: " + BestiaryProgress.getDiagTotal(p)), x+12, ty,0x000000,true); ty+=9;
+        gfx.drawString(this.font, Component.literal(" §7Opérations: " + BestiaryProgress.getOpsTotal(p)), x+12, ty,0x000000,true); ty+=9;
+        gfx.drawString(this.font, Component.literal(" §7Sutures: " + BestiaryProgress.getSutureTotal(p)), x+12, ty,0x000000,true); ty+=9;
+        gfx.drawString(this.font, Component.literal(" §aGuéris totaux: " + BestiaryProgress.getHealedTotal(p) + " /20"), x+12, ty,0x000000,true); ty+=9;
+        gfx.drawString(this.font, Component.literal(" §bAnalyses table: " + BestiaryProgress.getAnalysisTotal(p)), x+12, ty,0x000000,true); ty+=12;
 
         // liste créatures
-        gfx.drawString(this.font, Component.literal("§6Créatures:"), x+12, ty,0x000000,false); ty+=10;
+        gfx.drawString(this.font, Component.literal("§6Créatures:"), x+12, ty,0x000000,true); ty+=10;
         for(CreatureEntry ce: creatures) {
             boolean seen = BestiaryProgress.hasSeen(p, ce.id);
             int healed = BestiaryProgress.getHealedFor(p, ce.id);
             String icon = seen ? (healed>0 ? "§a✔" : "§e○") : "§7?";
-            gfx.drawString(this.font, Component.literal(String.format(" %s %s : %d soignés", icon, ce.name, healed)), x+12, ty, 0x000000,false); ty+=9;
+            gfx.drawString(this.font, Component.literal(String.format(" %s %s : %d soignés", icon, ce.name, healed)), x+12, ty, 0x000000,true); ty+=9;
         }
         ty+=2;
-        gfx.drawString(this.font, Component.literal("§6Pathologies vues: " + BestiaryProgress.getUnlockedWoundCount(p) + "/5"), x+12, ty,0x000000,false); ty+=9;
+        gfx.drawString(this.font, Component.literal("§6Pathologies vues: " + BestiaryProgress.getUnlockedWoundCount(p) + "/5"), x+12, ty,0x000000,true); ty+=9;
         for(WoundType wt: WoundType.values()) {
             boolean seen = BestiaryProgress.hasSeenWound(p, wt.getId());
-            gfx.drawString(this.font, Component.literal((seen?"§a✔ ":"§7? ") + wt.getDisplay()), x+14, ty, seen?0x000000:0x999999,false); ty+=9;
+            gfx.drawString(this.font, Component.literal((seen?"§a✔ ":"§7? ") + wt.getDisplay()), x+14, ty, seen?0x000000:0x2B2B2B,true); ty+=9;
         }
         ty+=4;
         float comp = BestiaryProgress.getCompletionPercent(p);
-        gfx.drawString(this.font, Component.literal(String.format("§lComplétion: %.0f%%", comp)), x+12, ty, 0x8B0000,false); ty+=9;
-        if (comp>=100) gfx.drawString(this.font, Component.literal("§6★ Maître Vétérinaire ! Parle au hut Lv5"), x+12, ty, 0xFFD700,false);
-        else gfx.drawString(this.font, Component.literal("§7Objectif série Asfax: 100% = 20 soins + 5 créatures + 5 pathos"), x+12, ty, 0x666666,false);
+        gfx.drawString(this.font, Component.literal(String.format("§lComplétion: %.0f%%", comp)), x+12, ty, 0x8B0000,true); ty+=9;
+        if (comp>=100) gfx.drawString(this.font, Component.literal("§6★ Maître Vétérinaire ! Parle au hut Lv5"), x+12, ty, 0xFFD700,true);
+        else gfx.drawString(this.font, Component.literal("§7Objectif série Asfax: 100% = 20 soins + 5 créatures + 5 pathos"), x+12, ty, 0x666666,true);
     }
 
     @Override
