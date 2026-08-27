@@ -40,6 +40,6 @@ public class Veterinarium {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !..........."); // 1.9.6 livre net sans blur
+        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !............"); // 1.9.7 opaque sans blur - default options
     }
 }

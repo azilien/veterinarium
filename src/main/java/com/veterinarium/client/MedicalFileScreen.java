@@ -100,12 +100,13 @@ public class MedicalFileScreen extends Screen {
 
     @Override
     public void render(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
-        // fond sombre opaque sans blur (plus net, évite flou shader)
-        gfx.fill(0, 0, this.width, this.height, 0xAA000000);
-        int x = this.width / 2 - 130;
-        int y = this.height / 2 - 90;
-        int w = 260;
-        int h = 180;
+        // fond opaque plein (pas de blur, pas de transparence shader) + lisible même avec DoF
+        gfx.fill(0, 0, this.width, this.height, 0xFF1A1A1A);
+        // cadre livre plus grand et net
+        int x = this.width / 2 - 140;
+        int y = this.height / 2 - 95;
+        int w = 280;
+        int h = 190;
 
         // ombre
         gfx.fill(x+4, y+4, x+w+4, y+h+4, 0x44000000);
