@@ -100,11 +100,12 @@ public class MedicalFileScreen extends Screen {
 
     @Override
     public void render(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(gfx, mouseX, mouseY, partialTick);
-        int x = this.width / 2 - 120;
-        int y = this.height / 2 - 85;
-        int w = 240;
-        int h = 170;
+        // fond sombre opaque sans blur (plus net, évite flou shader)
+        gfx.fill(0, 0, this.width, this.height, 0xAA000000);
+        int x = this.width / 2 - 130;
+        int y = this.height / 2 - 90;
+        int w = 260;
+        int h = 180;
 
         // ombre
         gfx.fill(x+4, y+4, x+w+4, y+h+4, 0x44000000);
@@ -262,14 +263,15 @@ public class MedicalFileScreen extends Screen {
                 case BRULURE -> "Feu continu";
             };
             String line = String.format(" %s  %s  %s", wt.getDisplay(), req, risk);
-            // truncate
-            int col = seen ? 0x000000 : 0x999999;
-            String disp = seen ? line : " §7??? - Non diagnostiquée";
+            int col = seen ? 0x000000 : 0x555555;
+            String disp = seen ? line : " §8??? - Non diagnostiquée";
             gfx.drawString(this.font, Component.literal(disp), x+12, ty, col, false);
-            // description sous ligne si vu
             if (seen) {
                 ty+=9;
-                gfx.drawString(this.font, wt.getDescription(), x+18, ty, 0x333333, false);
+                gfx.drawString(this.font, wt.getDescription(), x+18, ty, 0x2B2B2B, false);
+            } else {
+                ty+=9;
+                gfx.drawString(this.font, Component.literal("§8→ Utilise Seringue sur blessé pour débloquer"), x+18, ty, 0x555555, false);
             }
             ty+=11;
         }
