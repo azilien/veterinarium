@@ -17,7 +17,7 @@ import java.util.List;
 
 public class MedicalFileScreen extends Screen {
     private int currentPage = 0;
-    private static final int TOTAL_PAGES = 10; // 0 cover, 1-6 creatures, 7 pathologies, 8 protocole, 9 progression
+    private static final int TOTAL_PAGES = 11; // 0 cover, 1-6 creatures, 7 pathologies, 8 protocole, 9 recettes, 10 progression
     private int worldWounded = 0, worldHealed = 0, worldOperated = 0;
     private int tickCounter = 0;
 
@@ -120,7 +120,8 @@ public class MedicalFileScreen extends Screen {
             case 1,2,3,4,5,6 -> "BESTIAIRE - " + creatures[currentPage-1].name.toUpperCase();
             case 7 -> "PATHOLOGIES - 5 BLESSURES";
             case 8 -> "PROTOCOLE ASFAX - BLOQU+";
-            case 9 -> "PROGRESSION - STATS";
+            case 9 -> "RECETTES - CRAFT";
+            case 10 -> "PROGRESSION - STATS";
             default -> "DOSSIER MEDICAL";
         };
         gfx.drawCenteredString(this.font, "§l"+header, this.width/2, y+8, 0xFFFFFF);
@@ -131,7 +132,8 @@ public class MedicalFileScreen extends Screen {
         else if (currentPage>=1 && currentPage<=6) renderCreature(gfx, x, y, w, h, creatures[currentPage-1]);
         else if (currentPage==7) renderPathologies(gfx, x, y, w, h);
         else if (currentPage==8) renderProtocol(gfx, x, y, w, h);
-        else if (currentPage==9) renderProgress(gfx, x, y, w, h);
+        else if (currentPage==9) renderRecipes(gfx, x, y, w, h);
+        else if (currentPage==10) renderProgress(gfx, x, y, w, h);
 
         // footer pagination dots
         int dotY = y+h-10;
@@ -295,6 +297,72 @@ public class MedicalFileScreen extends Screen {
         ty+=4;
         gfx.drawString(this.font, Component.literal("§c⚠ Suture sans scalpel = Poison !"), x+12, ty, 0xCC0000, false); ty+=10;
         gfx.drawString(this.font, Component.literal("§aInfirmerie: 8 blocs  §bHut: 16-32 blocs"), x+12, ty, 0x000000, false);
+    }
+
+    private void renderRecipes(GuiGraphics gfx, int x, int y, int w, int h) {
+        int ty = y + 30;
+        gfx.drawString(this.font, Component.literal("§lRecettes Survie - JEI @veterinarium"), x+12, ty, 0x8B0000, false); ty+=10;
+        gfx.drawString(this.font, Component.literal("§7Établi 3x3 + Livre recettes (vert)"), x+12, ty, 0x666666, false); ty+=14;
+        // Grilles compactes 2x3
+        // Seringue
+        drawMiniRecipe(gfx, x+12, ty, "Seringue", new ItemStack(ModItems.SYRINGE.get()),
+                new ItemStack(net.minecraft.world.item.Items.GLASS), null, null,
+                new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), null, null,
+                new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), null, null);
+        // Scalpel
+        drawMiniRecipe(gfx, x+82, ty, "Scalpel", new ItemStack(ModItems.SCALPEL.get()),
+                null, new ItemStack(net.minecraft.world.item.Items.IRON_INGOT), null,
+                new ItemStack(net.minecraft.world.item.Items.IRON_INGOT), null, null,
+                null, null, null);
+        // Bandage
+        drawMiniRecipe(gfx, x+152, ty, "Bandage x4", new ItemStack(ModItems.BANDAGE.get(), 4),
+                new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.STRING), null,
+                null, null, null,
+                null, null, null);
+        ty+=62;
+        // Suture
+        drawMiniRecipe(gfx, x+12, ty, "Suture", new ItemStack(ModItems.SUTURE_KIT.get()),
+                new ItemStack(net.minecraft.world.item.Items.STRING), null, null,
+                new ItemStack(net.minecraft.world.item.Items.PAPER), null, null,
+                new ItemStack(net.minecraft.world.item.Items.STRING), null, null);
+        // Sphère
+        drawMiniRecipe(gfx, x+82, ty, "Sphère", new ItemStack(ModItems.VET_SPHERE.get()),
+                null, new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), null,
+                new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), new ItemStack(net.minecraft.world.item.Items.GLASS), new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET),
+                null, new ItemStack(net.minecraft.world.item.Items.IRON_NUGGET), null);
+        // Hut
+        drawMiniRecipe(gfx, x+152, ty, "Hut", new ItemStack(ModItems.HOSPITAL_HUT.get()),
+                new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL),
+                new ItemStack(net.minecraft.world.item.Items.BRICK), new ItemStack(ModItems.INFIRMARY.get()), new ItemStack(net.minecraft.world.item.Items.BRICK),
+                new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL), new ItemStack(net.minecraft.world.item.Items.WHITE_WOOL));
+        ty+=62;
+        gfx.drawString(this.font, Component.literal("§eTip: Tape @veterinarium dans le livre recettes"), x+12, ty, 0x000000, false); ty+=9;
+        gfx.drawString(this.font, Component.literal("§7Clinique abandonnée coffre = kit démarrage"), x+12, ty, 0x000000, false);
+    }
+    private void drawMiniRecipe(GuiGraphics gfx, int rx, int ry, String name, ItemStack result, ItemStack... grid) {
+        // grid 9 slots (3x3) + result
+        gfx.drawString(this.font, Component.literal("§6" + name), rx, ry, 0x000000, false);
+        int gx = rx; int gy = ry + 10;
+        // fond grille 3x3
+        gfx.fill(gx-1, gy-1, gx+50, gy+50, 0xFF8B4513);
+        gfx.fill(gx, gy, gx+49, gy+49, 0xFFD2B48C);
+        for(int row=0;row<3;row++) for(int col=0;col<3;col++) {
+            int idx = row*3+col;
+            int ix = gx + col*16 +1; int iy = gy + row*16 +1;
+            gfx.fill(ix, iy, ix+15, iy+15, 0xFFF5E6C8);
+            gfx.fill(ix, iy, ix+15, iy+1, 0xFF8B4513);
+            gfx.fill(ix, iy, ix+1, iy+15, 0xFF8B4513);
+            if (idx < grid.length && grid[idx] != null && !grid[idx].isEmpty()) {
+                gfx.renderItem(grid[idx], ix+0, iy+0);
+            }
+        }
+        // flèche
+        gfx.drawString(this.font, Component.literal("→"), gx+52, gy+20, 0x000000, false);
+        // résultat
+        gfx.fill(gx+60, gy+12, gx+84, gy+36, 0xFF8B4513);
+        gfx.fill(gx+61, gy+13, gx+83, gy+35, 0xFFF5E6C8);
+        gfx.renderItem(result, gx+64, gy+16);
+        gfx.renderItemDecorations(this.font, result, gx+64, gy+16);
     }
 
     private void renderProgress(GuiGraphics gfx, int x, int y, int w, int h) {
