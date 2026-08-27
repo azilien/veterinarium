@@ -14,29 +14,14 @@
     "announce_to_chat": false,
     "hidden": false
   },
-  "parent": "veterinarium:root",
   "criteria": {
-    "has_tool": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "veterinarium:scalpel",
-              "veterinarium:syringe",
-              "veterinarium:suture_kit",
-              "veterinarium:medical_file",
-              "veterinarium:bandage",
-              "veterinarium:anesthetic"
-            ]
-          }
-        ]
-      }
+    "tick": {
+      "trigger": "minecraft:tick"
     }
   },
   "requirements": [
     [
-      "has_tool"
+      "tick"
     ]
   ],
   "rewards": {

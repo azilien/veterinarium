@@ -40,6 +40,6 @@ public class Veterinarium {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !........"); // 1.9.3 JEI optionnel
+        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !........."); // 1.9.4 recettes visibles dès début
     }
 }
