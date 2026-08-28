@@ -40,6 +40,6 @@ public class Veterinarium {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !................"); // 1.10.0 bilingue EN/FR
+        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !................."); // 1.10.1 bilingue complet (WoundType+MedicalFile)
     }
 }

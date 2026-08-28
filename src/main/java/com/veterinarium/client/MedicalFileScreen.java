@@ -188,7 +188,7 @@ public class MedicalFileScreen extends Screen {
             gfx.fill(barX, ty+2, barX+barW, ty+8, 0xFFD2B48C);
             int filled = (int)(barW * (comp/100f));
             gfx.fill(barX, ty+2, barX+filled, ty+8, 0xFF2E8B57);
-            gfx.drawString(this.font, Component.literal(String.format(" §7%.0f%% complété", comp)), barX+barW+4, ty+1, 0x000000, true);
+            gfx.drawString(this.font, Component.literal(String.format(Component.translatable("gui.veterinarium.medical_file.cover.bar").getString(), comp)), barX+barW+4, ty+1, 0x000000, true);
             ty+=14;
             gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.cover.creatures").getString() + " " + BestiaryProgress.getUnlockedCreatureCount(p)+"/6  " + Component.translatable("gui.veterinarium.medical_file.cover.pathologies").getString() + " " + BestiaryProgress.getUnlockedWoundCount(p)+"/5"), x+12, ty, 0x000000, true); ty+=10;
         }
@@ -209,11 +209,25 @@ public class MedicalFileScreen extends Screen {
         }
         // nom + sci
         gfx.drawString(this.font, Component.literal((seen? "§l"+Component.translatable("entity.veterinarium."+c.id).getString() : Component.translatable("gui.veterinarium.medical_file.bestiary.not_discovered").getString())), x+38, ty, seen?0x000000:0x888888, true);
-        gfx.drawString(this.font, Component.literal("§o" + (seen? c.sci : "Inconnu")), x+38, ty+10, 0x8B4513, true);
+        String sciKey = "gui.veterinarium.medical_file.creature.sci." + c.id.replace("wounded_","");
+        String sciVal = seen ? Component.translatable(sciKey).getString() : Component.translatable("gui.veterinarium.medical_file.bestiary.unknown").getString();
+        gfx.drawString(this.font, Component.literal("§o" + sciVal), x+38, ty+10, 0x8B4513, true);
         ty+=22;
         // habitat etc
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.habitat", seen? c.habitat : "???").getString()), x+12, ty, 0x000000, true); ty+=9;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.trait", seen? c.trait : "???").getString()), x+12, ty, 0x000000, true); ty+=9;
+        String habitatKey = switch(c.id) {
+            case "wounded_wolf" -> "forest";
+            case "wounded_cat" -> "village";
+            case "wounded_horse" -> "plains";
+            case "wounded_fox" -> "taiga";
+            case "wounded_villager" -> "civil";
+            case "wounded_drake" -> "end";
+            default -> "forest";
+        };
+        String traitKey = "gui.veterinarium.medical_file.creature.trait." + c.id.replace("wounded_","");
+        String habitatVal = seen ? Component.translatable("gui.veterinarium.medical_file.creature.habitat." + habitatKey).getString() : "???";
+        String traitVal = seen ? Component.translatable(traitKey).getString() : "???";
+        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.habitat", habitatVal).getString()), x+12, ty, 0x000000, true); ty+=9;
+        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.trait", traitVal).getString()), x+12, ty, 0x000000, true); ty+=9;
         // soin
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.care").getString()), x+12, ty, 0x000000, true); ty+=9;
         if (c.id.equals("wounded_fox")) gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.fox_bonus").getString()), x+12, ty, 0x000000, true);
@@ -222,8 +236,8 @@ public class MedicalFileScreen extends Screen {
         if (!c.id.equals("wounded_wolf") && !c.id.equals("wounded_cat")) ty+=0; else ty+=0;
         if (seen) ty+=2; else ty+=2;
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.pathologies_all").getString()), x+12, ty, 0x000000, true); ty+=9;
-        gfx.drawString(this.font, Component.literal(" §7Contusion  Hémorragie  Fracture"), x+12, ty, 0x000000, true); ty+=9;
-        gfx.drawString(this.font, Component.literal(" §7Infection  Brûlure"), x+12, ty, 0x000000, true); ty+=12;
+        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.list1").getString()), x+12, ty, 0x000000, true); ty+=9;
+        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.list2").getString()), x+12, ty, 0x000000, true); ty+=12;
 
         // stats perso
         if (p != null) {
@@ -259,22 +273,22 @@ public class MedicalFileScreen extends Screen {
                 if (wt.needsBandage()) req+="Bandage";
             }
             String risk = switch(wt) {
-                case CONTUSION -> "Aucun";
-                case HEMORRAGIE -> "Rechute 50%";
-                case FRACTURE -> "Douleur 50%";
-                case INFECTION -> "Poison";
-                case BRULURE -> "Feu continu";
+                case CONTUSION -> Component.translatable("wound.veterinarium.risk.none").getString();
+                case HEMORRAGIE -> Component.translatable("wound.veterinarium.risk.relapse").getString();
+                case FRACTURE -> Component.translatable("wound.veterinarium.risk.pain").getString();
+                case INFECTION -> Component.translatable("wound.veterinarium.risk.poison").getString();
+                case BRULURE -> Component.translatable("wound.veterinarium.risk.fire").getString();
             };
             String line = String.format(" %s  %s  %s", wt.getDisplay(), req, risk);
             int col = seen ? 0x000000 : 0x2B2B2B;
-            String disp = seen ? line : " §8??? - Non diagnostiquée";
+            String disp = seen ? line : " §8" + Component.translatable("gui.veterinarium.medical_file.pathologies.not_diag").getString();
             gfx.drawString(this.font, Component.literal(disp), x+12, ty, col, true);
             if (seen) {
                 ty+=9;
                 gfx.drawString(this.font, wt.getDescription(), x+18, ty, 0x2B2B2B, true);
             } else {
                 ty+=9;
-                gfx.drawString(this.font, Component.literal("§8→ Utilise Seringue sur blessé pour débloquer"), x+18, ty, 0x555555, true);
+                gfx.drawString(this.font, Component.literal("§8→ " + Component.translatable("gui.veterinarium.medical_file.pathologies.not_diag_desc").getString()), x+18, ty, 0x555555, true);
             }
             ty+=11;
         }
@@ -380,7 +394,8 @@ public class MedicalFileScreen extends Screen {
             boolean seen = BestiaryProgress.hasSeen(p, ce.id);
             int healed = BestiaryProgress.getHealedFor(p, ce.id);
             String icon = seen ? (healed>0 ? "§a✔" : "§e○") : "§7?";
-            gfx.drawString(this.font, Component.literal(String.format(" %s %s : %d soignés", icon, ce.name, healed)), x+12, ty, 0x000000,true); ty+=9;
+            String entName = Component.translatable("entity.veterinarium."+ce.id).getString();
+            gfx.drawString(this.font, Component.literal(String.format(" %s %s : %d soignés", icon, entName, healed)), x+12, ty, 0x000000,true); ty+=9;
         }
         ty+=2;
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.pathologies", BestiaryProgress.getUnlockedWoundCount(p)).getString()), x+12, ty,0x000000,true); ty+=9;
@@ -390,9 +405,9 @@ public class MedicalFileScreen extends Screen {
         }
         ty+=4;
         float comp = BestiaryProgress.getCompletionPercent(p);
-        gfx.drawString(this.font, Component.literal(String.format("§lComplétion: %.0f%%", comp)), x+12, ty, 0x8B0000,true); ty+=9;
-        if (comp>=100) gfx.drawString(this.font, Component.literal("§6★ Maître Vétérinaire ! Parle au hut Lv5"), x+12, ty, 0xFFD700,true);
-        else gfx.drawString(this.font, Component.literal("§7Objectif série Asfax: 100% = 20 soins + 5 créatures + 5 pathos"), x+12, ty, 0x666666,true);
+        gfx.drawString(this.font, Component.literal(String.format(Component.translatable("gui.veterinarium.medical_file.progress.completion_line").getString(), comp)), x+12, ty, 0x8B0000,true); ty+=9;
+        if (comp>=100) gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.master").getString()), x+12, ty, 0xFFD700,true);
+        else gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.objective").getString()), x+12, ty, 0x666666,true);
     }
 
     @Override
