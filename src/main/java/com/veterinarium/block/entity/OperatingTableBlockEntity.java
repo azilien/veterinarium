@@ -11,13 +11,14 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class OperatingTableBlockEntity extends BlockEntity {
-    private final ItemStackHandler handler = new ItemStackHandler(2) {
+    private final ItemStackHandler handler = new ItemStackHandler(3) {
         @Override
         protected void onContentsChanged(int slot) { setChanged(); if (level!=null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); }
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
             if (slot==0) return stack.is(com.veterinarium.registry.ModItems.BANDAGE.get());
             if (slot==1) return stack.is(com.veterinarium.registry.ModItems.ANESTHETIC.get());
+            if (slot==2) return stack.is(com.veterinarium.registry.ModItems.COMPRESSION_BANDAGE.get());
             return false;
         }
     };
@@ -30,23 +31,26 @@ public class OperatingTableBlockEntity extends BlockEntity {
     public ItemStackHandler getHandler() { return handler; }
 
     public boolean consumeIfNeeded(WoundType wt, boolean isScalpel) {
-        // Scalpel needs anesthetic for FRACTURE/INFECTION
-        // Suture needs bandage for HEMORRAGIE/INFECTION
+        // Scalpel needs anesthetic for FRACTURE/INFECTION/BRULURE
+        // Suture needs bandage for HEMORRAGIE/INFECTION/BRULURE/SAIGNEMENT
+        boolean consumed = false;
         if (isScalpel) {
             if (!wt.needsAnesthetic()) return true;
             for (int i=0;i<handler.getSlots();i++) {
                 ItemStack s = handler.getStackInSlot(i);
-                if (!s.isEmpty() && s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) { s.shrink(1); return true; }
+                if (!s.isEmpty() && s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) { s.shrink(1); consumed = true; break; }
             }
-            return false;
         } else {
             if (!wt.needsBandage()) return true;
             for (int i=0;i<handler.getSlots();i++) {
                 ItemStack s = handler.getStackInSlot(i);
-                if (!s.isEmpty() && s.is(com.veterinarium.registry.ModItems.BANDAGE.get())) { s.shrink(1); return true; }
+                if (!s.isEmpty() && s.is(com.veterinarium.registry.ModItems.BANDAGE.get())) { s.shrink(1); consumed = true; break; }
             }
-            return false;
         }
+        if (consumed && level instanceof net.minecraft.server.level.ServerLevel sl) {
+            sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER, worldPosition.getX()+0.5, worldPosition.getY()+1.2, worldPosition.getZ()+0.5, 3, 0.3, 0.3, 0.3, 0.1);
+        }
+        return consumed;
     }
 
     @Override

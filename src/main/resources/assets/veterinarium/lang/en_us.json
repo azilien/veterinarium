@@ -313,5 +313,12 @@
   "message.veterinarium.urgency.timer_prefix": "🚨 URGENCY ",
   "message.veterinarium.urgency.ambulance_timer": "§e🚑 Ambulance %ss remaining for bonus <60s → run to Hut!",
   "message.veterinarium.urgency.urgent_name": "§c🚨 URGENCY §7- ",
-  "message.veterinarium.urgency.call": "§c🚨 EMERGENCY CALL! §f%s §7at %s / %s §8(distance %s) §7— Syringe → Table!"
+  "message.veterinarium.urgency.call": "§c🚨 EMERGENCY CALL! §f%s §7at %s / %s §8(distance %s) §7— Syringe → Table!",
+  "message.veterinarium.table.stock": "§c[Operating Table] §7Stock: §e%s bandage §7| §d%s anesthetic §7| §a%s compression",
+  "message.veterinarium.table.insert": "§a[Operating Table] §7%s loaded (§7%d)",
+  "message.veterinarium.table.full": "§c[Operating Table] §7Inventory full (3 slots) — Sneak-click for info",
+  "message.veterinarium.table.ready": "§c[Operating Table] §7Ready. Place §eBandage§7/§dAnesthetic§7/§aCompression§7 (click) — auto-supply at 5 blocks.",
+  "message.veterinarium.table.empty_stock": "§7→ Click with §eBandage§7/§dAnesthetic§7/§aCompression§7 to load",
+  "message.veterinarium.table.extract": "§7[Operating Table] §fRemoved: %s",
+  "message.veterinarium.general_anesthesia": "§d[General Anesthesia] §aCreature asleep 10s — table supplied anesthetic."
 }

@@ -41,6 +41,7 @@ public class UrgencyAndEpidemicHandler {
         if (level.getGameTime() % 40 == 0) {
             handleInfectionSpread(level);
             handleUrgentExpiry(level);
+            handleAnesthesiaExpiry(level);
             handleWoundParticles(level);
         }
         if (level.getGameTime() % 20 == 0) {
@@ -126,6 +127,36 @@ public class UrgencyAndEpidemicHandler {
             }
         }
         return false;
+    }
+
+    private static void handleAnesthesiaExpiry(Level level) {
+        List<LivingEntity> anesthetized = level.getEntitiesOfClass(LivingEntity.class,
+                new AABB(-30000000, -64, -30000000, 30000000, 320, 30000000),
+                e -> e.getTags().contains("veterinarium_anesthetized"));
+        for (LivingEntity e : anesthetized) {
+            long expiry = e.getPersistentData().getLong("VetAnesthesiaExpiry");
+            if (expiry == 0) { e.removeTag("veterinarium_anesthetized"); continue; }
+            if (level.getGameTime() >= expiry) {
+                // Réveil
+                e.removeTag("veterinarium_anesthetized");
+                e.getPersistentData().remove("VetAnesthesiaExpiry");
+                e.removeEffect(MobEffects.BLINDNESS);
+                e.removeEffect(MobEffects.DARKNESS);
+                e.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                e.removeEffect(MobEffects.WEAKNESS);
+                e.setCustomName(null);
+                e.setCustomNameVisible(false);
+                level.playSound(null, e.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.PLAYERS, 0.6f, 1.2f);
+                if (level instanceof ServerLevel sl) {
+                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, e.getX(), e.getY()+1.5, e.getZ(), 3, 0.3,0.3,0.3,0.1);
+                }
+            } else {
+                // particules Zzz pendant sommeil
+                if (level instanceof ServerLevel sl && level.getGameTime() % 20 == 0) {
+                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, e.getX(), e.getY()+2.0, e.getZ(), 1, 0.2,0.2,0.2,0.3);
+                }
+            }
+        }
     }
 
     private static void handleUrgentExpiry(Level level) {

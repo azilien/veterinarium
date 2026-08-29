@@ -307,5 +307,12 @@
   "message.veterinarium.urgency.timer_prefix": "🚨 URGENCE ",
   "message.veterinarium.urgency.ambulance_timer": "§e🚑 Ambulance %ss restants pour bonus <60s → cours au Hut !",
   "message.veterinarium.urgency.urgent_name": "§c🚨 URGENCE §7- ",
-  "message.veterinarium.urgency.call": "§c🚨 APPEL D'URGENCE ! §f%s §7à %s / %s §8(distance %s) §7— Seringue -> Bloc !"
+  "message.veterinarium.urgency.call": "§c🚨 APPEL D'URGENCE ! §f%s §7à %s / %s §8(distance %s) §7— Seringue -> Bloc !",
+  "message.veterinarium.table.stock": "§c[Bloc Opératoire] §7Stock: §e%d bandage §7| §d%d anesthésiant §7| §a%d compression",
+  "message.veterinarium.table.insert": "§a[Bloc Opératoire] §7%s chargé (§7%d)",
+  "message.veterinarium.table.full": "§c[Bloc Opératoire] §7Inventaire plein (3 slots) — Sneak-clic pour voir",
+  "message.veterinarium.table.ready": "§c[Bloc Opératoire] §7Prêt. Place §eBandage§7/§dAnesthésiant§7/§aCompression§7 (clic) — la table fournira auto à 5 blocs.",
+  "message.veterinarium.table.empty_stock": "§7→ Clic avec §eBandage§7/§dAnesthésiant§7/§aCompression§7 pour charger",
+  "message.veterinarium.table.extract": "§7[Bloc Opératoire] §fRetrait: %s",
+  "message.veterinarium.general_anesthesia": "§d[Anesthésie Générale] §aCréature endormie 10s — la table a fourni l'anesthésiant."
 }

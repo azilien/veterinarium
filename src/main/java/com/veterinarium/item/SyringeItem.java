@@ -69,7 +69,34 @@ public class SyringeItem extends Item {
             target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1));
             target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100, 0));
             level.playSound(null, target.blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0f, 1.3f);
-            player.displayClientMessage(Component.translatable("message.veterinarium.syringe.anesthesia_injected"), true);
+            // Anesthésie générale si table à proximité avec stock
+            boolean hasTableAnesthetic = false;
+            for (int dx=-5;dx<=5 && !hasTableAnesthetic;dx++)
+                for (int dy=-2;dy<=2 && !hasTableAnesthetic;dy++)
+                    for (int dz=-5;dz<=5 && !hasTableAnesthetic;dz++) {
+                        var be = level.getBlockEntity(target.blockPosition().offset(dx,dy,dz));
+                        if (be instanceof com.veterinarium.block.entity.OperatingTableBlockEntity table) {
+                            for (int i=0;i<table.getHandler().getSlots();i++) {
+                                var s = table.getHandler().getStackInSlot(i);
+                                if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()) && s.getCount()>0) { hasTableAnesthetic = true; break; }
+                            }
+                        }
+                    }
+            if (hasTableAnesthetic) {
+                // Anesthésie générale: endormissement profond 10s
+                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 3));
+                target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
+                target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0));
+                target.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 100, 0));
+                target.addTag("veterinarium_anesthetized");
+                target.getPersistentData().putLong("VetAnesthesiaExpiry", level.getGameTime() + 200);
+                target.setCustomName(net.minecraft.network.chat.Component.literal("§dEndormi..."));
+                target.setCustomNameVisible(true);
+                level.playSound(null, target.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.PLAYERS, 0.6f, 0.5f);
+                player.displayClientMessage(Component.literal("§d[Anesthésie Générale] §aCréature endormie 10s — la table a fourni l'anesthésiant."), false);
+            } else {
+                player.displayClientMessage(Component.translatable("message.veterinarium.syringe.anesthesia_injected"), true);
+            }
             try { com.veterinarium.data.BestiaryProgress.recordDiagnose(player, target, wt); } catch (Exception ignored) {}
 
             EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;

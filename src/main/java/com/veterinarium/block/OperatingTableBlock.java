@@ -46,19 +46,20 @@ public class OperatingTableBlock extends Block implements EntityBlock {
         // sneak + vide = info
         ItemStack held = player.getMainHandItem();
         if (player.isShiftKeyDown()) {
-            int band = 0, anest = 0;
+            int band = 0, anest = 0, comp = 0;
             for (int i=0;i<table.getHandler().getSlots();i++) {
                 ItemStack s = table.getHandler().getStackInSlot(i);
                 if (s.is(com.veterinarium.registry.ModItems.BANDAGE.get())) band += s.getCount();
                 if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) anest += s.getCount();
+                if (s.is(com.veterinarium.registry.ModItems.COMPRESSION_BANDAGE.get())) comp += s.getCount();
             }
-            player.displayClientMessage(Component.literal("§c[Bloc Opératoire] §7Stock: §e" + band + " bandage §7| §d" + anest + " anesthésiant §7(Sneak-clic pour vider)"), false);
-            if (band==0 && anest==0) player.displayClientMessage(Component.literal("§7→ Clic avec §eBandage§7/§dAnesthésiant §7pour charger la table (accès auto pendant chirurgie à 5 blocs)"), false);
+            player.displayClientMessage(Component.literal("§c[Bloc Opératoire] §7Stock: §e" + band + " bandage §7| §d" + anest + " anesthésiant §7| §a" + comp + " compression"), false);
+            if (band==0 && anest==0 && comp==0) player.displayClientMessage(Component.literal("§7→ Clic avec §eBandage§7/§dAnesthésiant§7/§aCompression§7 pour charger"), false);
             level.playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.4f, 1.2f);
             return InteractionResult.SUCCESS;
         }
-        // si tient bandage/anesthetic -> insère
-        if (!held.isEmpty() && (held.is(com.veterinarium.registry.ModItems.BANDAGE.get()) || held.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()))) {
+        // si tient bandage/anesthetic/compression -> insère
+        if (!held.isEmpty() && (held.is(com.veterinarium.registry.ModItems.BANDAGE.get()) || held.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()) || held.is(com.veterinarium.registry.ModItems.COMPRESSION_BANDAGE.get()))) {
             ItemStack copy = held.copy();
             copy.setCount(1);
             for (int i=0;i<table.getHandler().getSlots();i++) {
@@ -86,7 +87,7 @@ public class OperatingTableBlock extends Block implements EntityBlock {
                 }
             }
         }
-        player.displayClientMessage(Component.literal("§c[Bloc Opératoire] §7Prêt. Place §eBandage§7/§dAnesthésiant§7 (clic) puis soigne à 5 blocs — la table fournira auto."), true);
+        player.displayClientMessage(Component.literal("§c[Bloc Opératoire] §7Prêt. Place §eBandage§7/§dAnesthésiant§7/§aCompression§7 (clic) — la table fournira auto à 5 blocs."), true);
         level.playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.4f, 1.2f);
         return InteractionResult.SUCCESS;
     }
