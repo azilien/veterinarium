@@ -83,7 +83,7 @@ public class SutureKitItem extends Item {
                 target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 120, 1));
                 target.hurt(level.damageSources().magic(), 2.0f);
                 level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.ZOMBIE_HURT, SoundSource.PLAYERS, 1.0f, 0.8f);
-                player.displayClientMessage(Component.literal("§c☠ Infection ! §7Il fallait opérer au §cScalpel §7d'abord ! §f" + target.getName().getString() + " s'aggrave."), true);
+                player.displayClientMessage(Component.translatable("message.veterinarium.suture.infection.missing_scalpel", target.getName().getString()), true);
                 EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                 stack.hurtAndBreak(1, player, slot);
                 return InteractionResult.SUCCESS;
@@ -93,28 +93,28 @@ public class SutureKitItem extends Item {
                 if (wt.needsBandage()) {
                     boolean fromTable = tryConsumeFromTable(level, target.blockPosition(), wt, false);
                     if (fromTable) {
-                        player.displayClientMessage(Component.literal("§c[Bloc Opératoire] §a1 Bandage fourni par la table → suture étanche"), false);
+                        player.displayClientMessage(Component.translatable("message.veterinarium.suture.bandage.table_supplied"), false);
                     } else {
                         boolean hasTableNearby = hasNearbyTableWithStock(level, target.blockPosition(), wt, false);
                         int has = countItem(player, ModItems.BANDAGE.get());
                         if (has < 1) {
-                            String src = hasTableNearby ? "dans la table/inventaire" : "dans l'inventaire (ou charge la table à 5 blocs)";
-                            player.displayClientMessage(Component.literal("§c⚠ " + wt.getDisplay() + " §7nécessite §e1 Bandage §7" + src + " ! (50% rechute)"), true);
+                            String srcKey = hasTableNearby ? "message.veterinarium.suture.source.table_or_inventory" : "message.veterinarium.suture.source.inventory_only";
+                            player.displayClientMessage(Component.translatable("message.veterinarium.suture.needs_bandage", wt.getDisplay(), Component.translatable(srcKey)), true);
                             if (level.random.nextFloat() < 0.5f) {
                                 target.hurt(level.damageSources().magic(), 3.0f);
                                 target.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 0));
                                 target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
                                 level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.PLAYER_HURT, SoundSource.PLAYERS, 1.0f, 0.7f);
-                                player.displayClientMessage(Component.literal("§c☠ Hémorragie: sans bandage la plaie se rouvre!"), false);
+                                player.displayClientMessage(Component.translatable("message.veterinarium.suture.bandage.fail"), false);
                                 EquipmentSlot sl = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                                 stack.hurtAndBreak(1, player, sl);
                                 return InteractionResult.SUCCESS;
                             } else {
-                                player.displayClientMessage(Component.literal("§e→ Suture réussie de justesse sans bandage..."), false);
+                                player.displayClientMessage(Component.translatable("message.veterinarium.suture.bandage.lucky"), false);
                             }
                         } else {
                             consumeItem(player, ModItems.BANDAGE.get());
-                            player.displayClientMessage(Component.literal("§e[Bandage] §a1 Bandage consommé → suture étanche"), false);
+                            player.displayClientMessage(Component.translatable("message.veterinarium.suture.bandage.consumed"), false);
                         }
                     }
                 }
@@ -128,7 +128,7 @@ public class SutureKitItem extends Item {
                 } catch (Exception e) {
                     level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.WOOL_PLACE, SoundSource.PLAYERS, 1.0f, 0.9f);
                 }
-                player.displayClientMessage(Component.literal("§d[Kit de Suture] §aSuture réussie sur " + target.getName().getString() + " §a+3 coeurs + Régénération"), true);
+                player.displayClientMessage(Component.translatable("message.veterinarium.suture.success", target.getName().getString()), true);
 
                 // Si c'est nos entités blessées custom, marque healed pour texture
                 if (target instanceof com.veterinarium.entity.WoundedWolfEntity woundedWolf) {
@@ -159,7 +159,7 @@ public class SutureKitItem extends Item {
                     woundedDrake.setHealed(true);
                     player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 1200, 1));
                     target.spawnAtLocation(net.minecraft.world.item.Items.DRAGON_BREATH, 2);
-                    player.displayClientMessage(Component.literal("§6☢ Drake Boss guéri ! Souffle de dragon obtenu + réputation légendaire !"), false);
+                    player.displayClientMessage(Component.translatable("message.veterinarium.suture.drake_boss_healed"), false);
                 }
                 // Ice & Fire dragon healed bonus
                 try { com.veterinarium.integration.IceAndFireIntegration.onDragonHealed(target, player); } catch (Exception ignored) {}
@@ -169,7 +169,7 @@ public class SutureKitItem extends Item {
                     player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 600, 0));
                     if (level.random.nextFloat() < 0.5f) {
                         target.spawnAtLocation(net.minecraft.world.item.Items.EMERALD, 1);
-                        player.displayClientMessage(Component.literal("§e★ Le villageois reconnaissant vous offre une émeraude !"), false);
+                        player.displayClientMessage(Component.translatable("message.veterinarium.suture.villager_reward"), false);
                     }
                 }
 
@@ -177,19 +177,19 @@ public class SutureKitItem extends Item {
                     if (level.random.nextFloat() < 0.33f) {
                         tamable.tame(player);
                         tamable.setOrderedToSit(false);
-                        player.displayClientMessage(Component.literal("§6★ " + target.getName().getString() + " vous fait confiance après les soins ! (Apprivoisé)"), false);
+                        player.displayClientMessage(Component.translatable("message.veterinarium.suture.tamed", target.getName().getString()), false);
                         try { level.playSound(null, target.blockPosition(), ModSounds.HEAL_SUCCESS.get(), SoundSource.NEUTRAL, 0.8f, 1.2f); } catch (Exception e) { level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.WOLF_WHINE, SoundSource.NEUTRAL, 1.0f, 1.0f); }
                     } else {
-                        player.displayClientMessage(Component.literal("§7La créature est soignée mais reste méfiante... Réessayez après un autre soin."), false);
+                        player.displayClientMessage(Component.translatable("message.veterinarium.suture.tame_failed"), false);
                     }
                 } else if (target instanceof net.minecraft.world.entity.animal.horse.AbstractHorse horse && !horse.isTamed()) {
                     if (level.random.nextFloat() < 0.33f) {
                         horse.setTamed(true);
                         horse.setOwnerUUID(player.getUUID());
-                        player.displayClientMessage(Component.literal("§6★ " + target.getName().getString() + " vous fait confiance après les soins ! (Apprivoisé)"), false);
+                        player.displayClientMessage(Component.translatable("message.veterinarium.suture.tamed", target.getName().getString()), false);
                         try { level.playSound(null, target.blockPosition(), ModSounds.HEAL_SUCCESS.get(), SoundSource.NEUTRAL, 0.8f, 1.0f); } catch (Exception e) { level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.HORSE_ANGRY, SoundSource.NEUTRAL, 1.0f, 1.0f); }
                     } else {
-                        player.displayClientMessage(Component.literal("§7La créature est soignée mais reste méfiante... Réessayez après un autre soin."), false);
+                        player.displayClientMessage(Component.translatable("message.veterinarium.suture.tame_failed"), false);
                     }
                 }
 
@@ -210,7 +210,7 @@ public class SutureKitItem extends Item {
                 if (target.getTags().contains("veterinarium_urgent")) {
                     target.removeTag("veterinarium_urgent");
                     target.getPersistentData().remove("VetUrgentExpiry");
-                    player.displayClientMessage(Component.literal("§a🚨 URGENCE RÉUSSIE ! §f" + target.getName().getString() + " §asauvé à temps ! §e+3 émeraudes + Héro du village"), false);
+                    player.displayClientMessage(Component.translatable("message.veterinarium.suture.urgency.success", target.getName().getString()), false);
                     target.spawnAtLocation(net.minecraft.world.item.Items.EMERALD, 3);
                     player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 1200, 0));
                     level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 1.0f, 1.2f);
@@ -218,8 +218,9 @@ public class SutureKitItem extends Item {
                 }
                 // Enlève le nom "Blessé" et met "Soigné" (sauf si déjà fait par nos entités custom)
                 boolean isCustomWounded = target instanceof com.veterinarium.entity.WoundedWolfEntity || target instanceof com.veterinarium.entity.WoundedCatEntity || target instanceof com.veterinarium.entity.WoundedHorseEntity || target instanceof com.veterinarium.entity.WoundedFoxEntity || target instanceof com.veterinarium.entity.WoundedVillagerEntity || target instanceof com.veterinarium.entity.WoundedDrakeEntity;
-                if (!isCustomWounded && target.getCustomName() != null && target.getCustomName().getString().contains("Blessé")) {
-                    target.setCustomName(Component.literal("§a❤ Soigné §7- " + target.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§a❤ Soigné §7- ", "")));
+                if (!isCustomWounded && target.getCustomName() != null && target.getCustomName().getString().contains(Component.translatable("message.veterinarium.suture.name.wounded").getString())) {
+                    String nameClean = target.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§a❤ Soigné §7- ", "");
+                    target.setCustomName(Component.translatable("message.veterinarium.suture.name.healed").append(nameClean));
                     target.setCustomNameVisible(true);
                 }
                 // Bonus: si wolf, enlève lenteur
@@ -230,7 +231,7 @@ public class SutureKitItem extends Item {
                 stack.hurtAndBreak(1, player, slot);
                 return InteractionResult.SUCCESS;
             } else {
-                player.displayClientMessage(Component.literal("§7[Kit de Suture] La créature doit d'abord être opérée au Scalpel ou être blessée (<90% HP)"), true);
+                player.displayClientMessage(Component.translatable("message.veterinarium.suture.not_ready"), true);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
@@ -238,11 +239,11 @@ public class SutureKitItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Kit complet: aiguille + fil stérile"));
-        tooltip.add(Component.literal("§8Clic droit sur créature opérée/blessée"));
-        tooltip.add(Component.literal("§8-> Soigne 3 coeurs + Régénération"));
-        tooltip.add(Component.literal("§8-> 33% de chance d'apprivoiser"));
-        tooltip.add(Component.literal("§eNécessite: Scalpel d'abord"));
-        tooltip.add(Component.literal("§eHémorragie/Infection → §7nécessite §eBandage"));
+        tooltip.add(Component.translatable("message.veterinarium.suture.tooltip.description"));
+        tooltip.add(Component.translatable("message.veterinarium.suture.tooltip.usage"));
+        tooltip.add(Component.translatable("message.veterinarium.suture.tooltip.heal"));
+        tooltip.add(Component.translatable("message.veterinarium.suture.tooltip.tame_chance"));
+        tooltip.add(Component.translatable("message.veterinarium.suture.tooltip.requires_scalpel"));
+        tooltip.add(Component.translatable("message.veterinarium.suture.tooltip.requires_bandage"));
     }
 }

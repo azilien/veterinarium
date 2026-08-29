@@ -149,33 +149,36 @@ public class HospitalHutBlockEntity extends BlockEntity {
 
     public String getContractName() {
         return switch(contractType) {
-            case 1 -> "Loups";
-            case 2 -> "Chats";
-            case 3 -> "Chevaux";
-            case 4 -> "Renards";
-            case 5 -> "Villageois";
-            case 6 -> "Drakes Boss";
-            case 7 -> "Infections";
-            case 8 -> "Captures Sphère";
-            default -> "Créatures";
+            case 1 -> Component.translatable("message.veterinarium.hut.contract.type.wolves").getString();
+            case 2 -> Component.translatable("message.veterinarium.hut.contract.type.cats").getString();
+            case 3 -> Component.translatable("message.veterinarium.hut.contract.type.horses").getString();
+            case 4 -> Component.translatable("message.veterinarium.hut.contract.type.foxes").getString();
+            case 5 -> Component.translatable("message.veterinarium.hut.contract.type.villagers").getString();
+            case 6 -> Component.translatable("message.veterinarium.hut.contract.type.drakes").getString();
+            case 7 -> Component.translatable("message.veterinarium.hut.contract.type.infections").getString();
+            case 8 -> Component.translatable("message.veterinarium.hut.contract.type.captures").getString();
+            default -> Component.translatable("message.veterinarium.hut.contract.type.creatures").getString();
         };
     }
     public Component getContractDisplay() {
-        if (contractDay==-1) return Component.literal("§7Aucun contrat - reviens demain");
-        String status = contractClaimed ? "§a✔ Réussi" : (contractProgress>=contractNeeded ? "§e▶ À récupérer" : "§7" + contractProgress + "/" + contractNeeded);
-        String typeName = switch(contractType) {
-            case 0 -> "Soigne " + contractNeeded + " créatures";
-            case 1 -> "Soigne " + contractNeeded + " loups";
-            case 2 -> "Soigne " + contractNeeded + " chats";
-            case 3 -> "Soigne " + contractNeeded + " chevaux";
-            case 4 -> "Soigne " + contractNeeded + " renards";
-            case 5 -> "Soigne " + contractNeeded + " villageois";
-            case 6 -> "Soigne " + contractNeeded + " drake(s) boss";
-            case 7 -> "Soigne " + contractNeeded + " infections";
-            case 8 -> "Capture " + contractNeeded + " créature(s) (sphère)";
-            default -> "Soigne " + contractNeeded;
+        if (contractDay==-1) return Component.translatable("message.veterinarium.hut.contract.none");
+        Component status;
+        if (contractClaimed) status = Component.translatable("message.veterinarium.hut.contract.status.completed");
+        else if (contractProgress>=contractNeeded) status = Component.translatable("message.veterinarium.hut.contract.status.claim");
+        else status = Component.literal("§7" + contractProgress + "/" + contractNeeded);
+        String typeKey = switch(contractType) {
+            case 0 -> "message.veterinarium.hut.contract.heal_any";
+            case 1 -> "message.veterinarium.hut.contract.heal_wolves";
+            case 2 -> "message.veterinarium.hut.contract.heal_cats";
+            case 3 -> "message.veterinarium.hut.contract.heal_horses";
+            case 4 -> "message.veterinarium.hut.contract.heal_foxes";
+            case 5 -> "message.veterinarium.hut.contract.heal_villagers";
+            case 6 -> "message.veterinarium.hut.contract.heal_drakes";
+            case 7 -> "message.veterinarium.hut.contract.heal_infections";
+            case 8 -> "message.veterinarium.hut.contract.capture";
+            default -> "message.veterinarium.hut.contract.heal_any";
         };
-        return Component.literal("§6Contrat J" + contractDay + " : " + typeName + " " + status);
+        return Component.translatable("message.veterinarium.hut.contract.display", contractDay, Component.translatable(typeKey, contractNeeded), status);
     }
     public boolean isContractCompleted() { return contractProgress >= contractNeeded && !contractClaimed && contractDay!=-1; }
     public void onHealForContract(String entityKey, com.veterinarium.wound.WoundType wt, boolean isCapture) {
@@ -293,7 +296,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
             // annonce
             for (var p : lvl.players()) {
                 if (p.distanceToSqr(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()) < 10000) {
-                    p.displayClientMessage(Component.literal("§6📋 Nouveau contrat Hut J" + currentDay + " : " + getContractDisplay().getString()), false);
+                    p.displayClientMessage(Component.translatable("message.veterinarium.hut.contract.new", currentDay, getContractDisplay()), false);
                 }
             }
         }
@@ -350,7 +353,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
                     target.addTag("veterinarium_operated");
                     target.removeTag("veterinarium_wounded");
                     target.removeTag("veterinarium_needs_scalpel");
-                    target.setCustomName(Component.literal("§a❤ Soigné par Healer Hut Lv"+hutLevel));
+                    target.setCustomName(Component.translatable("message.veterinarium.hut.healer.custom_name", hutLevel));
                     target.setCustomNameVisible(true);
                     healedCount++;
                     if (target instanceof com.veterinarium.entity.WoundedWolfEntity w) w.setHealed(true);
@@ -390,7 +393,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
                 var pd = nearest.getPersistentData();
                 if (rep >= 25 && !pd.getBoolean("VetRep25")) {
                     pd.putBoolean("VetRep25", true);
-                    nearest.displayClientMessage(net.minecraft.network.chat.Component.literal("§a🏥 Réputation 25% — Hut te donne 1 bandage/jour (dans coffre)"), false);
+                    nearest.displayClientMessage(Component.translatable("message.veterinarium.hut.rep.25"), false);
                     // donne 2 bandages direct
                     var b = new net.minecraft.world.item.ItemStack(com.veterinarium.registry.ModItems.BANDAGE.get(), 2);
                     if (!nearest.addItem(b)) nearest.drop(b, false);
@@ -398,7 +401,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
                 }
                 if (rep >= 50 && !pd.getBoolean("VetRep50")) {
                     pd.putBoolean("VetRep50", true);
-                    nearest.displayClientMessage(net.minecraft.network.chat.Component.literal("§a🏥 Réputation 50% — Villageois soignés -50% trades (Héros du village prolongé)"), false);
+                    nearest.displayClientMessage(Component.translatable("message.veterinarium.hut.rep.50"), false);
                     nearest.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.HERO_OF_THE_VILLAGE, 6000, 0));
                     // bonus sphères
                     var s = new net.minecraft.world.item.ItemStack(com.veterinarium.registry.ModItems.VET_SPHERE.get(), 2);
@@ -406,12 +409,12 @@ public class HospitalHutBlockEntity extends BlockEntity {
                 }
                 if (rep >= 75 && !pd.getBoolean("VetRep75")) {
                     pd.putBoolean("VetRep75", true);
-                    nearest.displayClientMessage(net.minecraft.network.chat.Component.literal("§6🏥 Réputation 75% — Un Drake vient te rendre visite !"), false);
+                    nearest.displayClientMessage(Component.translatable("message.veterinarium.hut.rep.75"), false);
                     if (level instanceof net.minecraft.server.level.ServerLevel sl) {
                         var drake = com.veterinarium.registry.ModEntities.WOUNDED_DRAKE.get().create(sl);
                         if (drake != null) {
                             drake.moveTo(pos.getX()+2, pos.getY()+5, pos.getZ()+2, 0, 0);
-                            drake.setCustomName(net.minecraft.network.chat.Component.literal("§6Drake Réputation 75% - Soigne-le !"));
+                            drake.setCustomName(Component.translatable("message.veterinarium.hut.drake_rep75_name"));
                             drake.setCustomNameVisible(true);
                             sl.addFreshEntity(drake);
                         }
@@ -419,7 +422,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
                 }
                 if (rep >= 100 && !pd.getBoolean("VetRep100")) {
                     pd.putBoolean("VetRep100", true);
-                    nearest.displayClientMessage(net.minecraft.network.chat.Component.literal("§6★ Réputation 100% — Infirmier Chef ! Cape + Netherite offerts"), false);
+                    nearest.displayClientMessage(Component.translatable("message.veterinarium.hut.rep.100"), false);
                     var nether = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT, 1);
                     if (!nearest.addItem(nether)) nearest.drop(nether, false);
                     nearest.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.HERO_OF_THE_VILLAGE, 12000, 1));
@@ -447,11 +450,11 @@ public class HospitalHutBlockEntity extends BlockEntity {
                     le.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.REGENERATION, 100, 1));
                     if (isFast) {
                         le.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 200, 0));
-                        p.displayClientMessage(net.minecraft.network.chat.Component.literal("§a🚑 Arrivée rapide ! Bonus heal + résistance (<60s) + émeraude"), false);
+                        p.displayClientMessage(Component.translatable("message.veterinarium.hut.ambulance.fast"), false);
                         le.spawnAtLocation(net.minecraft.world.item.Items.EMERALD, 1);
                         level.playSound(null, pos, net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.5f);
                     } else {
-                        p.displayClientMessage(net.minecraft.network.chat.Component.literal("§7🚑 Patient déposé au Hut. Opère-le maintenant !"), false);
+                        p.displayClientMessage(Component.translatable("message.veterinarium.hut.ambulance.delivered"), false);
                     }
                     if (level instanceof net.minecraft.server.level.ServerLevel sl) {
                         sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HEART, le.getX(), le.getY()+1, le.getZ(), 3, 0.2,0.2,0.2,0.1);

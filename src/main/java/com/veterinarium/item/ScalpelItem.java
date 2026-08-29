@@ -83,29 +83,29 @@ public class ScalpelItem extends Item {
                 if (wt.needsAnesthetic()) {
                     boolean fromTable = tryConsumeFromTable(level, target.blockPosition(), wt, true);
                     if (fromTable) {
-                        player.displayClientMessage(Component.literal("§d[Bloc Opératoire] §a1 Anesthésiant fourni par la table → incision sans douleur"), false);
+                        player.displayClientMessage(Component.translatable("message.veterinarium.scalpel.anesthetic.table_supplied"), false);
                         target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 200, 0));
                     } else {
                         boolean hasTableNearby = hasNearbyTableWithStock(level, target.blockPosition(), wt, true);
                         int has = countItem(player, ModItems.ANESTHETIC.get());
                         if (has < 1) {
-                            String src = hasTableNearby ? "dans la table/inventaire" : "dans l'inventaire (ou charge la table à 5 blocs)";
-                            player.displayClientMessage(Component.literal("§c⚠ " + wt.getDisplay() + " §7nécessite §d1 Anesthésiant §7" + src + " ! (50% douleur)"), true);
+                            String srcKey = hasTableNearby ? "message.veterinarium.scalpel.source.table_or_inventory" : "message.veterinarium.scalpel.source.inventory_only";
+                            player.displayClientMessage(Component.translatable("message.veterinarium.scalpel.needs_anesthetic", wt.getDisplay(), Component.translatable(srcKey)), true);
                             if (level.random.nextFloat() < 0.5f) {
                                 target.hurt(level.damageSources().magic(), 2.0f);
                                 target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.WEAKNESS, 200, 1));
                                 target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, 300, 2));
                                 level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.VILLAGER_HURT, SoundSource.PLAYERS, 1.0f, 0.7f);
-                                player.displayClientMessage(Component.literal("§c☠ Échec anesthésie: la créature hurle, soin réduit!"), false);
+                                player.displayClientMessage(Component.translatable("message.veterinarium.scalpel.anesthesia.fail"), false);
                                 EquipmentSlot sl = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                                 stack.hurtAndBreak(1, player, sl);
                                 return InteractionResult.SUCCESS;
                             } else {
-                                player.displayClientMessage(Component.literal("§e→ Chanceux: incision réussie malgré la douleur..."), false);
+                                player.displayClientMessage(Component.translatable("message.veterinarium.scalpel.anesthesia.lucky"), false);
                             }
                         } else {
                             consumeItem(player, ModItems.ANESTHETIC.get());
-                            player.displayClientMessage(Component.literal("§d[Anesthésie] §a1 Anesthésiant consommé → incision sans douleur"), false);
+                            player.displayClientMessage(Component.translatable("message.veterinarium.scalpel.anesthetic.consumed"), false);
                             target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 200, 0));
                         }
                     }
@@ -117,7 +117,7 @@ public class ScalpelItem extends Item {
                 } catch (Exception e) {
                     level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 0.8f, 1.5f);
                 }
-                player.displayClientMessage(Component.literal("§c[Scalpel] §aIncision précise -> §f" + target.getName().getString() + " §a+" + heal + " HP"), true);
+                player.displayClientMessage(Component.translatable("message.veterinarium.scalpel.incision.success", target.getName().getString(), String.format("%.0f", heal)), true);
                 EquipmentSlot slot = hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                 stack.hurtAndBreak(1, player, slot);
                 target.addTag("veterinarium_operated");
@@ -129,10 +129,10 @@ public class ScalpelItem extends Item {
                 // Bonus Ars Nouveau si présent
                 try { com.veterinarium.integration.ArsNouveauIntegration.applyArsBonus(target, player); } catch (Exception ignored) {}
                 try { com.veterinarium.data.BestiaryProgress.recordOperate(player, target); } catch (Exception ignored) {}
-                player.displayClientMessage(Component.literal("§7→ Prêt pour suture ! Utilise le §dKit de Suture§7 maintenant."), false);
+                player.displayClientMessage(Component.translatable("message.veterinarium.scalpel.ready_for_suture"), false);
                 return InteractionResult.SUCCESS;
             } else {
-                player.displayClientMessage(Component.literal("§7[Scalpel] §f" + target.getName().getString() + " n'a pas besoin de chirurgie (PV max)"), true);
+                player.displayClientMessage(Component.translatable("message.veterinarium.scalpel.no_surgery_needed", target.getName().getString()), true);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
@@ -140,9 +140,9 @@ public class ScalpelItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Outil chirurgical de précision"));
-        tooltip.add(Component.literal("§8Clic droit sur créature blessée -> soigne 1 coeur"));
-        tooltip.add(Component.literal("§8Marque la créature comme 'opérée'"));
-        tooltip.add(Component.literal("§dFracture/Infection → §7nécessite §dAnesthésiant §7dans l'inventaire"));
+        tooltip.add(Component.translatable("message.veterinarium.scalpel.tooltip.description"));
+        tooltip.add(Component.translatable("message.veterinarium.scalpel.tooltip.usage"));
+        tooltip.add(Component.translatable("message.veterinarium.scalpel.tooltip.mark"));
+        tooltip.add(Component.translatable("message.veterinarium.scalpel.tooltip.requires_anesthetic"));
     }
 }

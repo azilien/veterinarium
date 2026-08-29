@@ -75,13 +75,13 @@ public class HellfireSerumItem extends Item {
         if (!isHealed) {
             // tolère aussi si le joueur insiste: si la créature est >90% HP et déjà opérée, on laisse muter (pour serie)
             if (!(target.getHealth() >= target.getMaxHealth()*0.8f && (target.getTags().contains("veterinarium_operated") || target instanceof net.minecraft.world.entity.TamableAnimal ta && ta.isTame()))) {
-                player.displayClientMessage(Component.literal("§c[Sérum Hellfire] §7La cible doit être §aSOIGNÉE§7 d'abord (Scalpel→Suture ou Hut). §f" + target.getName().getString() + " n'est pas prêt."), true);
+                player.displayClientMessage(Component.translatable("message.veterinarium.hellfire.target_not_healed", target.getName().getString()), true);
                 return InteractionResult.PASS;
             }
         }
 
         if (!hasNearbyOperatingTable(level, target.blockPosition())) {
-            player.displayClientMessage(Component.literal("§c[Sérum Hellfire] §7Pas de §cBloc Opératoire §7équipé à 5 blocs ! Charge 1 bandage + 1 anesthésiant."), true);
+            player.displayClientMessage(Component.translatable("message.veterinarium.hellfire.no_operating_table"), true);
             return InteractionResult.FAIL;
         }
         // tente conso table, sinon inventaire
@@ -98,15 +98,15 @@ public class HellfireSerumItem extends Item {
                 if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) anest+=s.getCount();
             }
             if (band<1 || anest<1) {
-                player.displayClientMessage(Component.literal("§c[Sérum] §7Il faut §e1 Bandage + §d1 Anesthésiant §7(dans table ou inventaire) pour la mutation."), true);
+                player.displayClientMessage(Component.translatable("message.veterinarium.hellfire.missing_supplies"), true);
                 return InteractionResult.FAIL;
             }
             // consomme
             consumeInv(player, com.veterinarium.registry.ModItems.BANDAGE.get());
             consumeInv(player, com.veterinarium.registry.ModItems.ANESTHETIC.get());
-            player.displayClientMessage(Component.literal("§e[Consommé] §71 Bandage + 1 Anesthésiant (inventaire) → mutation..."), false);
+            player.displayClientMessage(Component.translatable("message.veterinarium.hellfire.consumed_inventory"), false);
         } else {
-            player.displayClientMessage(Component.literal("§c[Bloc Opératoire] §a1 Bandage + 1 Anesthésiant fournis → mutation..."), false);
+            player.displayClientMessage(Component.translatable("message.veterinarium.hellfire.consumed_table"), false);
         }
 
         // mutation !
@@ -116,18 +116,18 @@ public class HellfireSerumItem extends Item {
             // spawn Hellfire Ravager à la position de la cible
             var ravager = ModEntities.HELLFIRE_RAVAGER.get().create(sl);
             if (ravager == null) {
-                player.displayClientMessage(Component.literal("§cErreur spawn Hellfire"), false);
+                player.displayClientMessage(Component.translatable("message.veterinarium.hellfire.spawn_error"), false);
                 return InteractionResult.FAIL;
             }
             ravager.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), target.getXRot());
-            ravager.setCustomName(Component.literal("§6☢ Hellfire Ravager §7(ADN " + (dnaInfo.isEmpty()? target.getName().getString(): dnaInfo) + ")"));
+            ravager.setCustomName(Component.translatable("message.veterinarium.hellfire.ravager_name", dnaInfo.isEmpty()? target.getName().getString(): dnaInfo));
             ravager.setCustomNameVisible(true);
             // tente tame direct si target était tame ou si joueur a chance
             if (target instanceof net.minecraft.world.entity.TamableAnimal tam && tam.isTame() && tam.isOwnedBy(player)) {
                 ravager.tame(player);
             } else if (level.random.nextFloat() < 0.7f) {
                 ravager.tame(player);
-                player.displayClientMessage(Component.literal("§6★ Le Ravager te reconnaît comme son maître !"), false);
+                player.displayClientMessage(Component.translatable("message.veterinarium.hellfire.tamed"), false);
             }
             // copie santé relative?
             sl.addFreshEntity(ravager);
@@ -144,7 +144,7 @@ public class HellfireSerumItem extends Item {
                 nbt.putInt("VetMutations", nbt.getInt("VetMutations")+1);
                 nbt.putBoolean("VetSeen_hellfire_ravager", true);
             } catch (Exception ignored) {}
-            player.displayClientMessage(Component.literal("§6☢ MUTATION RÉUSSIE ! §f" + ravager.getName().getString() + " §7est né du bloc opératoire."), false);
+            player.displayClientMessage(Component.translatable("message.veterinarium.hellfire.mutation_success", ravager.getName().getString()), false);
             if (!player.getAbilities().instabuild) stack.shrink(1);
             return InteractionResult.SUCCESS;
         }
@@ -158,10 +158,10 @@ public class HellfireSerumItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§6Sérum Hellfire - Mutagène"));
-        tooltip.add(Component.literal("§8Clic sur créature §aSOIGNÉE §8près Bloc Opé"));
-        tooltip.add(Component.literal("§8→ Transforme en §6Hellfire Ravager"));
-        tooltip.add(Component.literal("§8Requiert: 1 bandage + 1 anesthésiant (table)"));
-        tooltip.add(Component.literal("§c☢ Tier Ark - 40❤ 8 dmg feu"));
+        tooltip.add(Component.translatable("message.veterinarium.hellfire.tooltip.description"));
+        tooltip.add(Component.translatable("message.veterinarium.hellfire.tooltip.usage"));
+        tooltip.add(Component.translatable("message.veterinarium.hellfire.tooltip.result"));
+        tooltip.add(Component.translatable("message.veterinarium.hellfire.tooltip.requires"));
+        tooltip.add(Component.translatable("message.veterinarium.hellfire.tooltip.stats"));
     }
 }

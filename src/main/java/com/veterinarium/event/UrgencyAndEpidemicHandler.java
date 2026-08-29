@@ -92,7 +92,8 @@ public class UrgencyAndEpidemicHandler {
                     target.setHealth(max * 0.5f);
                     target.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
                     target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 400, 0));
-                    target.setCustomName(Component.literal("§c☠ Infecté §7- " + target.getName().getString().replace("§c☠ Infecté §7- ", "").replace("§c☠ Blessé §7- ", "")));
+                    String cleanName = target.getName().getString().replace("§c☠ Infecté §7- ", "").replace("§c☠ Blessé §7- ", "");
+                    target.setCustomName(Component.translatable("message.veterinarium.urgency.infected_name").append(cleanName));
                     target.setCustomNameVisible(true);
                     if (target instanceof Mob mob) mob.setPersistenceRequired();
                     if (level instanceof ServerLevel sl) {
@@ -101,7 +102,7 @@ public class UrgencyAndEpidemicHandler {
                     // alerte joueurs proches
                     for (var p : level.players()) {
                         if (p.distanceToSqr(target) < 5000) { // ~70 blocs
-                            p.displayClientMessage(Component.literal("§5☣ Contagion ! §f" + target.getName().getString() + " §7a attrapé §5l'Infection §7près de " + carrier.getName().getString()), false);
+                            p.displayClientMessage(Component.translatable("message.veterinarium.urgency.contagion", target.getName().getString(), carrier.getName().getString()), false);
                             level.playSound(null, p.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.PLAYERS, 0.6f, 0.8f);
                         }
                     }
@@ -144,14 +145,14 @@ public class UrgencyAndEpidemicHandler {
                         if (zombie != null) {
                             zombie.moveTo(e.getX(), e.getY(), e.getZ(), e.getYRot(), e.getXRot());
                             String name = e.hasCustomName() ? e.getCustomName().getString() : e.getName().getString();
-                            zombie.setCustomName(Component.literal(name.replace("🚨 URGENCE", "🧟 ZOMBIFIÉ").replace("☠", "🧟")));
+                            zombie.setCustomName(Component.literal(name.replace("🚨 URGENCE", Component.translatable("message.veterinarium.urgency.zombified").getString()).replace("☠", Component.translatable("message.veterinarium.urgency.zombified").getString())));
                             zombie.setCustomNameVisible(true);
                             zombie.setPersistenceRequired();
                             sl.addFreshEntity(zombie);
                             sl.sendParticles(net.minecraft.core.particles.ParticleTypes.SOUL, e.getX(), e.getY()+1, e.getZ(), 15, 0.3,0.3,0.3,0.1);
                             level.playSound(null, e.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.HOSTILE, 1.0f, 0.8f);
                             for (var p : level.players()) {
-                                p.displayClientMessage(Component.literal("§c🧟 ÉCHEC : §f" + name.replace("§c🚨 URGENCE §7- ", "") + " §7s'est zombifié ! Vite, soigne le zombie !"), false);
+                                p.displayClientMessage(Component.translatable("message.veterinarium.urgency.zombie_fail", name.replace("§c🚨 URGENCE §7- ", "")), false);
                             }
                         }
                         e.discard();
@@ -160,7 +161,7 @@ public class UrgencyAndEpidemicHandler {
                         e.hurt(level.damageSources().magic(), 100f);
                         e.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 1));
                         for (var p : level.players()) {
-                            p.displayClientMessage(Component.literal("§c☠ URGENCE ÉCHOUÉE ! §7" + e.getName().getString() + " n'a pas été sauvé à temps."), false);
+                            p.displayClientMessage(Component.translatable("message.veterinarium.urgency.failed", e.getName().getString()), false);
                             if (level instanceof ServerLevel sl2) sl2.sendParticles(net.minecraft.core.particles.ParticleTypes.SMOKE, e.getX(), e.getY()+1, e.getZ(), 10, 0.5,0.5,0.5,0.02);
                         }
                         e.removeTag("veterinarium_urgent");
@@ -196,7 +197,7 @@ public class UrgencyAndEpidemicHandler {
                             sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ANGRY_VILLAGER, e.getX(), e.getY()+1.8, e.getZ(), 2, 0.2,0.2,0.2,0.1);
                         }
                         String nameClean = e.getName().getString().replace("§c🚨 URGENCE §7- ", "").replace(" §8(5-8 min)", "").replace("§c☠ Blessé §7- ", "");
-                        Component timer = Component.literal(col + "🚨 URGENCE " + nameClean + " " + time + " §7[" + e.blockPosition().getX() + "/" + e.blockPosition().getZ() + "]");
+                        Component timer = Component.literal(col).append(Component.translatable("message.veterinarium.urgency.timer_prefix")).append(nameClean).append(" " + time + " §7[" + e.blockPosition().getX() + "/" + e.blockPosition().getZ() + "]");
                         for (var p : level.players()) {
                             if (p.distanceToSqr(e) < 10000) { // 100 blocs
                                 p.displayClientMessage(timer, true); // actionbar
@@ -264,7 +265,7 @@ public class UrgencyAndEpidemicHandler {
                     long elapsed = level.getGameTime() - start;
                     long remaining = 1200 - elapsed;
                     int secs = (int)Math.max(0, remaining/20);
-                    p.displayClientMessage(Component.literal("§e🚑 Ambulance " + secs + "s restants pour bonus <60s → cours au Hut !"), true);
+                    p.displayClientMessage(Component.translatable("message.veterinarium.urgency.ambulance_timer", secs), true);
                 }
             }
         }
@@ -308,11 +309,12 @@ public class UrgencyAndEpidemicHandler {
             spawned.addTag("veterinarium_urgent");
             long expiry = level.getGameTime() + getUrgencyTimerMin() + (getUrgencyTimerRange()>0 ? level.random.nextInt(getUrgencyTimerRange()) : 0);
             spawned.getPersistentData().putLong("VetUrgentExpiry", expiry);
-            spawned.setCustomName(Component.literal("§c🚨 URGENCE §7- " + spawned.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§c🚨 URGENCE §7- ", "") + " §8(5-8 min)"));
+            String urgentName = spawned.getName().getString().replace("§c☠ Blessé §7- ", "").replace("§c🚨 URGENCE §7- ", "");
+            spawned.setCustomName(Component.translatable("message.veterinarium.urgency.urgent_name").append(urgentName).append(" §8(5-8 min)"));
             spawned.setCustomNameVisible(true);
             sl.sendParticles(net.minecraft.core.particles.ParticleTypes.EXPLOSION, pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, 1, 0,0,0,0);
             // message
-            Component msg = Component.literal("§c🚨 APPEL D'URGENCE ! §f" + spawned.getName().getString().replace("§c🚨 URGENCE §7- ", "") + " §7à " + pos.getX() + " / " + pos.getZ() + " §8(distance " + (int)Math.sqrt(origin.distSqr(pos)) + ") §7— Seringue -> Bloc !");
+            Component msg = Component.translatable("message.veterinarium.urgency.call", spawned.getName().getString().replace("§c🚨 URGENCE §7- ", ""), pos.getX(), pos.getZ(), (int)Math.sqrt(origin.distSqr(pos)));
             for (var p : level.players()) {
                 p.displayClientMessage(msg, false);
                 p.sendSystemMessage(msg);

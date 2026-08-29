@@ -45,12 +45,16 @@ public class AnalysisTableBlock extends Block implements EntityBlock {
             WoundType wt = WoundType.fromId(id);
             table.setAnalysis(wt, target);
             try { com.veterinarium.data.BestiaryProgress.recordAnalysis(player, wt, target); } catch (Exception ignored) {}
-            player.displayClientMessage(Component.literal("§b[Table d'Analyse] §aAnalyse enregistrée: §f" + target + " → " + wt.getDisplay()), false);
+            player.displayClientMessage(Component.translatable("message.veterinarium.analysis.recorded", target, wt.getDisplay()), false);
             player.displayClientMessage(wt.getDescription(), false);
-            String req = wt.needsAnesthetic() ? "§dAnesthésiant " : "";
-            if (wt.needsBandage()) req += "§eBandage ";
-            if (!req.isEmpty()) player.displayClientMessage(Component.literal("§7→ Apporte " + req.trim() + " §7au Bloc Opératoire"), false);
-            else player.displayClientMessage(Component.literal("§a→ Soin standard au Bloc Opératoire"), false);
+            if (wt.needsAnesthetic() || wt.needsBandage()) {
+                net.minecraft.network.chat.MutableComponent req = (net.minecraft.network.chat.MutableComponent) Component.empty();
+                if (wt.needsAnesthetic()) req = req.append(Component.translatable("message.veterinarium.analysis.requires.anesthetic"));
+                if (wt.needsBandage()) req = req.append(Component.translatable("message.veterinarium.analysis.requires.bandage"));
+                player.displayClientMessage(Component.translatable("message.veterinarium.analysis.bring_to_table", req), false);
+            } else {
+                player.displayClientMessage(Component.translatable("message.veterinarium.analysis.standard_care"), false);
+            }
             level.playSound(null, pos, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0f, 1.2f);
             return InteractionResult.SUCCESS;
         }
@@ -74,13 +78,13 @@ public class AnalysisTableBlock extends Block implements EntityBlock {
             else if (target instanceof com.veterinarium.entity.WoundedVillagerEntity v) wt = v.getWoundType();
             else if (target.getPersistentData().contains("VetWound")) wt = WoundType.fromId(target.getPersistentData().getInt("VetWound"));
             table.setAnalysis(wt, target.getName().getString());
-            player.displayClientMessage(Component.literal("§b[Table d'Analyse] §7Scan auto: §f" + target.getName().getString() + " → " + wt.getDisplay()), false);
+            player.displayClientMessage(Component.translatable("message.veterinarium.analysis.auto_scan", target.getName().getString(), wt.getDisplay()), false);
             player.displayClientMessage(wt.getDescription(), false);
             level.playSound(null, pos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 0.6f, 1.5f);
             return InteractionResult.SUCCESS;
         }
-        player.displayClientMessage(Component.literal("§b[Table d'Analyse] §7Aucune cible. §fDiagnostique une créature avec §bSeringue §7puis reviens."), false);
-        player.displayClientMessage(Component.literal("§8Analyses totales: " + table.getAnalysesDone()), false);
+        player.displayClientMessage(Component.translatable("message.veterinarium.analysis.no_target"), false);
+        player.displayClientMessage(Component.translatable("message.veterinarium.analysis.total_count", String.valueOf(table.getAnalysesDone())), false);
         level.playSound(null, pos, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0f, 0.8f);
         return InteractionResult.SUCCESS;
     }

@@ -46,7 +46,7 @@ public class StretcherBlock extends HorizontalDirectionalBlock implements Entity
         if (!level.isClientSide) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof StretcherBlockEntity) {
-                player.displayClientMessage(Component.literal("§f[Brancard] §7Soin portable 0.5❤/2s dans 2.5 blocs — pose près d'un patient"), false);
+                player.displayClientMessage(Component.translatable("message.veterinarium.stretcher.description"), false);
                 level.playSound(null,pos,SoundEvents.WOOL_PLACE,SoundSource.BLOCKS,0.7f,1.0f);
             }
         }

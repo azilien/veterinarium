@@ -50,7 +50,7 @@ public class DnaSyringeItem extends Item {
                 || target.getHealth() < target.getMaxHealth()*0.7f;
 
         if (!isWounded) {
-            player.displayClientMessage(Component.literal("§7[Seringue ADN] §f" + target.getName().getString() + " n'est pas blessé — cible un §cBlessé§7."), true);
+            player.displayClientMessage(Component.translatable("message.veterinarium.dna_syringe.not_wounded", target.getName().getString()), true);
             return InteractionResult.PASS;
         }
         WoundType wt = getWound(target);
@@ -60,8 +60,8 @@ public class DnaSyringeItem extends Item {
         target.hurt(level.damageSources().magic(), 1.0f);
         target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.WEAKNESS, 100, 0));
         level.playSound(null, target.blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0f, 0.8f);
-        player.displayClientMessage(Component.literal("§5[Seringue ADN] §aADN prélevé : " + wt.getDisplay() + " §7sur " + target.getName().getString()), false);
-        player.displayClientMessage(Component.literal("§7→ Utilise au Bloc Opératoire avec §6Sérum Hellfire §7pour muter une créature soignée."), false);
+        player.displayClientMessage(Component.translatable("message.veterinarium.dna_syringe.dna_collected", wt.getDisplay(), target.getName().getString()), false);
+        player.displayClientMessage(Component.translatable("message.veterinarium.dna_syringe.hint"), false);
         // bestiaire
         try { com.veterinarium.data.BestiaryProgress.recordDiagnose(player, target, wt); } catch (Exception ignored) {}
         // consomme 1 vide et donne remplie
@@ -77,9 +77,9 @@ public class DnaSyringeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§5Seringue ADN - Vide"));
-        tooltip.add(Component.literal("§8Clic sur créature blessée → extrait ADN"));
-        tooltip.add(Component.literal("§8Donne Seringue Remplie (+1❤ dégâts)"));
-        tooltip.add(Component.literal("§6→ Craft Sérum Hellfire au bloc"));
+        tooltip.add(Component.translatable("message.veterinarium.dna_syringe.tooltip.description"));
+        tooltip.add(Component.translatable("message.veterinarium.dna_syringe.tooltip.usage"));
+        tooltip.add(Component.translatable("message.veterinarium.dna_syringe.tooltip.result"));
+        tooltip.add(Component.translatable("message.veterinarium.dna_syringe.tooltip.craft_hint"));
     }
 }
