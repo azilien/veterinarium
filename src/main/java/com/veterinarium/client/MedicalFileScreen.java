@@ -17,9 +17,10 @@ import java.util.List;
 
 public class MedicalFileScreen extends Screen {
     private int currentPage = 0;
-    private static final int TOTAL_PAGES = 11; // 0 cover, 1-6 creatures, 7 pathologies, 8 protocole, 9 recettes, 10 progression
+    private static final int TOTAL_PAGES = 11;
     private int worldWounded = 0, worldHealed = 0, worldOperated = 0;
     private int tickCounter = 0;
+    private int lastMouseX = 0, lastMouseY = 0;
 
     // creature defs
     private static class CreatureEntry {
@@ -105,10 +106,13 @@ public class MedicalFileScreen extends Screen {
     @Override
     public void render(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(gfx, mouseX, mouseY, partialTick);
+        lastMouseX = mouseX; lastMouseY = mouseY;
         int x = this.width / 2 - 145;
         int y = this.height / 2 - 100;
-        int w = 290;
-        int h = 200;
+        int w = Math.min(380, Math.max(290, this.width * 3 / 4));
+        int h = Math.min(240, Math.max(200, this.height * 3 / 4));
+        x = this.width / 2 - w / 2;
+        y = this.height / 2 - h / 2;
 
         // ombre
         gfx.fill(x+4, y+4, x+w+4, y+h+4, 0x44000000);
@@ -147,7 +151,7 @@ public class MedicalFileScreen extends Screen {
             gfx.fill(dotX0 + i*7, dotY, dotX0 + i*7 +5, dotY+5, col);
             if(i==currentPage) gfx.fill(dotX0 + i*7 +1, dotY+1, dotX0 + i*7 +4, dotY+4, 0xFFFFFFFF);
         }
-        gfx.drawCenteredString(this.font, (currentPage+1)+"/"+TOTAL_PAGES, this.width/2, dotY+7, 0x8B4513);
+        gfx.drawCenteredString(this.font, (currentPage+1)+"/"+TOTAL_PAGES, this.width/2, dotY+7, 0xFFFFFF);
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.footer.asfax").getString()), x+8, y+h-22, 0x8B4513, true);
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.footer.nav").getString()), x+w-68, y+h-22, 0x8B4513, true);
 
@@ -375,6 +379,20 @@ public class MedicalFileScreen extends Screen {
         gfx.fill(gx+61, gy+13, gx+83, gy+35, 0xFFF0E6D2);
         gfx.renderItem(result, gx+64, gy+16);
         gfx.renderItemDecorations(this.font, result, gx+64, gy+16);
+        // tooltip on hover for result
+        if (lastMouseX >= gx+60 && lastMouseX <= gx+84 && lastMouseY >= gy+12 && lastMouseY <= gy+36) {
+            gfx.renderTooltip(this.font, result, lastMouseX, lastMouseY);
+        }
+        // tooltip on hover for grid slots
+        for(int row=0;row<3;row++) for(int col=0;col<3;col++) {
+            int idx = row*3+col;
+            int ix = gx + col*16 +1; int iy = gy + row*16 +1;
+            if (idx < grid.length && grid[idx] != null && !grid[idx].isEmpty()) {
+                if (lastMouseX >= ix && lastMouseX <= ix+15 && lastMouseY >= iy && lastMouseY <= iy+15) {
+                    gfx.renderTooltip(this.font, grid[idx], lastMouseX, lastMouseY);
+                }
+            }
+        }
     }
 
     private void renderProgress(GuiGraphics gfx, int x, int y, int w, int h) {
