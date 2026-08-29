@@ -12,6 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
@@ -38,6 +39,8 @@ public class UrgencyAndEpidemicHandler {
         if (event.phase != TickEvent.Phase.END) return;
         Level level = event.level;
         if (level.isClientSide) return;
+        // Navigation anesthésie: tous les ticks pour pathfinding fluide
+        handleAnesthesiaWalk(level);
         if (level.getGameTime() % 40 == 0) {
             handleInfectionSpread(level);
             handleUrgentExpiry(level);
@@ -135,17 +138,11 @@ public class UrgencyAndEpidemicHandler {
                 e -> e.getTags().contains("veterinarium_anesthetized"));
         for (LivingEntity e : anesthetized) {
             long expiry = e.getPersistentData().getLong("VetAnesthesiaExpiry");
-            if (expiry == 0) { e.removeTag("veterinarium_anesthetized"); continue; }
+            if (expiry == 0) { clearAnesthesiaState(e); continue; }
             if (level.getGameTime() >= expiry) {
                 // Réveil
-                e.removeTag("veterinarium_anesthetized");
-                e.getPersistentData().remove("VetAnesthesiaExpiry");
-                e.removeEffect(MobEffects.BLINDNESS);
-                e.removeEffect(MobEffects.DARKNESS);
-                e.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-                e.removeEffect(MobEffects.WEAKNESS);
-                e.setCustomName(null);
-                e.setCustomNameVisible(false);
+                clearAnesthesiaState(e);
+                e.setPose(Pose.STANDING);
                 level.playSound(null, e.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.PLAYERS, 0.6f, 1.2f);
                 if (level instanceof ServerLevel sl) {
                     sl.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, e.getX(), e.getY()+1.5, e.getZ(), 3, 0.3,0.3,0.3,0.1);
@@ -157,6 +154,68 @@ public class UrgencyAndEpidemicHandler {
                 }
             }
         }
+    }
+
+    private static void handleAnesthesiaWalk(Level level) {
+        List<LivingEntity> walking = level.getEntitiesOfClass(LivingEntity.class,
+                new AABB(-30000000, -64, -30000000, 30000000, 320, 30000000),
+                e -> e.getTags().contains("veterinarium_anesthetizing"));
+        for (LivingEntity e : walking) {
+            // Vérifier expiry (timeout 20s)
+            long expiry = e.getPersistentData().getLong("VetAnesthesiaExpiry");
+            if (expiry == 0 || level.getGameTime() >= expiry) {
+                clearAnesthesiaState(e);
+                continue;
+            }
+            int tx = e.getPersistentData().getInt("VetTableX");
+            int ty = e.getPersistentData().getInt("VetTableY");
+            int tz = e.getPersistentData().getInt("VetTableZ");
+            double dist = e.distanceToSqr(tx + 0.5, ty + 0.5, tz + 0.5);
+            // Arrivée: distance < 2.0 blocs² (≈ 1.4 blocs)
+            if (dist < 2.0) {
+                // Arrivé sur la table: endormissement profond
+                e.removeTag("veterinarium_anesthetizing");
+                e.addTag("veterinarium_anesthetized");
+                // Nouvel expiry: 10s à partir de maintenant
+                e.getPersistentData().putLong("VetAnesthesiaExpiry", level.getGameTime() + 200);
+                // Effets profonds
+                e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 3));
+                e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
+                e.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0));
+                e.setPose(Pose.SWIMMING);
+                e.setCustomName(net.minecraft.network.chat.Component.literal("§dEndormi..."));
+                e.setCustomNameVisible(true);
+                if (e instanceof Mob m) m.getNavigation().stop();
+                level.playSound(null, e.blockPosition(), SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.PLAYERS, 0.8f, 0.4f);
+                if (level instanceof ServerLevel sl) {
+                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER, e.getX(), e.getY()+1.0, e.getZ(), 5, 0.3,0.3,0.3,0.1);
+                }
+            } else {
+                // En route: navigation vers la table
+                if (e instanceof Mob mob) {
+                    mob.getNavigation().moveTo(tx + 0.5, ty + 0.5, tz + 0.5, 0.5); // vitesse lente
+                }
+                // Particules Zzz pendant la marche
+                if (level instanceof ServerLevel sl && level.getGameTime() % 10 == 0) {
+                    sl.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, e.getX(), e.getY()+2.0, e.getZ(), 1, 0.2,0.2,0.2,0.3);
+                }
+            }
+        }
+    }
+
+    private static void clearAnesthesiaState(LivingEntity e) {
+        e.removeTag("veterinarium_anesthetizing");
+        e.removeTag("veterinarium_anesthetized");
+        e.getPersistentData().remove("VetAnesthesiaExpiry");
+        e.getPersistentData().remove("VetTableX");
+        e.getPersistentData().remove("VetTableY");
+        e.getPersistentData().remove("VetTableZ");
+        e.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+        e.removeEffect(MobEffects.WEAKNESS);
+        e.removeEffect(MobEffects.BLINDNESS);
+        e.setPose(Pose.STANDING);
+        e.setCustomName(null);
+        e.setCustomNameVisible(false);
     }
 
     private static void handleUrgentExpiry(Level level) {

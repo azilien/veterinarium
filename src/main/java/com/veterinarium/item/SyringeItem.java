@@ -83,17 +83,30 @@ public class SyringeItem extends Item {
                         }
                     }
             if (hasTableAnesthetic) {
-                // Anesthésie générale: endormissement profond 10s
-                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 3));
-                target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
-                target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0));
-                target.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 100, 0));
-                target.addTag("veterinarium_anesthetized");
-                target.getPersistentData().putLong("VetAnesthesiaExpiry", level.getGameTime() + 200);
-                target.setCustomName(net.minecraft.network.chat.Component.literal("§dEndormi..."));
+                // Anesthésie générale: cherche la table la plus proche et envoie la créature
+                int bestDx=0, bestDy=0, bestDz=0, bestDist=Integer.MAX_VALUE;
+                for (int dx=-5;dx<=5;dx++)
+                    for (int dy=-2;dy<=2;dy++)
+                        for (int dz=-5;dz<=5;dz++) {
+                            var be = level.getBlockEntity(target.blockPosition().offset(dx,dy,dz));
+                            if (be instanceof com.veterinarium.block.entity.OperatingTableBlockEntity) {
+                                int d = Math.abs(dx)+Math.abs(dy)+Math.abs(dz);
+                                if (d < bestDist) { bestDist=d; bestDx=dx; bestDy=dy; bestDz=dz; }
+                            }
+                        }
+                var tablePos = target.blockPosition().offset(bestDx, bestDy, bestDz);
+                target.addTag("veterinarium_anesthetizing");
+                target.getPersistentData().putInt("VetTableX", tablePos.getX());
+                target.getPersistentData().putInt("VetTableY", tablePos.getY());
+                target.getPersistentData().putInt("VetTableZ", tablePos.getZ());
+                target.getPersistentData().putLong("VetAnesthesiaExpiry", level.getGameTime() + 400); // 20s max walk+sleep
+                // Effets légers pendant la marche
+                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 1));
+                target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 400, 0));
+                target.setCustomName(net.minecraft.network.chat.Component.literal("§dEn route vers la table..."));
                 target.setCustomNameVisible(true);
                 level.playSound(null, target.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.PLAYERS, 0.6f, 0.5f);
-                player.displayClientMessage(Component.literal("§d[Anesthésie Générale] §aCréature endormie 10s — la table a fourni l'anesthésiant."), false);
+                player.displayClientMessage(Component.literal("§d[Anesthésie Générale] §aCréature en route vers le Bloc Opératoire — anesthésie 10s à l'arrivée."), false);
             } else {
                 player.displayClientMessage(Component.translatable("message.veterinarium.syringe.anesthesia_injected"), true);
             }
