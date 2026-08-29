@@ -9,7 +9,7 @@ public enum WoundType {
     FRACTURE(2, "wound.veterinarium.fracture", "fracture", true, false),
     INFECTION(3, "wound.veterinarium.infection", "infection", true, true),
     BRULURE(4, "wound.veterinarium.brulure", "brulure", true, true),
-    SAIGNEMENT(5, "wound.veterinarium.saignement", "saignement", false, false);  // saignement actif: bandage = soin
+    SAIGNEMENT(5, "wound.veterinarium.saignement", "saignement", false, true);  // saignement actif: bandage requis pour suture
 
     private final int id;
     private final String display;
