@@ -84,6 +84,9 @@ public class ModItems {
     public static final RegistryObject<Item> VET_SPHERE_FILLED = ITEMS.register("vet_sphere_filled",
             () -> new VetSphereFilledItem(new Item.Properties().stacksTo(1)));
 
+    public static final RegistryObject<Item> COMPRESSION_BANDAGE = ITEMS.register("compression_bandage",
+            () -> new CompressionBandageItem(new Item.Properties().stacksTo(16)));
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

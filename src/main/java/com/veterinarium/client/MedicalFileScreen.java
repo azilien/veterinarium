@@ -241,7 +241,7 @@ public class MedicalFileScreen extends Screen {
         if (seen) ty+=2; else ty+=2;
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.pathologies_all").getString()), x+12, ty, 0x000000, true); ty+=9;
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.list1").getString()), x+12, ty, 0x000000, true); ty+=9;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.list2").getString()), x+12, ty, 0x000000, true); ty+=12;
+        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.list2").getString()) + "  §cSaignement", x+12, ty, 0x000000, true); ty+=12;
 
         // stats perso
         if (p != null) {
@@ -282,6 +282,7 @@ public class MedicalFileScreen extends Screen {
                 case FRACTURE -> Component.translatable("wound.veterinarium.risk.pain").getString();
                 case INFECTION -> Component.translatable("wound.veterinarium.risk.poison").getString();
                 case BRULURE -> Component.translatable("wound.veterinarium.risk.fire").getString();
+                case SAIGNEMENT -> "Bleed 1❤/5s";
             };
             String line = String.format(" %s  %s  %s", wt.getDisplay(), req, risk);
             int col = seen ? 0x000000 : 0x2B2B2B;

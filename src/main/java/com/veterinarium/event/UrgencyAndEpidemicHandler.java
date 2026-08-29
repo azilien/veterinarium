@@ -223,12 +223,12 @@ public class UrgencyAndEpidemicHandler {
             switch (wt) {
                 case HEMORRAGIE -> sl.sendParticles(net.minecraft.core.particles.ParticleTypes.DAMAGE_INDICATOR, pos.x, pos.y, pos.z, 1, 0.2,0.1,0.2,0.1);
                 case FRACTURE -> {
-                    // particule os ? on utilise crit
                     sl.sendParticles(net.minecraft.core.particles.ParticleTypes.CRIT, pos.x, pos.y, pos.z, 2, 0.2,0.2,0.2,0.2);
                     sl.sendParticles(net.minecraft.core.particles.ParticleTypes.WHITE_SMOKE, pos.x, pos.y, pos.z, 1, 0.1,0.1,0.1,0.02);
                 }
                 case INFECTION -> sl.sendParticles(net.minecraft.core.particles.ParticleTypes.MYCELIUM, pos.x, pos.y, pos.z, 2, 0.2,0.1,0.2,0.1);
                 case BRULURE -> sl.sendParticles(net.minecraft.core.particles.ParticleTypes.FLAME, pos.x, pos.y, pos.z, 2, 0.15,0.15,0.15,0.02);
+                case SAIGNEMENT -> sl.sendParticles(net.minecraft.core.particles.ParticleTypes.DRIPPING_LAVA, pos.x, pos.y, pos.z, 2, 0.1,0.1,0.1,0.02);
                 case CONTUSION -> {
                     if (level.random.nextFloat()<0.1f) sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ANGRY_VILLAGER, pos.x, pos.y, pos.z, 1, 0.2,0.1,0.2,0.1);
                 }

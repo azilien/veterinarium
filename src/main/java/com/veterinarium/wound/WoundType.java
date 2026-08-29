@@ -5,10 +5,11 @@ import net.minecraft.util.RandomSource;
 
 public enum WoundType {
     CONTUSION(0, "wound.veterinarium.contusion", "contusion", false, false),
-    HEMORRAGIE(1, "wound.veterinarium.hemorragie", "hemorragie", false, true),      // besoin bandage après suture sinon resaignement
-    FRACTURE(2, "wound.veterinarium.fracture", "fracture", true, false),            // besoin anesthésie AVANT scalpel
-    INFECTION(3, "wound.veterinarium.infection", "infection", true, true),          // anesthésie + bandage recommandés
-    BRULURE(4, "wound.veterinarium.brulure", "brulure", true, true);                // brûlure grave: anesthésie + bandage + effet feu
+    HEMORRAGIE(1, "wound.veterinarium.hemorragie", "hemorragie", false, true),
+    FRACTURE(2, "wound.veterinarium.fracture", "fracture", true, false),
+    INFECTION(3, "wound.veterinarium.infection", "infection", true, true),
+    BRULURE(4, "wound.veterinarium.brulure", "brulure", true, true),
+    SAIGNEMENT(5, "wound.veterinarium.saignement", "saignement", false, false);  // saignement actif: bandage = soin
 
     private final int id;
     private final String display;
@@ -37,12 +38,13 @@ public enum WoundType {
         return CONTUSION;
     }
     public static WoundType random(RandomSource r) {
-        // pondération: 35% contusion, 22% hémorragie, 18% fracture, 13% infection, 12% brûlure
+        // pondération: 25% contusion, 20% hémorragie, 17% fracture, 13% infection, 12% brûlure, 13% saignement
         float f = r.nextFloat();
-        if (f < 0.35f) return CONTUSION;
-        if (f < 0.57f) return HEMORRAGIE;
-        if (f < 0.75f) return FRACTURE;
-        if (f < 0.88f) return INFECTION;
-        return BRULURE;
+        if (f < 0.25f) return CONTUSION;
+        if (f < 0.45f) return HEMORRAGIE;
+        if (f < 0.62f) return FRACTURE;
+        if (f < 0.75f) return INFECTION;
+        if (f < 0.87f) return BRULURE;
+        return SAIGNEMENT;
     }
 }

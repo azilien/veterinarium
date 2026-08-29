@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "veterinarium:compression_bandage"
+    },
+    "title": {
+      "translate": "advancements.veterinarium.premier_sang.title"
+    },
+    "description": {
+      "translate": "advancements.veterinarium.premier_sang.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "veterinarium:suture",
+  "criteria": {
+    "has_bandage": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veterinarium:compression_bandage"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_bandage"
+    ]
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:string" },
+    { "item": "minecraft:string" },
+    { "item": "minecraft:paper" }
+  ],
+  "result": {
+    "id": "veterinarium:compression_bandage",
+    "count": 2
+  }
+}

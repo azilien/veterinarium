@@ -31,11 +31,12 @@ public class VeterinariumGameTests {
     @GameTest(template = "veterinarium:hospital_hut")
     public static void testWoundWeights(GameTestHelper helper) {
         var src = net.minecraft.util.RandomSource.create(12345L);
-        int[] cnt = new int[5];
+        int[] cnt = new int[6];
         for (int i = 0; i < 10000; i++) cnt[WoundType.random(src).getId()]++;
-        helper.assertTrue(cnt[0] > 3000 && cnt[0] < 4000, "CONTUSION weight off " + cnt[0]);
-        helper.assertTrue(cnt[1] > 1700 && cnt[1] < 2700, "HEMORRAGIE weight off " + cnt[1]);
+        helper.assertTrue(cnt[0] > 2000 && cnt[0] < 3000, "CONTUSION weight off " + cnt[0]);
+        helper.assertTrue(cnt[1] > 1500 && cnt[1] < 2500, "HEMORRAGIE weight off " + cnt[1]);
         helper.assertTrue(cnt[4] > 700 && cnt[4] < 1700, "BRULURE weight off " + cnt[4]);
+        helper.assertTrue(cnt[5] > 800 && cnt[5] < 1800, "SAIGNEMENT weight off " + cnt[5]);
         for (WoundType wt : WoundType.values()) {
             helper.assertTrue(wt.getDisplay() != null && !wt.getDisplay().isEmpty(), "display empty " + wt);
             helper.assertTrue(wt.getDescription() != null && !wt.getDescription().getString().isEmpty(), "desc empty " + wt);
