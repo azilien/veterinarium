@@ -176,6 +176,7 @@
   "wound.veterinarium.risk.pain": "Pain 50%",
   "wound.veterinarium.risk.poison": "Poison",
   "wound.veterinarium.risk.fire": "Continuous fire",
+  "wound.veterinarium.risk.bleed": "Bleed 1❤/5s",
   "wound.veterinarium.saignement": "§cBleeding",
   "wound.veterinarium.saignement.desc": "§cActive bleed: heals 1❤/5s until bandaged. Use Compression Bandage for fast relief.",
   "item.veterinarium.compression_bandage": "Compression Bandage",

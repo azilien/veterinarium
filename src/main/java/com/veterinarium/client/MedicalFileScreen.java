@@ -282,7 +282,7 @@ public class MedicalFileScreen extends Screen {
                 case FRACTURE -> Component.translatable("wound.veterinarium.risk.pain").getString();
                 case INFECTION -> Component.translatable("wound.veterinarium.risk.poison").getString();
                 case BRULURE -> Component.translatable("wound.veterinarium.risk.fire").getString();
-                case SAIGNEMENT -> "Bleed 1❤/5s";
+                case SAIGNEMENT -> Component.translatable("wound.veterinarium.risk.bleed").getString();
             };
             String line = String.format(" %s  %s  %s", wt.getDisplay(), req, risk);
             int col = seen ? 0x000000 : 0x2B2B2B;
