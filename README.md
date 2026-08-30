@@ -9,6 +9,7 @@
 ![Version](https://img.shields.io/badge/Version-1.12.0-success)
 ![Tests](https://img.shields.io/badge/Tests-11/11-passing-brightgreen)
 ![Lang](https://img.shields.io/badge/Lang-EN/FR-blueviolet)
+[![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange)](https://www.curseforge.com/minecraft/mc-mods/veterinarium)
 
 *Ice & Fire meets House M.D. with wounded mobs, surgery and Palworld spheres.*
 
@@ -133,6 +134,8 @@ Welcome, First Blood, Successful Operation, Cicatrization, Healer, Hospital, Cap
 - **Ice & Fire**: 12% wounded dragons → scales on healing
 
 ### Installation
+**Download on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/veterinarium)**
+
 1. Minecraft Java 1.21.1 + Forge 52.1.14
 2. Copy `build/libs/veterinarium-1.12.0.jar` into `mods/`
 3. Launch → Creative → `Veterinarium` tab
@@ -269,6 +272,8 @@ Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital,
 - **Ice & Fire** : 12% dragons blessés → écailles à la guérison
 
 ### Installation
+**Télécharger sur [CurseForge](https://www.curseforge.com/minecraft/mc-mods/veterinarium)**
+
 1. Minecraft Java 1.21.1 + Forge 52.1.14
 2. Copie `build/libs/veterinarium-1.12.0.jar` dans `mods/`
 3. Lance → Créatif → onglet `Veterinarium`
@@ -302,7 +307,6 @@ See [CHANGELOG.md](CHANGELOG.md) / Voir [CHANGELOG.md](CHANGELOG.md)
 - [x] v1.7 — Emergencies & Epidemics
 - [x] v1.11 — Contaminator, General Anesthesia, Compression Bandage, Bilingual EN/FR
 - [x] v1.12 — Scalpel Tiers, Cure Zombie, Cow/Sheep/Chicken, Operating GUI, 4 Medications
-- [ ] CurseForge upload
 
 ## Licence
 
