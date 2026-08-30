@@ -5,6 +5,27 @@ Les modifications notables de ce projet seront documentées dans ce fichier.
 
 ---
 
+## [2.0] — 2026-08-30
+
+### Added / Ajouté
+- **4 Medications**: Antibiotic (cures Poison, +3 HP), Anti-inflammatory (removes Slowness/Nausea, +2 HP), Adrenaline (+4 HP, Speed II + Strength I), Blood Transfusion (+6 HP, Absorption II) / 4 Médicaments : Antibiotique, Anti-inflammatoire, Adrénaline, Transfusion Sanguine
+- **Recipes for all medications** / Recettes pour tous les médicaments
+- **Unique Bestiary text per creature**: description, bonus, pathologies / Texte unique par créature dans le bestiaire
+- **Protocol page expanded**: medications + emergencies sections / Page protocole enrichie : médicaments + urgences
+- **Progress page 2-column layout** / Page progression en 2 colonnes
+
+### Fixed / Corrigé
+- GUI overlap: pagination dots + buttons no longer overlap / Chevauchement GUI corrigé
+- Page order: Recipes first in Bestiary / Pages réordonnées : Recettes en 1er
+- Progress page overflow / Débordement page progression corrigé
+
+### Removed / Supprimé
+- All Asfax references from code, docs, and lang files / Références Asfax supprimées
+- Local paths from build.gradle (PrismLauncher extracted to local-dev.gradle) / Chemins locaux extraits
+- Java home hardcoded in gradle.properties / Java home supprimé de gradle.properties
+
+---
+
 ## [1.12.0] — 2026-08-30
 
 ### Added / Ajouté

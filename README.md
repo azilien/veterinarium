@@ -6,7 +6,7 @@
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green)
 ![Forge](https://img.shields.io/badge/Forge-52.1.14-orange)
 ![Java](https://img.shields.io/badge/Java-21-blue)
-![Version](https://img.shields.io/badge/Version-1.12.0-success)
+![Version](https://img.shields.io/badge/Version-2.0-success)
 ![Tests](https://img.shields.io/badge/Tests-11/11-passing-brightgreen)
 ![Lang](https://img.shields.io/badge/Lang-EN/FR-blueviolet)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange)](https://www.curseforge.com/minecraft/mc-mods/veterinarium)
@@ -306,7 +306,8 @@ See [CHANGELOG.md](CHANGELOG.md) / Voir [CHANGELOG.md](CHANGELOG.md)
 - [x] v1.6 — Vet Spheres (Palworld-like)
 - [x] v1.7 — Emergencies & Epidemics
 - [x] v1.11 — Contaminator, General Anesthesia, Compression Bandage, Bilingual EN/FR
-- [x] v1.12 — Scalpel Tiers, Cure Zombie, Cow/Sheep/Chicken, Operating GUI, 4 Medications
+- [x] v1.12 — Scalpel Tiers, Cure Zombie, Cow/Sheep/Chicken, Operating GUI
+- [x] v2.0 — Medications, Bestiary unique, GUI fixes, security cleanup
 
 ## Licence
 
