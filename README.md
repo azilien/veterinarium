@@ -17,6 +17,53 @@
 
 # English
 
+## What You Can Do
+
+### Heal wounded creatures and tame them
+- Wander the world and find **wounded animals** (wolves, cats, horses, foxes, cows, sheep, chickens) — they spawn naturally with red particles and a "Wounded" name
+- Use the **Syringe** on them to diagnose: you'll see their HP, wound type, and what supplies you need
+- Perform **surgery**: Scalpel → Suture Kit (in that order!) to heal them
+- Once healed, **tame them** with the usual item (bone for wolf, fish for cat) — or they'll follow you willingly
+- **Ride** healed horses, **milk** healed cows, **shear** healed sheep, **feed** healed chickens
+
+### Build a veterinary hospital
+- Craft an **Operating Table** — place it, right-click to open the GUI, fill it with Bandages and Anesthetics
+- Craft an **Infirmary** — passive healing zone (0.5 HP/2s within 8 blocks)
+- Build a **Hospital Hut** (Lv1-5) — heals creatures in a large zone, gives you daily contracts and emerald rewards
+- Place a **Stretcher** — portable healing, carry wounded creatures to your hospital
+
+### Perform advanced surgeries
+- **General Anesthesia**: use the Syringe near an Operating Table → the creature walks to it automatically → falls asleep for 10 seconds
+- **Compression Bandage**: instant 4 HP heal if the creature is below 50% HP
+- **Medications**: Antibiotic (cures Poison), Anti-inflammatory (removes Slowness), Adrenaline (emergency +4 HP), Blood Transfusion (+6 HP)
+
+### Cure Zombie Villagers
+- Craft an **Antidote** (Golden Apple + Hellfire Serum + Nether Wart)
+- Right-click a **Zombie Villager** (tagged "Urgent") to cure it → becomes a normal Villager with Regeneration
+
+### Capture and transport creatures
+- Craft a **Vet Sphere** — right-click a healed creature to capture it
+- Right-click with a filled sphere to release it anywhere
+- Build an army of healed creatures and deploy them
+
+### Create Hellfire Ravagers (Boss mutations)
+- Extract **DNA** from a wounded creature with the DNA Syringe
+- Craft a **Hellfire Serum** (DNA + Blaze Powder + Nether Wart)
+- Use the serum on a healed creature near an Operating Table → it transforms into a **Hellfire Ravager** (40 HP, fire damage)
+- The Ravager evolves through **3 mutation stages**: Fire → Acid (10 kills) → Shadow (25 kills)
+
+### Fight emergencies and epidemics
+- **Radio calls** every 6-11 minutes: an urgent wounded creature appears 80-150 blocks away
+- Rush to heal it before the timer runs out for emerald rewards
+- Watch out for **contagion** — infected creatures spread infection to nearby animals
+- The **Contaminator** block accelerates infection in a 6-block radius
+
+### Cure the plague
+- Craft an **Antibiotic** (Spider Eye + Awkward Potion) to cure Poison
+- Craft an **Anti-inflammatory** (Glowstone + Thick Potion) to remove Slowness and Nausea
+- Craft **Adrenaline** (Blaze Powder + Nether Wart + Awkward Potion) for emergency healing
+- Craft a **Blood Transfusion** (Gold Ingot + Redstone + Bandage) to remove Wither and heal 6 HP
+
 ## Concept
 
 `Ice & Fire + MineColonies + House M.D. + Ark + Palworld` in one mod.
@@ -154,6 +201,53 @@ Welcome, First Blood, Successful Operation, Cicatrization, Healer, Hospital, Cap
 ---
 
 # Français
+
+## Ce que tu peux faire
+
+### Soigner les créatures blessées et les apprivoiser
+- Explore le monde et trouve des **animaux blessés** (loups, chats, chevaux, renards, vaches, moutons, poulets) — ils spawnent naturellement avec des particules rouges et le nom "Blessé"
+- Utilise la **Seringue** pour diagnostiquer : tu verras les PV, le type de blessure et les consommables nécessaires
+- Effectue une **opération** : Scalpel → Kit de Suture (dans cet ordre !) pour les soigner
+- Une fois soigné, **apprivoise-les** avec l'habitué (os pour le loup, poisson pour le chat)
+- **Monte** les chevaux soignés, ** traites** les vaches soignées, **tonds** les moutons soignés, **nourris** les poulets soignés
+
+### Construire un hôpital vétérinaire
+- Craft un **Bloc Opératoire** — place-le, clic droit pour ouvrir le GUI, remplis-le de Bandages et Anesthésiants
+- Craft une **Infirmerie** — zone de heal passif (0.5❤/2s dans 8 blocs)
+- Construis une **Hut Hôpital** (Lv1-5) — soigne les créatures dans une large zone, contrats journaliers et récompenses en émeraudes
+- Place un **Brancard** — portable, pour transporter les blessés vers ton hôpital
+
+### Effectuer des chirurgies avancées
+- **Anesthésie Générale** : utilise la Seringue près d'un Bloc Opératoire → la créature y marche automatiquement → s'endort 10 secondes
+- **Bandage de Compression** : soin instantané de 4❤ si la créature est sous 50% PV
+- **Médicaments** : Antibiotique (guérit Poison), Anti-inflammatoire (supprime Lenteur), Adrénaline (+4❤ urgence), Transfusion Sanguine (+6❤)
+
+### Guérir les Zombie Villagers
+- Craft un **Antidote** (Pomme Dorée + Sérum Hellfire + Nether Wart)
+- Clic droit sur un **Zombie Villager** (tagué "Urgent") pour le guérir → devient un Villager normal avec Régénération
+
+### Capturer et transporter des créatures
+- Craft une **Sphère Vétérinaire** — clic droit sur une créature soignée pour la capturer
+- Clic droit avec une sphère remplie pour la libérer n'importe où
+- Construis une armée de créatures soignées et déploie-les
+
+### Créer des Hellfire Ravagers (mutations Boss)
+- Extrait de l'**ADN** d'une créature blessée avec la Seringue ADN
+- Craft un **Sérum Hellfire** (ADN + Poudre de Blaze + Nether Wart)
+- Utilise le sérum sur une créature soignée près d'un Bloc Opératoire → se transforme en **Hellfire Ravager** (40❤, dégâts de feu)
+- Le Ravager évolue en **3 stades** : Fire → Acid (10 kills) → Shadow (25 kills)
+
+### Combattre urgences et épidémies
+- **Appels radio** toutes les 6-11 minutes : une créature urgente apparaît à 80-150 blocs
+- Cours la soigner avant l'expiration du timer pour des récompenses en émeraudes
+- Attention à la **contagion** — les créatures infectées contaminent les animaux proches
+- Le **Contaminateur** accélère l'infection dans un rayon de 6 blocs
+
+### Soigner la peste
+- Craft un **Antibiotique** (Œil d'Araignée + Potion Awkward) pour guérir le Poison
+- Craft un **Anti-inflammatoire** (Poudre de Luminite + Potion Thick) pour supprimer Lenteur et Nausée
+- Craft de l'**Adrénaline** (Poudre de Blaze + Nether Wart + Potion Awkward) pour urgence
+- Craft une **Transfusion Sanguine** (Lingot d'Or + Redstone + Bandage) pour supprimer Wither et soigner 6❤
 
 ## Concept
 
