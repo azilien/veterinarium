@@ -107,11 +107,11 @@ public class ModCommands {
                 com.veterinarium.registry.ModItems.OPERATING_TABLE.get(), com.veterinarium.registry.ModItems.ANALYSIS_TABLE.get(), com.veterinarium.registry.ModItems.INFIRMARY.get(), com.veterinarium.registry.ModItems.HOSPITAL_HUT.get(), com.veterinarium.registry.ModItems.STRETCHER.get(), com.veterinarium.registry.ModItems.CONTAMINATOR.get()
             }) pl.getInventory().add(new ItemStack(it));
         }
-        // summons à l'intérieur (y+1.5 pour être bien sur le sol)
+        // summons bien au-dessus du sol (y+2)
         try {
-            var wolf = new com.veterinarium.entity.WoundedWolfEntity(com.veterinarium.registry.ModEntities.WOUNDED_WOLF.get(), level); wolf.moveTo(hutPos.getX()+1.5, hutPos.getY()+1, hutPos.getZ()+1.5, 0, 0); level.addFreshEntity(wolf);
-            var cat = new com.veterinarium.entity.WoundedCatEntity(com.veterinarium.registry.ModEntities.WOUNDED_CAT.get(), level); cat.moveTo(hutPos.getX()-1.5, hutPos.getY()+1, hutPos.getZ()-1.5, 0, 0); level.addFreshEntity(cat);
-            var cow = new com.veterinarium.entity.WoundedCowEntity(com.veterinarium.registry.ModEntities.WOUNDED_COW.get(), level); cow.moveTo(hutPos.getX()+0.5, hutPos.getY()+1, hutPos.getZ()-2.5, 0, 0); level.addFreshEntity(cow);
+            var wolf = new com.veterinarium.entity.WoundedWolfEntity(com.veterinarium.registry.ModEntities.WOUNDED_WOLF.get(), level); wolf.moveTo(hutPos.getX()+1.5, hutPos.getY()+2, hutPos.getZ()+1.5, 0, 0); level.addFreshEntity(wolf);
+            var cat = new com.veterinarium.entity.WoundedCatEntity(com.veterinarium.registry.ModEntities.WOUNDED_CAT.get(), level); cat.moveTo(hutPos.getX()-1.5, hutPos.getY()+2, hutPos.getZ()-1.5, 0, 0); level.addFreshEntity(cat);
+            var cow = new com.veterinarium.entity.WoundedCowEntity(com.veterinarium.registry.ModEntities.WOUNDED_COW.get(), level); cow.moveTo(hutPos.getX()+0.5, hutPos.getY()+2, hutPos.getZ()-2.5, 0, 0); level.addFreshEntity(cow);
         } catch (Exception e) {
             level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_wolf " + (hutPos.getX()+1) + " " + (hutPos.getY()+1) + " " + (hutPos.getZ()+1));
         }
