@@ -2,7 +2,7 @@
 **Tu ne domptes plus les créatures, tu les soignes.**
 *Le mod Minecraft pensé pour Asfax — Ice & Fire + MineColonies + House M.D. + Ark + Palworld*
 
-![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green) ![Forge](https://img.shields.io/badge/Forge-52.1.14-orange) ![Java](https://img.shields.io/badge/Java-21-blue)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green) ![Forge](https://img.shields.io/badge/Forge-52.1.14-orange) ![Java](https://img.shields.io/badge/Java-21-blue) ![Version](https://img.shields.io/badge/Version-1.11.0-success) ![Tests](https://img.shields.io/badge/Tests-11/11-brightgreen) ![Lang](https://img.shields.io/badge/EN/FR-330%20clés-blueviolet)
 
 ---
 
@@ -10,79 +10,90 @@
 
 1. **Trouve** une créature blessée (<100% HP, tag `☠ Blessé` + pathologie)
 2. **Diagnostique** avec la `Seringue Diagnostique` (HP% + type + stocke pour Table d'Analyse)
-3. **Opère** avec le `Scalpel` (+1❤, tag `operated`, besoin `Anesthésiant` pour Fracture/Infection/Brûlure sinon 50% échec)
-4. **Suture** avec le `Kit de Suture` (+3❤ + Régénération, besoin `Bandage` pour Hémorragie/Infection/Brûlure sinon rechute, 33% tame)
-5. **Capture** avec la `Sphère Vétérinaire` (Palworld) — **uniquement si soignée** — ou assigne à ton `Hut Hôpital` (heal de zone)
+3. **Opère** avec le `Scalpel` (+1❤, tag `operated`, anesthésiant requis pour Fracture/Infection/Brûlure)
+4. **Suture** avec le `Kit de Suture` (+6❤ + Régénération, bandage requis pour Hémorragie/Saignement/Infection/Brûlure)
+5. **Capture** avec la `Sphère Vétérinaire` (Palworld) — **uniquement si soignée**
+6. **Anesthésie Générale** : créature marche vers Bloc Opératoire → Pose.SWIMMING → réveil 10s
 
 > Succès = Loup apprivoisé **après** soins, pas avec un os !
 
 ---
 
-## 📦 Contenu 1.6.0
+## 📦 Contenu 1.11.0
 
-### 🩺 Pathologies (5)
-| Type | Requis | Risque sans |
-|------|--------|-------------|
-| **Contusion** | Scalpel→Suture | — |
-| **Hémorragie** | Bandage | Rechute 50% |
-| **Fracture** | Anesthésiant | Douleur 50% + cri |
-| **Infection** | Anesth.+Bandage | Poison |
-| **Brûlure** | Anesth.+Bandage | Feu continu + WITHER |
+### 🩺 Pathologies (6)
+| Type | Requis | Risque sans | Poids |
+|------|--------|-------------|-------|
+| **Contusion** | Scalpel→Suture | — | 25% |
+| **Hémorragie** | Bandage | Rechute 50% | 20% |
+| **Fracture** | Anesthésiant | Douleur 50% | 17% |
+| **Infection** | Anesth.+Bandage | Poison | 13% |
+| **Brûlure** | Anesth.+Bandage | Feu continu + WITHER | 12% |
+| **Saignement** | Bandage | Saignement 1❤/5s | 13% |
 
-Poids spawn : 35% / 22% / 18% / 13% / 12%
-
-### 🐾 Créatures blessées (6 + variantes)
+### 🐾 Créatures (7 + variantes)
 - Loup, Chat, Cheval, Renard, Villageois (8% spawn naturel `WoundedSpawnHandler`)
-- **Drake Boss** (Phantom 60HP, vol, rare overworld + urgences)
-- **Hellfire Ravager** (40HP 8dmg feu, mutation Tier Ark) — évolution via ADN + Sérum
+- **Drake Boss** (60HP, vol, souffle, rare overworld + urgences)
+- **Hellfire Ravager** (40HP 8dmg feu, mutations **Fire→Acid→Shadow** via kill counter)
 
-### 🧰 Items
-| Item | Recette | Usage |
-|------|---------|-------|
-| **Scalpel** | `I / I` (iron_ingot) | Opère |
-| **Suture Kit** | `S / P / S` | Soigne |
-| **Seringue** | ` G / I / I` (glass/nugget) | Diag |
-| **Seringue ADN** | ` R / G / I` (redstone/glass/nugget) | Extrait ADN sur blessé → `Seringue ADN Remplie` |
-| **Sérum Hellfire** | `ADN remplie + blaze + nether_wart + magma_cream` | Mute soigné → Hellfire Ravager au Bloc Opératoire |
-| **Sphère Vétérinaire** | ` I / IGI / I` | Capture seulement soigné, libère au sol |
-| **Dossier Médical** | `PP / BB` (paper/book) | Bestiaire 10 pages |
-| **Bandage / Anesthésiant** | craft | Consommables bloc |
-| **Infirmerie / Hut / Brancard / Table d'Analyse / Bloc Opératoire** | voir JEI | Heal zone |
+### 🧰 Items (23)
+| Item | Usage |
+|------|-------|
+| **Scalpel** 250 dur | Opère (+1❤) |
+| **Kit de Suture** 64 dur | Soigne (+6❤, Régénération) |
+| **Seringue** 32 dur | Diagnostic + Anesthésie Générale |
+| **Seringue ADN** 16 | Extrait ADN sur blessé |
+| **Sérum Hellfire** 16 | Mute soigné → Hellfire Ravager |
+| **Sphère Vétérinaire** 16 | Capture seulement soigné |
+| **Dossier Médical** 1 | Bestiaire 10 pages EN/FR |
+| **Bandage / Anesthésiant** | Consommables auto-fournis par table |
+| **Bandage de Compression** 16 | Soin rapide si HP<50% |
 
-### 🏥 Blocs
-- **Bloc Opératoire** (2 slots bandage/anesthésiant, auto-fourni à 5 blocs)
-- **Table d'Analyse** (mémorise dernier diag `VetLastWound`)
-- **Infirmerie** (0.5❤/2s rayon 8)
-- **Hut Hôpital** Lv1-5 (1.5→3.5❤/2s rayon 16→32, particules, sons monitor, **contrats journaliers**)
-- **Brancard** (0.5❤/2s rayon 2.5 portable)
-- **Clinique abandonnée** (structure rare plains/forest/taiga, loot médical)
+### 🏥 Blocs (6)
+| Bloc | Usage |
+|------|-------|
+| **Bloc Opératoire** | 3 slots (bandage/anesthésiant/compression), auto-fourni à 5 blocs, **anesthésie générale** |
+| **Table d'Analyse** | Diagnostic Bestiaire (10 pages) |
+| **Infirmerie** | Heal 0.5❤/2s rayon 8 |
+| **Hut Hôpital** Lv1-5 | 1.5→3.5❤/2s, contrats journaliers, ambulancier |
+| **Brancard** | Portable 0.5❤/2s |
+| **Contaminateur** | Accélère infection à 6 blocs (12%/seconde) |
 
 ### 📚 Bestiaire 10 pages `MedicalFileScreen`
-Cover + 6 créatures + Pathologies + Protocole + Progression (diag/op/suture/guéris, barre 0-100%)
+Cover + 6 créatures + 6 Pathologies + Protocole + Progression (diag/op/suture/guéris, barre 0-100%)
 
 ### 🚨 Urgences & Épidémies
-- Appel radio toutes 6-11min : blessé urgent à 80-150 blocs, timer 5-8min, 3 émeraudes + Héros si sauvé
-- Infection contagion 4%/2s à 4 blocs, bloquée si Hut Lv3+ ou brancard (quarantaine)
+- Appel radio toutes 6-11min : blessé urgent à 80-150 blocs, timer 5-8min
+- Contagion 4%/2s à 4 blocs, bloquée Hut Lv3+ ou Brancard
+- **Contaminateur** : bloc qui accélère l'infection, convertit blessés → infectés
 
 ### 🧬 Mutations & Boss
-- ADN + Sérum + Bloc Opératoire (bandage+anesthésiant) → Hellfire Ravager (tame 70%)
+- ADN + Sérum + Bloc Opératoire → Hellfire Ravager (tame 70%)
+- **3 variants** : Fire (défaut) → Acid (10 kills) → Shadow (25 kills)
 - Drake Boss 60HP guéri → `dragon_breath` + Héros II
+
+### 🎵 Sons custom (10)
+monitor_beep, scalpel_cut, suture, heal_success, mutation, sphere_capture, sphere_release, urgency_bell, epidemic, contaminator_ambient
+
+### 🏗️ Architecture
+- **11 GameTests** automatisés (template `veterinarium:hospital_hut`)
+- **Bilingue EN/FR** complet (330+ clés `Component.translatable()`)
+- **Config** `config/veterinarium-common.toml`
+- **CurseForge ready** : logo 400x400 + banner 800x400
 
 ---
 
 ## 🛠️ Compat
-- **MineColonies** : Hut heal citoyens 0.5x, `supplycamp` recette alternative Bloc Opératoire
-- **Ars Nouveau** : `source_gem` → soin +2❤ + absorption `ArsNouveauIntegration`
-- **Ice & Fire** : 12% dragons blessés (Fire/Ice/Lightning) → écailles à la guérison
+- **MineColonies** : Hut heal citoyens 0.5x, `supplycamp` recette alternative
+- **Ars Nouveau** : `source_gem` → soin +2❤ + absorption
+- **Ice & Fire** : 12% dragons blessés → écailles à la guérison
 
 ---
 
 ## 📖 Installation
 1. Forge 1.21.1 - 52.1.14
-2. Placer `veterinarium-1.6.0.jar` dans `mods/`
-3. Lancer, onglet créatif `Veterinarium - Hôpital des Monstres` ou `@veterinarium` en recherche
-
-Prism : le mod se sync auto après chaque `gradlew build` dans `PrismLauncher/instances/Veterinarium/.minecraft/mods`
+2. Placer `veterinarium-1.11.0.jar` dans `mods/`
+3. Lancer, onglet créatif `Veterinarium - Hôpital des Monstres`
 
 ---
 
@@ -96,14 +107,9 @@ Prism : le mod se sync auto après chaque `gradlew build` dans `PrismLauncher/in
 
 ---
 
-## 🧪 Test rapide
-```
-/give @p veterinarium:scalpel
-/give @p veterinarium:suture_kit
-/give @p veterinarium:syringe
-/give @p veterinarium:vet_sphere
-/summon veterinarium:wounded_wolf ~ ~ ~
-/summon veterinarium:wounded_drake ~ ~ ~
+## 🧪 Tests
+```bash
+JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runGameTestServer  # 11/11 ✅
 ```
 
 ---
