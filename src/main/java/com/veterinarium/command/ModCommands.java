@@ -27,14 +27,14 @@ public class ModCommands {
         CommandSourceStack src = ctx.getSource();
         ServerLevel level = src.getLevel();
         BlockPos origin = BlockPos.containing(src.getPosition());
-        // aplanit 15x13 a 15 blocs
-        BlockPos p1 = origin.offset(10, -1, -6);
-        BlockPos p2 = origin.offset(22, -1, 6);
+        // aplanit 16x16 à 15 blocs pour maison 15x15
+        BlockPos p1 = origin.offset(7, -1, -8);
+        BlockPos p2 = origin.offset(23, -1, 8);
         for (BlockPos p : BlockPos.betweenClosed(p1, p2)) level.setBlock(p, net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState(), 3);
-        p1 = origin.offset(10, 0, -6);
-        p2 = origin.offset(22, 6, 6);
+        p1 = origin.offset(7, 0, -8);
+        p2 = origin.offset(23, 6, 8);
         for (BlockPos p : BlockPos.betweenClosed(p1, p2)) level.setBlock(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
-        // pose le hut et construit la vraie maison 9x9 via buildHut
+        // pose le hut et construit la maison 9x9 via buildHut puis étend à 15x15
         BlockPos hutPos = origin.offset(15, 0, 0);
         level.setBlock(hutPos, com.veterinarium.registry.ModBlocks.HOSPITAL_HUT.get().defaultBlockState(), 3);
         // force construction (normalement sneak-clic)
@@ -45,16 +45,56 @@ public class ModCommands {
             if (pl != null) {
                 boolean ok = hutBlock.buildHut(level, hutPos, pl);
                 if (!ok) src.sendFailure(Component.literal("Zone encombrée, dégage un 9x9 plat !"));
+                else {
+                    // étend à 15x15 : sol et murs extérieurs
+                    for (int dx=-7; dx<=7; dx++) for (int dz=-7; dz<=7; dz++) {
+                        if (Math.abs(dx)==7 || Math.abs(dz)==7) {
+                            level.setBlock(hutPos.offset(dx, -1, dz), net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState(), 3);
+                            for (int y=0; y<=3; y++) {
+                                if (dx==0 && dz==-7 && (y==0||y==1)) continue; // porte
+                                if (y==2 && Math.abs(dx)==7 && dz%2==0) { level.setBlock(hutPos.offset(dx, y, dz), net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState(), 3); continue; }
+                                if (y==2 && Math.abs(dz)==7 && dx%2==0) { level.setBlock(hutPos.offset(dx, y, dz), net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState(), 3); continue; }
+                                level.setBlock(hutPos.offset(dx, y, dz), net.minecraft.world.level.block.Blocks.BRICKS.defaultBlockState(), 3);
+                            }
+                        }
+                    }
+                    // toit 15x15
+                    for (int dx=-7; dx<=7; dx++) for (int dz=-7; dz<=7; dz++) {
+                        BlockPos tp = hutPos.offset(dx, 4, dz);
+                        boolean isCross = (dx==0 && Math.abs(dz)<=2) || (dz==0 && Math.abs(dx)<=2);
+                        if (level.getBlockState(tp).isAir()) level.setBlock(tp, (isCross ? net.minecraft.world.level.block.Blocks.RED_WOOL : net.minecraft.world.level.block.Blocks.WHITE_WOOL).defaultBlockState(), 3);
+                    }
+                    // fenetres supplémentaires internes 9x9
+                    for (int dx : new int[]{-2, 2}) { level.setBlock(hutPos.offset(dx, 2, -4), net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState(), 3); level.setBlock(hutPos.offset(dx, 2, 4), net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState(), 3); }
+                    for (int dz : new int[]{-2, 2}) { level.setBlock(hutPos.offset(-4, 2, dz), net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState(), 3); level.setBlock(hutPos.offset(4, 2, dz), net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState(), 3); }
+                    // lanternes
+                    for (int dx : new int[]{-2, 2}) for (int dz : new int[]{-2, 2}) level.setBlock(hutPos.offset(dx, 3, dz), net.minecraft.world.level.block.Blocks.LANTERN.defaultBlockState(), 3);
+                    level.setBlock(hutPos.offset(0, 3, 0), net.minecraft.world.level.block.Blocks.LANTERN.defaultBlockState(), 3);
+                    // lanternes extérieures 15x15
+                    for (int dx : new int[]{-6, 6}) for (int dz : new int[]{-6, 6}) level.setBlock(hutPos.offset(dx, 3, dz), net.minecraft.world.level.block.Blocks.LANTERN.defaultBlockState(), 3);
+                    // pots de fleurs
+                    level.setBlock(hutPos.offset(-3, 1, 0), net.minecraft.world.level.block.Blocks.POTTED_OXEYE_DAISY.defaultBlockState(), 3);
+                    level.setBlock(hutPos.offset(3, 1, 0), net.minecraft.world.level.block.Blocks.POTTED_BLUE_ORCHID.defaultBlockState(), 3);
+                    level.setBlock(hutPos.offset(-6, 1, -6), net.minecraft.world.level.block.Blocks.POTTED_AZURE_BLUET.defaultBlockState(), 3);
+                    level.setBlock(hutPos.offset(6, 1, -6), net.minecraft.world.level.block.Blocks.POTTED_RED_TULIP.defaultBlockState(), 3);
+                    // chemin
+                    for (int dz=-9; dz<=-7; dz++) level.setBlock(hutPos.offset(0, -1, dz), net.minecraft.world.level.block.Blocks.DIRT_PATH.defaultBlockState(), 3);
+                    // matériel du mod exposé à l'intérieur (tables déjà posées par buildHut, ajoute le reste)
+                    level.setBlock(hutPos.offset(-5, 1, 0), com.veterinarium.registry.ModBlocks.CONTAMINATOR.get().defaultBlockState(), 3);
+                    level.setBlock(hutPos.offset(5, 1, 0), net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState(), 3);
+                }
             }
         }
-        // donne items
+        // donne tout le matériel du mod (30 items)
         if (src.getEntity() instanceof ServerPlayer pl) {
-            pl.getInventory().add(new ItemStack(com.veterinarium.registry.ModItems.SCALPEL.get()));
-            pl.getInventory().add(new ItemStack(com.veterinarium.registry.ModItems.SUTURE_KIT.get()));
-            pl.getInventory().add(new ItemStack(com.veterinarium.registry.ModItems.SYRINGE.get()));
-            pl.getInventory().add(new ItemStack(com.veterinarium.registry.ModItems.MEDICAL_FILE.get()));
-            pl.getInventory().add(new ItemStack(com.veterinarium.registry.ModItems.BANDAGE.get(), 16));
-            pl.getInventory().add(new ItemStack(com.veterinarium.registry.ModItems.ANESTHETIC.get(), 16));
+            for (var it : new net.minecraft.world.item.Item[]{
+                com.veterinarium.registry.ModItems.SCALPEL.get(), com.veterinarium.registry.ModItems.SCALPEL_DIAMOND.get(), com.veterinarium.registry.ModItems.SCALPEL_NETHERITE.get(),
+                com.veterinarium.registry.ModItems.SUTURE_KIT.get(), com.veterinarium.registry.ModItems.SYRINGE.get(), com.veterinarium.registry.ModItems.MEDICAL_FILE.get(),
+                com.veterinarium.registry.ModItems.BANDAGE.get(), com.veterinarium.registry.ModItems.ANESTHETIC.get(), com.veterinarium.registry.ModItems.COMPRESSION_BANDAGE.get(),
+                com.veterinarium.registry.ModItems.ANTIBIOTIC.get(), com.veterinarium.registry.ModItems.ANTI_INFLAMMATORY.get(), com.veterinarium.registry.ModItems.ADRENALINE.get(), com.veterinarium.registry.ModItems.BLOOD_TRANSFUSION.get(),
+                com.veterinarium.registry.ModItems.ANTIDOTE.get(), com.veterinarium.registry.ModItems.VET_SPHERE.get(), com.veterinarium.registry.ModItems.DNA_SYRINGE.get(), com.veterinarium.registry.ModItems.HELLFIRE_SERUM.get(),
+                com.veterinarium.registry.ModItems.OPERATING_TABLE.get(), com.veterinarium.registry.ModItems.ANALYSIS_TABLE.get(), com.veterinarium.registry.ModItems.INFIRMARY.get(), com.veterinarium.registry.ModItems.HOSPITAL_HUT.get(), com.veterinarium.registry.ModItems.STRETCHER.get(), com.veterinarium.registry.ModItems.CONTAMINATOR.get()
+            }) pl.getInventory().add(new ItemStack(it));
         }
         // summons via command
         level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_wolf " + (origin.getX()+16) + " " + origin.getY() + " " + (origin.getZ()+1));
