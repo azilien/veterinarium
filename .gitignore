@@ -7,3 +7,5 @@ out/
 *.log
 .mpt/
 veterinarium-*-for-max.zip
+local-dev.gradle
+gitignore/

@@ -26,9 +26,6 @@ Les modifications notables de ce projet seront documentées dans ce fichier.
 - GUI overlap fixed / Chevauchement GUI corrigé
 - Page order: Recipes first in Bestiary / Pages réordonnées : Recettes en 1er
 
-### Removed / Supprimé
-- All Asfax references / Toutes les références Asfax supprimées
-
 ---
 
 ## [1.11.0] — 2026-08-28
