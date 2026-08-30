@@ -3,9 +3,12 @@ package com.veterinarium.registry;
 import com.veterinarium.Veterinarium;
 import com.veterinarium.entity.HellfireRavagerEntity;
 import com.veterinarium.entity.WoundedCatEntity;
+import com.veterinarium.entity.WoundedChickenEntity;
+import com.veterinarium.entity.WoundedCowEntity;
 import com.veterinarium.entity.WoundedDrakeEntity;
 import com.veterinarium.entity.WoundedFoxEntity;
 import com.veterinarium.entity.WoundedHorseEntity;
+import com.veterinarium.entity.WoundedSheepEntity;
 import com.veterinarium.entity.WoundedVillagerEntity;
 import com.veterinarium.entity.WoundedWolfEntity;
 import net.minecraft.core.registries.Registries;
@@ -77,6 +80,30 @@ public class ModEntities {
                             .fireImmune()
                             .clientTrackingRange(10)
                             .build("wounded_drake"));
+
+    public static final RegistryObject<EntityType<WoundedCowEntity>> WOUNDED_COW =
+            ENTITY_TYPES.register("wounded_cow",
+                    () -> EntityType.Builder.of(WoundedCowEntity::new, MobCategory.CREATURE)
+                            .sized(0.9F, 1.4F)
+                            .eyeHeight(1.2F)
+                            .clientTrackingRange(10)
+                            .build("wounded_cow"));
+
+    public static final RegistryObject<EntityType<WoundedSheepEntity>> WOUNDED_SHEEP =
+            ENTITY_TYPES.register("wounded_sheep",
+                    () -> EntityType.Builder.of(WoundedSheepEntity::new, MobCategory.CREATURE)
+                            .sized(0.8F, 1.0F)
+                            .eyeHeight(0.8F)
+                            .clientTrackingRange(10)
+                            .build("wounded_sheep"));
+
+    public static final RegistryObject<EntityType<WoundedChickenEntity>> WOUNDED_CHICKEN =
+            ENTITY_TYPES.register("wounded_chicken",
+                    () -> EntityType.Builder.of(WoundedChickenEntity::new, MobCategory.CREATURE)
+                            .sized(0.4F, 0.7F)
+                            .eyeHeight(0.5F)
+                            .clientTrackingRange(10)
+                            .build("wounded_chicken"));
 
     public static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);
