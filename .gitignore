@@ -1,3 +1,4 @@
+# === Forge / Gradle ===
 .gradle/
 build/
 run/
@@ -6,6 +7,13 @@ logs/
 out/
 *.log
 .mpt/
+
+# === Artifacts ===
 veterinarium-*-for-max.zip
+
+# === Local dev override (PrismLauncher auto-sync, perso) ===
 local-dev.gradle
+
+# === Planning privé (ancien "Série 10 épisodes Asfax.txt", renommé) ===
+# Dossier gitignore/ contient des docs de planning perso non trackés (série 10 épisodes, notes internes)
 gitignore/
