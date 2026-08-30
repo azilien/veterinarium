@@ -1,5 +1,4 @@
 # Veterinarium — Chronicles of the Wounded Beasts
-**Le mod Minecraft pensé pour Asfax**
 
 > Tu ne domptes plus les créatures, tu les **soignes**.
 
@@ -10,7 +9,7 @@
 ![Tests](https://img.shields.io/badge/Tests-11/11-passing-brightgreen)
 ![Lang](https://img.shields.io/badge/Lang-EN/FR-blueviolet)
 
-Inspiré par la chaîne **Asfax** (372k abonnés, infirmier au bloc, fan de Ice & Fire / MineColonies / Ars Nouveau / Ark / Palworld).
+Inspiré par Ice & Fire, MineColonies, House M.D., Ark et Palworld.
 
 ---
 
@@ -240,10 +239,9 @@ JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runGameTestServer  # 11/1
 - [x] v1.11 — Contaminateur, Anesthésie Générale, Bandage Compression, Bilingue EN/FR
 - [x] v1.12 — Scalpel Tiers, Cure Zombie, Cow/Sheep/Chicken, Operating GUI, Hellfire Renderer
 - [ ] CurseForge upload
-- [ ] Vidéo Asfax
 
 ---
 
 ## Licence
 
-MIT — Fait avec ❤️ pour la commu Asfax
+MIT — Fait avec ❤️

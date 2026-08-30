@@ -16,7 +16,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
     private int healedCount = 0;
     private int tickCounter = 0;
     private int hutLevel = 1; // 1-5
-    // Contrats journaliers Asfax
+    // Contrats journaliers
     private int contractDay = -1;
     private int contractType = 0; // 0=HEAL_ANY,1=WOLF,2=CAT,3=HORSE,4=FOX,5=VILLAGER,6=DRAKE,7=INFECTION,8=CAPTURE
     private int contractNeeded = 2;
@@ -253,7 +253,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
         if (lvl.isClientSide) return;
         int currentDay = (int)(lvl.getDayTime() / 24000L);
         if (contractDay != currentDay) {
-            // Courbe 10 épisodes Asfax (0-9) puis aléatoire
+            // Courbe de progression (0-9) puis aléatoire
             if (currentDay >= 0 && currentDay < 10) {
                 int[][] ordered = {
                     {0,2}, // EP1 Contusion any

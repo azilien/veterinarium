@@ -1,5 +1,4 @@
 # Veterinarium — Chronicles of the Wounded Beasts
-**Le mod Minecraft pensé pour Asfax**
 
 > Tu ne domptes plus les créatures, tu les **soignes**.
 
@@ -8,7 +7,7 @@
 ![Java](https://img.shields.io/badge/Java-21-blue)
 ![Status](https://img.shields.io/badge/Status-MVP%20Fonctionnel-success)
 
-Inspiré par la chaîne **Asfax** (372k abonnés, infirmier au bloc, fan de Ice & Fire / MineColonies / Ars Nouveau / Ark / Palworld).
+Inspiré par Ice & Fire, MineColonies, House M.D., Ark et Palworld.
 
 ---
 
@@ -50,7 +49,7 @@ C'est `Ice & Fire + MineColonies + House M.D.` en un seul mod.
 
 ## 🛠️ Installation
 
-### Pour tester tout de suite (comme Asfax)
+### Pour tester tout de suite
 1. Minecraft Java 1.21.1 + Forge 52.1.14 installé (déjà présent sur ton launcher `forge`)
 2. Copie `build/libs/veterinarium-1.0.0.jar` dans `~/.minecraft/mods/`
 3. Lance le profil `forge` → Nouveau monde en Créatif
@@ -70,7 +69,7 @@ JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runServer # lance un serv
 
 ---
 
-## 🧪 Test Rapide (Hardcore Asfax Style)
+## 🧪 Test Rapide
 
 1.  `/give @p veterinarium:scalpel`
 2.  `/give @p veterinarium:suture_kit`
@@ -86,7 +85,7 @@ JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runServer # lance un serv
 
 ---
 
-## 🚀 Roadmap (pour séduire Asfax en série)
+## 🚀 Roadmap
 
 - [ ] **v1.1 - Wounded Entities**: loup blessé qui spawn naturellement, dragon blessé rare (Ice & Fire compat)
 - [ ] **v1.2 - Bestiaire Médical GUI**: livre avec pages par créature, pathologies (infection, fracture, brûlure)
@@ -112,11 +111,5 @@ src/main/resources/
 
 ---
 
-## 🤝 Pour contacter Asfax
-- Chaîne: https://www.youtube.com/@Asfax
-- Pitch DM: "Je suis infirmier au bloc IRL comme toi, j'ai fait un mod où on soigne les dragons au bloc opératoire avant de les tame. Ça combine Ice & Fire + MineColonies. Tu veux tester la bêta en Hardcore ?"
-
----
-
 ## 📜 Licence
-MIT - Fait avec ❤️ pour la commu Asfax
+MIT - Fait avec ❤️

@@ -12,7 +12,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * Compat Ice & Fire : wounded dragons rares pour Asfax thumbnail dragon au bloc.
+     * Compat Ice & Fire : wounded dragons rares.
  * Sans dépendance dure (réflexion sur nom de classe).
  */
 @Mod.EventBusSubscriber

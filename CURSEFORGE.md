@@ -1,6 +1,6 @@
 # Veterinarium — Chronicles of the Wounded Beasts
 **Tu ne domptes plus les créatures, tu les soignes.**
-*Le mod Minecraft pensé pour Asfax — Ice & Fire + MineColonies + House M.D. + Ark + Palworld*
+*Le mod Minecraft inspiré de Ice & Fire + MineColonies + House M.D. + Ark + Palworld*
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green) ![Forge](https://img.shields.io/badge/Forge-52.1.14-orange) ![Java](https://img.shields.io/badge/Java-21-blue) ![Version](https://img.shields.io/badge/Version-1.11.0-success) ![Tests](https://img.shields.io/badge/Tests-11/11-brightgreen) ![Lang](https://img.shields.io/badge/EN/FR-330%20clés-blueviolet)
 
@@ -114,5 +114,4 @@ JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runGameTestServer  # 11/1
 
 ---
 
-## 📜 Licence MIT - Pour Asfax & les tamers infirmiers
-Chaîne : https://www.youtube.com/@Asfax
+## 📜 Licence MIT

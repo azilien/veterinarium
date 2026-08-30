@@ -41,7 +41,7 @@ public class WoundedSpawnHandler {
                 || living instanceof Cat
                 || living instanceof Villager
                 || living instanceof Parrot
-                || living instanceof Creeper; // creeper blessé = marrant pour Asfax
+                || living instanceof Creeper;
         
         if (!isCandidate) return;
         if (living.getRandom().nextDouble() > getChance()) return;

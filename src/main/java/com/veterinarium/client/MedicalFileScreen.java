@@ -45,14 +45,13 @@ public class MedicalFileScreen extends Screen {
     @Override
     protected void init() {
         int cx = this.width / 2;
-        int by = this.height / 2 + 78;
+        int by = this.height / 2 + 90;
         this.addRenderableWidget(Button.builder(Component.literal("◀"), b -> { if(currentPage>0) currentPage--; })
-                .bounds(cx - 115, by, 20, 20).build());
+                .bounds(cx - 55, by, 20, 20).build());
         this.addRenderableWidget(Button.builder(Component.literal("▶"), b -> { if(currentPage<TOTAL_PAGES-1) currentPage++; })
-                .bounds(cx + 95, by, 20, 20).build());
+                .bounds(cx + 35, by, 20, 20).build());
         this.addRenderableWidget(Button.builder(Component.literal("Fermer"), b -> this.onClose())
-                .bounds(cx - 40, by, 80, 20).build());
-        // clickable dots are rendered manually, no buttons
+                .bounds(cx - 20, by, 40, 20).build());
     }
 
     @Override
@@ -125,10 +124,10 @@ public class MedicalFileScreen extends Screen {
         // header text
         String header = switch(currentPage) {
             case 0 -> Component.translatable("gui.veterinarium.medical_file.header.cover").getString();
-            case 1,2,3,4,5,6 -> Component.translatable("gui.veterinarium.medical_file.header.bestiary", Component.translatable("entity.veterinarium."+creatures[currentPage-1].id).getString().toUpperCase()).getString();
-            case 7 -> Component.translatable("gui.veterinarium.medical_file.header.pathologies").getString();
-            case 8 -> Component.translatable("gui.veterinarium.medical_file.header.protocol").getString();
-            case 9 -> Component.translatable("gui.veterinarium.medical_file.header.recipes").getString();
+            case 1 -> Component.translatable("gui.veterinarium.medical_file.header.recipes").getString();
+            case 2,3,4,5,6,7 -> Component.translatable("gui.veterinarium.medical_file.header.bestiary", Component.translatable("entity.veterinarium."+creatures[currentPage-2].id).getString().toUpperCase()).getString();
+            case 8 -> Component.translatable("gui.veterinarium.medical_file.header.pathologies").getString();
+            case 9 -> Component.translatable("gui.veterinarium.medical_file.header.protocol").getString();
             case 10 -> Component.translatable("gui.veterinarium.medical_file.header.progress").getString();
             default -> Component.translatable("gui.veterinarium.medical_file.title").getString();
         };
@@ -137,10 +136,10 @@ public class MedicalFileScreen extends Screen {
 
         // contenu selon page
         if (currentPage==0) renderCover(gfx, x, y, w, h);
-        else if (currentPage>=1 && currentPage<=6) renderCreature(gfx, x, y, w, h, creatures[currentPage-1]);
-        else if (currentPage==7) renderPathologies(gfx, x, y, w, h);
-        else if (currentPage==8) renderProtocol(gfx, x, y, w, h);
-        else if (currentPage==9) renderRecipes(gfx, x, y, w, h);
+        else if (currentPage==1) renderRecipes(gfx, x, y, w, h);
+        else if (currentPage>=2 && currentPage<=7) renderCreature(gfx, x, y, w, h, creatures[currentPage-2]);
+        else if (currentPage==8) renderPathologies(gfx, x, y, w, h);
+        else if (currentPage==9) renderProtocol(gfx, x, y, w, h);
         else if (currentPage==10) renderProgress(gfx, x, y, w, h);
 
         // footer pagination dots
@@ -152,7 +151,6 @@ public class MedicalFileScreen extends Screen {
             if(i==currentPage) gfx.fill(dotX0 + i*7 +1, dotY+1, dotX0 + i*7 +4, dotY+4, 0xFFFFFFFF);
         }
         gfx.drawCenteredString(this.font, (currentPage+1)+"/"+TOTAL_PAGES, this.width/2, dotY+7, 0xFFFFFF);
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.footer.asfax").getString()), x+8, y+h-22, 0x8B4513, true);
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.footer.nav").getString()), x+w-68, y+h-22, 0x8B4513, true);
 
         super.render(gfx, mouseX, mouseY, partialTick);

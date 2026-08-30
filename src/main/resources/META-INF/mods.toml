@@ -10,7 +10,7 @@ displayName="Veterinarium - Chronicles of the Wounded Beasts"
 updateJSONURL=""
 displayURL=""
 logoFile="veterinarium.png"
-credits="Inspired by Asfax - Infirmier au bloc & Tamer"
+credits="Inspired by Ice & Fire, MineColonies, House M.D., Ark & Palworld"
 authors="Veterinarium Team"
 description='''Veterinarium — Le mod survie hardcore ou tu ne domptes plus les creatures, tu les SOIGNES.
 
@@ -21,8 +21,6 @@ Parfait pour les fans de Ice & Fire, MineColonies, Ars Nouveau et Ark.
 - Scalpel, Kit de Suture, Seringue, Dossier Medical (Bestiaire Medical)
 - Mecanique de soin : heal + tame + metier de colonie
 - Compatible survie Hardcore & Multijoueur
-
-Pour Asfax.
 '''
 
 [[dependencies.veterinarium]]

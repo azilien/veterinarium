@@ -301,7 +301,7 @@ public class UrgencyAndEpidemicHandler {
 
     private static void handleWoundParticles(Level level) {
         if (!(level instanceof ServerLevel sl)) return;
-        // particules wound-spécifiques toutes les 2s pour immersion Asfax (couleur thumbail)
+        // particules wound-spécifiques toutes les 2s pour immersion
         List<LivingEntity> wounded = level.getEntitiesOfClass(LivingEntity.class,
                 new AABB(-30000000, -64, -30000000, 30000000, 320, 30000000),
                 e -> e.getTags().contains("veterinarium_wounded") && e.isAlive());

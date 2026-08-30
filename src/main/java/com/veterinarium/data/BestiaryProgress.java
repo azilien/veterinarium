@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * Suivi de progression bestiaire pour Asfax série.
+ * Suivi de progression bestiaire.
  * Stocké en player persistentData (survit déco/reco, pas de cap).
  * Clés: VetDiagTotal, VetOpsTotal, VetSutureTotal, VetHealedTotal,
  *       VetSeen_<entityId>, VetSeenWound_<id>, VetHealed_<entityId>

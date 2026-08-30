@@ -1,7 +1,7 @@
 # Veterinarium — Chronicles of the Wounded Beasts
 
 **You no longer tame creatures, you heal them.**
-*Ice & Fire meets House M.D. with wounded mobs, surgery and Palworld spheres — inspired by Asfax.*
+*Ice & Fire meets House M.D. with wounded mobs, surgery and Palworld spheres.*
 
 ![Version](https://img.shields.io/badge/Version-1.11.0-success) ![Tests](https://img.shields.io/badge/Tests-11/11-brightgreen) ![Lang](https://img.shields.io/badge/EN/FR-330%20keys-blueviolet)
 
@@ -134,5 +134,4 @@ JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runGameTestServer  # 11/1
 
 ---
 
-## 📜 Licence MIT — Pour Asfax & les tamers infirmiers
-Chaîne : https://www.youtube.com/@Asfax — Pitch : *"Je suis infirmier au bloc IRL comme toi, j'ai fait un mod où on soigne les dragons au bloc avant de les tame."*
+## 📜 Licence MIT
