@@ -230,16 +230,20 @@ public class MedicalFileScreen extends Screen {
         String traitVal = seen ? Component.translatable(traitKey).getString() : "???";
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.habitat", habitatVal).getString()), x+12, ty, 0x000000, true); ty+=9;
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.trait", traitVal).getString()), x+12, ty, 0x000000, true); ty+=9;
-        // soin
+        // care + specific info
+        String descKey = "gui.veterinarium.medical_file.creature.desc." + c.id.replace("wounded_","");
+        String descVal = seen ? Component.translatable(descKey).getString() : "???";
+        gfx.drawString(this.font, Component.literal(descVal), x+12, ty, 0x2B2B2B, true); ty+=9;
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.care").getString()), x+12, ty, 0x000000, true); ty+=9;
-        if (c.id.equals("wounded_fox")) gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.fox_bonus").getString()), x+12, ty, 0x000000, true);
-        if (c.id.equals("wounded_villager")) gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.villager_bonus").getString()), x+12, ty, 0x000000, true);
-        if (c.id.equals("wounded_horse")) gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.horse_bonus").getString()), x+12, ty, 0x000000, true);
-        if (!c.id.equals("wounded_wolf") && !c.id.equals("wounded_cat")) ty+=0; else ty+=0;
-        if (seen) ty+=2; else ty+=2;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.pathologies_all").getString()), x+12, ty, 0x000000, true); ty+=9;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.list1").getString()), x+12, ty, 0x000000, true); ty+=9;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.bestiary.list2").getString()) + "  §cSaignement", x+12, ty, 0x000000, true); ty+=12;
+        String bonusKey = "gui.veterinarium.medical_file.creature.bonus." + c.id.replace("wounded_","");
+        String bonusVal = Component.translatable(bonusKey).getString();
+        if (!bonusVal.contains("creature.bonus.")) {
+            gfx.drawString(this.font, Component.literal(bonusVal), x+12, ty, 0x006400, true); ty+=9;
+        }
+        // specific pathologies per creature
+        String pathoKey = "gui.veterinarium.medical_file.creature.patho." + c.id.replace("wounded_","");
+        String pathoVal = seen ? Component.translatable(pathoKey).getString() : "???";
+        gfx.drawString(this.font, Component.literal(pathoVal), x+12, ty, 0x8B0000, true); ty+=12;
 
         // stats perso
         if (p != null) {
