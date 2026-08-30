@@ -30,12 +30,7 @@ public class WoundedFoxEntity extends Fox {
 
     public WoundedFoxEntity(EntityType<? extends Fox> type, Level level) {
         super(type, level);
-        this.setCustomName(Component.literal("§c☠ Renard Blessé"));
-        this.setCustomNameVisible(true);
-        this.setPersistenceRequired();
-        this.setWoundType(WoundType.random(this.random));
-        this.addTag("veterinarium_wounded");
-        this.addTag("veterinarium_needs_scalpel");
+        WoundedCreatureHelper.initWounded(this, DATA_HEALED, DATA_WOUND_TYPE, "Renard Blessé");
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -48,8 +43,7 @@ public class WoundedFoxEntity extends Fox {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_HEALED, false);
-        builder.define(DATA_WOUND_TYPE, 0);
+        WoundedCreatureHelper.defineSynchedData(builder, DATA_HEALED, DATA_WOUND_TYPE);
     }
 
     @Override
@@ -66,45 +60,29 @@ public class WoundedFoxEntity extends Fox {
         this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, net.minecraft.world.entity.animal.Rabbit.class, true));
     }
 
-    public boolean isHealed() { return this.entityData.get(DATA_HEALED); }
-    public void setHealed(boolean h) {
-        this.entityData.set(DATA_HEALED, h);
-        if (h) {
-            this.removeTag("veterinarium_wounded");
-            this.removeTag("veterinarium_needs_scalpel");
-            this.addTag("veterinarium_healed");
-            this.addTag("veterinarium_operated");
-            this.setCustomName(Component.literal("§a❤ Renard Soigné"));
-            this.setHealth(this.getMaxHealth());
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3D);
-        }
-    }
-
-    public WoundType getWoundType() { return WoundType.fromId(this.entityData.get(DATA_WOUND_TYPE)); }
-    public void setWoundType(WoundType t) { this.entityData.set(DATA_WOUND_TYPE, t.getId()); this.addTag(t.getTag()); }
+    public boolean isHealed() { return WoundedCreatureHelper.isHealed(this, DATA_HEALED); }
+    public void setHealed(boolean h) { WoundedCreatureHelper.setHealed(this, DATA_HEALED, DATA_WOUND_TYPE, h, "Renard Soigné", 0.3D); }
+    public WoundType getWoundType() { return WoundedCreatureHelper.getWoundType(this, DATA_WOUND_TYPE); }
+    public void setWoundType(WoundType t) { WoundedCreatureHelper.setWoundType(this, DATA_WOUND_TYPE, t); }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putBoolean("VetHealed", isHealed());
-        tag.putInt("VetWound", getWoundType().getId());
+        WoundedCreatureHelper.save(tag, this, DATA_HEALED, DATA_WOUND_TYPE);
     }
+
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("VetHealed")) this.entityData.set(DATA_HEALED, tag.getBoolean("VetHealed"));
-        if (tag.contains("VetWound")) this.entityData.set(DATA_WOUND_TYPE, tag.getInt("VetWound"));
+        WoundedCreatureHelper.load(tag, this, DATA_HEALED, DATA_WOUND_TYPE);
     }
 
-    @Override
-    protected SoundEvent getAmbientSound() { return isHealed() ? SoundEvents.FOX_AMBIENT : SoundEvents.FOX_HURT; }
-    @Override
-    protected SoundEvent getHurtSound(DamageSource s) { return SoundEvents.FOX_HURT; }
-    @Override
-    protected SoundEvent getDeathSound() { return SoundEvents.FOX_DEATH; }
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) { this.playSound(SoundEvents.FOX_SNIFF, 0.15F, 1.0F); }
+    @Override protected SoundEvent getAmbientSound() { return isHealed() ? SoundEvents.FOX_AMBIENT : SoundEvents.FOX_HURT; }
+    @Override protected SoundEvent getHurtSound(DamageSource s) { return SoundEvents.FOX_HURT; }
+    @Override protected SoundEvent getDeathSound() { return SoundEvents.FOX_DEATH; }
+    @Override protected void playStepSound(BlockPos pos, BlockState state) { this.playSound(SoundEvents.FOX_SNIFF, 0.15F, 1.0F); }
 
+    @Nullable
     @Override
     public Fox getBreedOffspring(ServerLevel level, AgeableMob other) {
         WoundedFoxEntity baby = new WoundedFoxEntity(com.veterinarium.registry.ModEntities.WOUNDED_FOX.get(), level);
@@ -115,7 +93,7 @@ public class WoundedFoxEntity extends Fox {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (!this.level().isClientSide && isHealed() && hand == InteractionHand.MAIN_HAND && player.getItemInHand(hand).isEmpty()) {
-            player.displayClientMessage(Component.literal("§7Le renard soigné vous observe avec confiance... Donne-lui une baie sucrée !"), true);
+            player.displayClientMessage(Component.literal("§7Le renard soigné vous observe avec confiance..."), true);
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);

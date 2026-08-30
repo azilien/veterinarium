@@ -40,6 +40,5 @@ public class Veterinarium {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM VETERINARIUM COMMON SETUP - Bloc Opératoire prêt !.................."); // 1.10.2 GameTests + bilingue
     }
 }

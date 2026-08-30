@@ -161,7 +161,7 @@ public class HellfireRavagerEntity extends Wolf {
         // Evolution automatique
         if (killCount == EVOLVE_ACID && "fire".equals(mutationType)) {
             mutateTo("acid");
-        } else if (killCount == EVOLVE_SHADOW && "fire".equals(mutationType)) {
+        } else if (killCount >= EVOLVE_SHADOW && "fire".equals(mutationType)) {
             mutateTo("shadow");
         } else if (killCount >= EVOLVE_SHADOW && "acid".equals(mutationType)) {
             mutateTo("shadow");

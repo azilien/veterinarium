@@ -31,28 +31,20 @@ public class WoundedWolfEntity extends Wolf {
 
     public WoundedWolfEntity(EntityType<? extends Wolf> type, Level level) {
         super(type, level);
-        // Name visible
-        this.setCustomName(Component.literal("§c☠ Loup Blessé"));
-        this.setCustomNameVisible(true);
-        this.setPersistenceRequired();
-        this.setWoundType(WoundType.random(this.random));
-        // Ajoute tags pour compatibilité avec ancien système
-        this.addTag("veterinarium_wounded");
-        this.addTag("veterinarium_needs_scalpel");
+        WoundedCreatureHelper.initWounded(this, DATA_HEALED, DATA_WOUND_TYPE, "Loup Blessé");
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Wolf.createAttributes()
-                .add(Attributes.MAX_HEALTH, 12.0D) // fragile
-                .add(Attributes.MOVEMENT_SPEED, 0.25D) // boiteux
+                .add(Attributes.MAX_HEALTH, 12.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D);
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_HEALED, false);
-        builder.define(DATA_WOUND_TYPE, 0);
+        WoundedCreatureHelper.defineSynchedData(builder, DATA_HEALED, DATA_WOUND_TYPE);
     }
 
     @Override
@@ -64,106 +56,57 @@ public class WoundedWolfEntity extends Wolf {
         this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8D));
-        // Pas de BegGoal - il gémit au lieu de quémander
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal(this));
     }
 
-    public boolean isHealed() {
-        return this.entityData.get(DATA_HEALED);
-    }
-
-    public void setHealed(boolean healed) {
-        this.entityData.set(DATA_HEALED, healed);
-        if (healed) {
-            this.removeTag("veterinarium_wounded");
-            this.removeTag("veterinarium_needs_scalpel");
-            this.addTag("veterinarium_healed");
-            this.addTag("veterinarium_operated");
-            this.setCustomName(Component.literal("§a❤ Loup Soigné"));
-            this.setCustomNameVisible(true);
-            this.setHealth(this.getMaxHealth());
-            // Vitesse normale retrouvée
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3D);
-        }
-    }
-
-    public WoundType getWoundType() { return WoundType.fromId(this.entityData.get(DATA_WOUND_TYPE)); }
-    public void setWoundType(WoundType t) { this.entityData.set(DATA_WOUND_TYPE, t.getId()); this.addTag(t.getTag()); }
+    public boolean isHealed() { return WoundedCreatureHelper.isHealed(this, DATA_HEALED); }
+    public void setHealed(boolean h) { WoundedCreatureHelper.setHealed(this, DATA_HEALED, DATA_WOUND_TYPE, h, "Loup Soigné", 0.3D); }
+    public WoundType getWoundType() { return WoundedCreatureHelper.getWoundType(this, DATA_WOUND_TYPE); }
+    public void setWoundType(WoundType t) { WoundedCreatureHelper.setWoundType(this, DATA_WOUND_TYPE, t); }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putBoolean("VetHealed", this.isHealed());
-        tag.putInt("VetWound", getWoundType().getId());
+        WoundedCreatureHelper.save(tag, this, DATA_HEALED, DATA_WOUND_TYPE);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("VetHealed")) {
-            boolean h = tag.getBoolean("VetHealed");
-            // On ne peut pas appeler setHealed directement côté NBT sans synched, on set la data
-            this.entityData.set(DATA_HEALED, h);
-            if (h) {
-                this.setCustomName(Component.literal("§a❤ Loup Soigné"));
-            }
-        }
-        if (tag.contains("VetWound")) this.entityData.set(DATA_WOUND_TYPE, tag.getInt("VetWound"));
+        WoundedCreatureHelper.load(tag, this, DATA_HEALED, DATA_WOUND_TYPE);
     }
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        // Laisse le système de soin via nos items gérer (Scalpel/Suture) - mais on ajoute un feedback
         if (!this.level().isClientSide && this.isHealed() && !this.isTame() && stack.isEmpty()) {
-            // Caresse -> léchouille
-            player.displayClientMessage(Component.literal("§7Le loup soigné remue la queue... Utilise un os pour l'apprivoiser définitivement !"), true);
+            player.displayClientMessage(Component.literal("§7Le loup soigné remue la queue... Utilise un os pour l'apprivoiser !"), true);
             this.playSound(SoundEvents.WOLF_WHINE, 1.0F, 1.2F);
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
     }
 
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.WOLF_HURT;
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return SoundEvents.WOLF_DEATH;
-    }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.WOLF_STEP, 0.15F, 0.9F);
-    }
+    @Override protected SoundEvent getHurtSound(DamageSource source) { return SoundEvents.WOLF_HURT; }
+    @Override protected SoundEvent getDeathSound() { return SoundEvents.WOLF_DEATH; }
+    @Override protected void playStepSound(BlockPos pos, BlockState state) { this.playSound(SoundEvents.WOLF_STEP, 0.15F, 0.9F); }
 
     @Nullable
     @Override
     public Wolf getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        // Si un des parents est wounded, le bébé a 20% de chance d'être wounded aussi
         WoundedWolfEntity baby = new WoundedWolfEntity(com.veterinarium.registry.ModEntities.WOUNDED_WOLF.get(), level);
-        if (this.random.nextFloat() < 0.2f) {
-            // reste blessé
-        } else {
-            baby.setHealed(true);
-            baby.setCustomName(Component.literal("§7Louveteau"));
-        }
+        if (this.random.nextFloat() >= 0.2f) baby.setHealed(true);
         return baby;
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide && this.tickCount % 60 == 0 && !this.isHealed() && this.getHealth() < this.getMaxHealth() * 0.5f) {
-            // Gémit toutes les 3s si très blessé
-            if (this.random.nextFloat() < 0.3f) {
-                this.playSound(SoundEvents.WOLF_WHINE, 0.8F, 0.8F);
-            }
+        if (!this.level().isClientSide && this.tickCount % 60 == 0 && !isHealed() && this.getHealth() < this.getMaxHealth() * 0.5f && this.random.nextFloat() < 0.3f) {
+            this.playSound(SoundEvents.WOLF_WHINE, 0.8F, 0.8F);
         }
     }
 }

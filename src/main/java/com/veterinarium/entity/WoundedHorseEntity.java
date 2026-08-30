@@ -22,7 +22,6 @@ import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
 
 public class WoundedHorseEntity extends Horse {
@@ -31,12 +30,7 @@ public class WoundedHorseEntity extends Horse {
 
     public WoundedHorseEntity(EntityType<? extends Horse> type, Level level) {
         super(type, level);
-        this.setCustomName(Component.literal("§c☠ Cheval Blessé"));
-        this.setCustomNameVisible(true);
-        this.setPersistenceRequired();
-        this.setWoundType(WoundType.random(this.random));
-        this.addTag("veterinarium_wounded");
-        this.addTag("veterinarium_needs_scalpel");
+        WoundedCreatureHelper.initWounded(this, DATA_HEALED, DATA_WOUND_TYPE, "Cheval Blessé");
         this.setTamed(false);
     }
 
@@ -50,8 +44,7 @@ public class WoundedHorseEntity extends Horse {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_HEALED, false);
-        builder.define(DATA_WOUND_TYPE, 0);
+        WoundedCreatureHelper.defineSynchedData(builder, DATA_HEALED, DATA_WOUND_TYPE);
     }
 
     @Override
@@ -66,44 +59,36 @@ public class WoundedHorseEntity extends Horse {
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
 
-    public boolean isHealed() { return this.entityData.get(DATA_HEALED); }
-    public void setHealed(boolean h) {
-        this.entityData.set(DATA_HEALED, h);
-        if (h) {
-            this.removeTag("veterinarium_wounded");
-            this.removeTag("veterinarium_needs_scalpel");
-            this.addTag("veterinarium_healed");
-            this.addTag("veterinarium_operated");
-            this.setCustomName(Component.literal("§a❤ Cheval Soigné"));
-            this.setHealth(this.getMaxHealth());
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2D);
-        }
-    }
-
-    public WoundType getWoundType() { return WoundType.fromId(this.entityData.get(DATA_WOUND_TYPE)); }
-    public void setWoundType(WoundType t) { this.entityData.set(DATA_WOUND_TYPE, t.getId()); this.addTag(t.getTag()); }
+    public boolean isHealed() { return WoundedCreatureHelper.isHealed(this, DATA_HEALED); }
+    public void setHealed(boolean h) { WoundedCreatureHelper.setHealed(this, DATA_HEALED, DATA_WOUND_TYPE, h, "Cheval Soigné", 0.2D); }
+    public WoundType getWoundType() { return WoundedCreatureHelper.getWoundType(this, DATA_WOUND_TYPE); }
+    public void setWoundType(WoundType t) { WoundedCreatureHelper.setWoundType(this, DATA_WOUND_TYPE, t); }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putBoolean("VetHealed", isHealed());
-        tag.putInt("VetWound", getWoundType().getId());
-    }
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        if (tag.contains("VetHealed")) this.entityData.set(DATA_HEALED, tag.getBoolean("VetHealed"));
-        if (tag.contains("VetWound")) this.entityData.set(DATA_WOUND_TYPE, tag.getInt("VetWound"));
+        WoundedCreatureHelper.save(tag, this, DATA_HEALED, DATA_WOUND_TYPE);
     }
 
     @Override
-    protected SoundEvent getAmbientSound() { return isHealed() ? SoundEvents.HORSE_AMBIENT : SoundEvents.HORSE_HURT; }
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        WoundedCreatureHelper.load(tag, this, DATA_HEALED, DATA_WOUND_TYPE);
+    }
+
+    @Override protected SoundEvent getAmbientSound() { return isHealed() ? SoundEvents.HORSE_AMBIENT : SoundEvents.HORSE_HURT; }
+    @Override protected SoundEvent getHurtSound(DamageSource s) { return SoundEvents.HORSE_HURT; }
+    @Override protected SoundEvent getDeathSound() { return SoundEvents.HORSE_DEATH; }
+    @Override protected void playStepSound(BlockPos pos, BlockState state) { this.playSound(SoundEvents.HORSE_STEP, 0.15F, 1.0F); }
+
     @Override
-    protected SoundEvent getHurtSound(DamageSource s) { return SoundEvents.HORSE_HURT; }
-    @Override
-    protected SoundEvent getDeathSound() { return SoundEvents.HORSE_DEATH; }
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) { this.playSound(SoundEvents.HORSE_STEP, 0.15F, 1.0F); }
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (!this.level().isClientSide && isHealed() && !this.isTamed() && player.getItemInHand(hand).isEmpty()) {
+            player.displayClientMessage(Component.literal("§7Le cheval soigné hennit... Utilise une pomme dorée pour l'apprivoiser !"), true);
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(player, hand);
+    }
 
     @Nullable
     @Override
@@ -111,16 +96,6 @@ public class WoundedHorseEntity extends Horse {
         WoundedHorseEntity baby = new WoundedHorseEntity(com.veterinarium.registry.ModEntities.WOUNDED_HORSE.get(), level);
         if (this.random.nextFloat() >= 0.3f) baby.setHealed(true);
         return baby;
-    }
-
-    @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        // Laisse le soin via Suture gérer, mais ajoute feedback
-        if (!this.level().isClientSide && isHealed() && !this.isTamed() && player.getItemInHand(hand).isEmpty()) {
-            player.displayClientMessage(Component.literal("§7Le cheval soigné hennit doucement... Utilise une pomme dorée pour l'apprivoiser !"), true);
-            return InteractionResult.SUCCESS;
-        }
-        return super.mobInteract(player, hand);
     }
 
     @Override

@@ -100,6 +100,7 @@ public class ContaminatorBlockEntity extends BlockEntity {
     }
 
     public void dropContents(Level level, BlockPos pos) {
+        // No items stored — just particle/sound feedback
     }
 
     @Override
