@@ -14,4 +14,4 @@ give @p veterinarium:anesthetic 16
 summon veterinarium:wounded_wolf ~16 ~ ~1
 summon veterinarium:wounded_cat ~14 ~ ~-1
 summon veterinarium:wounded_villager ~15 ~ ~3
-tellraw @p {"text":"Hut posé à 15 blocs sur terrain aplani — recule et F1 + F2","color":"gold"}
+say Hut pose a 15 blocs - recule et F1 + F2
