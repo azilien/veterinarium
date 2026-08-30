@@ -7,6 +7,8 @@
   "entity.veterinarium.wounded_cat": "Wounded Cat",
   "entity.veterinarium.wounded_horse": "Wounded Horse",
   "item.veterinarium.scalpel": "Scalpel",
+  "item.veterinarium.scalpel_diamond": "Diamond Scalpel",
+  "item.veterinarium.scalpel_netherite": "Netherite Scalpel",
   "item.veterinarium.suture_kit": "Suture Kit",
   "item.veterinarium.syringe": "Diagnostic Syringe",
   "item.veterinarium.medical_file": "Medical File",

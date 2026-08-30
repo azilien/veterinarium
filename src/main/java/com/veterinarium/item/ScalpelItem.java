@@ -19,8 +19,15 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class ScalpelItem extends Item {
+    private final float healAmount;
+
     public ScalpelItem(Properties properties) {
+        this(properties, 2.0f);
+    }
+
+    public ScalpelItem(Properties properties, float healAmount) {
         super(properties);
+        this.healAmount = healAmount;
     }
 
     private WoundType getWound(LivingEntity target) {
@@ -110,7 +117,7 @@ public class ScalpelItem extends Item {
                         }
                     }
                 }
-                float heal = 2.0f;
+                float heal = this.healAmount;
                 target.heal(heal);
                 try {
                     level.playSound(null, target.blockPosition(), ModSounds.SCALPEL_CUT.get(), SoundSource.PLAYERS, 0.8f, 1.2f);

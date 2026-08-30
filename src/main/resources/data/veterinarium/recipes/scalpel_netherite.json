@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing_transform",
+  "ingredients": {
+    "template": {"item": "minecraft:netherite_upgrade_smithing_template"},
+    "base": {"item": "veterinarium:scalpel_diamond"},
+    "addition": {"item": "minecraft:netherite_ingot"}
+  },
+  "result": {
+    "id": "veterinarium:scalpel_netherite",
+    "count": 1
+  }
+}

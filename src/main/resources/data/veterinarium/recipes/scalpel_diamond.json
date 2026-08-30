@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "veterinarium:scalpel"},
+    {"item": "minecraft:diamond"}
+  ],
+  "result": {
+    "id": "veterinarium:scalpel_diamond",
+    "count": 1
+  }
+}

@@ -25,6 +25,10 @@ public class ModItems {
     // Tools
     public static final RegistryObject<Item> SCALPEL = ITEMS.register("scalpel",
             () -> new ScalpelItem(new Item.Properties().durability(250)));
+    public static final RegistryObject<Item> SCALPEL_DIAMOND = ITEMS.register("scalpel_diamond",
+            () -> new ScalpelItem(new Item.Properties().durability(500).rarity(net.minecraft.world.item.Rarity.UNCOMMON), 3.0f));
+    public static final RegistryObject<Item> SCALPEL_NETHERITE = ITEMS.register("scalpel_netherite",
+            () -> new ScalpelItem(new Item.Properties().durability(1000).rarity(net.minecraft.world.item.Rarity.RARE).fireResistant(), 4.0f));
 
     public static final RegistryObject<Item> SUTURE_KIT = ITEMS.register("suture_kit",
             () -> new SutureKitItem(new Item.Properties().durability(64)));
