@@ -199,7 +199,7 @@ public class HospitalHutBlock extends Block implements EntityBlock {
         }
     }
 
-    private boolean buildHut(Level level, BlockPos center, Player player) {
+    public boolean buildHut(Level level, BlockPos center, Player player) {
         // Vérifie que la zone 9x9 à y=0..5 est dégagée (air ou remplaçable)
         for (int dx = -4; dx <= 4; dx++) {
             for (int dz = -4; dz <= 4; dz++) {

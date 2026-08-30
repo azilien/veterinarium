@@ -27,30 +27,26 @@ public class ModCommands {
         CommandSourceStack src = ctx.getSource();
         ServerLevel level = src.getLevel();
         BlockPos origin = BlockPos.containing(src.getPosition());
-        // aplanit
+        // aplanit 15x13 a 15 blocs
         BlockPos p1 = origin.offset(10, -1, -6);
         BlockPos p2 = origin.offset(22, -1, 6);
         for (BlockPos p : BlockPos.betweenClosed(p1, p2)) level.setBlock(p, net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState(), 3);
         p1 = origin.offset(10, 0, -6);
         p2 = origin.offset(22, 6, 6);
         for (BlockPos p : BlockPos.betweenClosed(p1, p2)) level.setBlock(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
-        // maison
-        p1 = origin.offset(12, -1, -3); p2 = origin.offset(18, -1, 3);
-        for (BlockPos p : BlockPos.betweenClosed(p1, p2)) level.setBlock(p, net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState(), 3);
-        // murs briques
-        for (int y=0;y<=3;y++) {
-            for (int z=-3;z<=3;z++) { level.setBlock(origin.offset(12, y, z), net.minecraft.world.level.block.Blocks.BRICKS.defaultBlockState(), 3); level.setBlock(origin.offset(18, y, z), net.minecraft.world.level.block.Blocks.BRICKS.defaultBlockState(), 3); }
-            for (int x=12;x<=18;x++) { level.setBlock(origin.offset(x, y, -3), net.minecraft.world.level.block.Blocks.BRICKS.defaultBlockState(), 3); level.setBlock(origin.offset(x, y, 3), net.minecraft.world.level.block.Blocks.BRICKS.defaultBlockState(), 3); }
+        // pose le hut et construit la vraie maison 9x9 via buildHut
+        BlockPos hutPos = origin.offset(15, 0, 0);
+        level.setBlock(hutPos, com.veterinarium.registry.ModBlocks.HOSPITAL_HUT.get().defaultBlockState(), 3);
+        // force construction (normalement sneak-clic)
+        if (level.getBlockState(hutPos).getBlock() instanceof com.veterinarium.block.HospitalHutBlock hutBlock) {
+            net.minecraft.world.entity.player.Player pl = null;
+            if (src.getEntity() instanceof net.minecraft.world.entity.player.Player p) pl = p;
+            else if (level.getNearestPlayer(hutPos.getX(), hutPos.getY(), hutPos.getZ(), 64, false) != null) pl = level.getNearestPlayer(hutPos.getX(), hutPos.getY(), hutPos.getZ(), 64, false);
+            if (pl != null) {
+                boolean ok = hutBlock.buildHut(level, hutPos, pl);
+                if (!ok) src.sendFailure(Component.literal("Zone encombrée, dégage un 9x9 plat !"));
+            }
         }
-        // toit
-        p1 = origin.offset(12, 4, -3); p2 = origin.offset(18, 4, 3);
-        for (BlockPos p : BlockPos.betweenClosed(p1, p2)) level.setBlock(p, net.minecraft.world.level.block.Blocks.OAK_SLAB.defaultBlockState(), 3);
-        // porte
-        level.setBlock(origin.offset(12, 0, 0), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
-        level.setBlock(origin.offset(12, 1, 0), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
-        // table et infirmerie
-        level.setBlock(origin.offset(15, 0, 0), com.veterinarium.registry.ModBlocks.OPERATING_TABLE.get().defaultBlockState(), 3);
-        level.setBlock(origin.offset(16, 0, 0), com.veterinarium.registry.ModBlocks.INFIRMARY.get().defaultBlockState(), 3);
         // donne items
         if (src.getEntity() instanceof ServerPlayer pl) {
             pl.getInventory().add(new ItemStack(com.veterinarium.registry.ModItems.SCALPEL.get()));
