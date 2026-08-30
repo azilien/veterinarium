@@ -87,6 +87,9 @@ public class ModItems {
     public static final RegistryObject<Item> COMPRESSION_BANDAGE = ITEMS.register("compression_bandage",
             () -> new CompressionBandageItem(new Item.Properties().stacksTo(16)));
 
+    public static final RegistryObject<Item> ANTIDOTE = ITEMS.register("antidote",
+            () -> new AntidoteItem(new Item.Properties().stacksTo(4)));
+
     public static final RegistryObject<Item> CONTAMINATOR = ITEMS.register("contaminator",
             () -> new BlockItem(ModBlocks.CONTAMINATOR.get(), new Item.Properties()));
 

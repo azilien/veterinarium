@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "minecraft:golden_apple"},
+    {"item": "veterinarium:hellfire_serum"},
+    {"item": "minecraft:nether_wart"}
+  ],
+  "result": {
+    "id": "veterinarium:antidote",
+    "count": 1
+  }
+}

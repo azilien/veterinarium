@@ -176,6 +176,8 @@
   "wound.veterinarium.saignement": "§cSaignement",
   "wound.veterinarium.saignement.desc": "§cSaignement actif: soigne 1❤/5s jusqu'au bandage. Utilise Bandage de Compression pour soulagement rapide.",
   "item.veterinarium.compression_bandage": "Bandage de Compression",
+  "item.veterinarium.antidote": "Antidote",
+  "message.veterinarium.antidote.tooltip": "Guérit les villageois zombifiés par les épidémies d'urgence",
   "message.veterinarium.compression_bandage.not_needed": "§7%s est au-dessus de 50%% PV — Bandage de Compression inutile.",
   "message.veterinarium.compression_bandage.applied": "§a❤ Compression appliquée: +4❤ soin rapide + Régén.",
   "message.veterinarium.compression_bandage.tooltip.description": "§7Soin rapide pour PV bas (<50%%)",

@@ -182,6 +182,8 @@
   "wound.veterinarium.saignement": "§cBleeding",
   "wound.veterinarium.saignement.desc": "§cActive bleed: heals 1❤/5s until bandaged. Use Compression Bandage for fast relief.",
   "item.veterinarium.compression_bandage": "Compression Bandage",
+  "item.veterinarium.antidote": "Antidote",
+  "message.veterinarium.antidote.tooltip": "Cures zombie villagers afflicted by urgency epidemics",
   "message.veterinarium.compression_bandage.not_needed": "§7%s is above 50% HP — Compression Bandage not needed.",
   "message.veterinarium.compression_bandage.applied": "§a❤ Compression applied: +4❤ fast heal + Regen.",
   "message.veterinarium.compression_bandage.tooltip.description": "§7Fast heal for low HP (<50%)",

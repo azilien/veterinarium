@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {"id": "veterinarium:antidote"},
+    "title": {"translate": "advancement.veterinarium.cure_zombie.title"},
+    "description": {"translate": "advancement.veterinarium.cure_zombie.description"},
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "veterinarium:root",
+  "criteria": {
+    "cure_zombie": {
+      "trigger": "minecraft:player_interacted_with_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:zombie_villager",
+          "nbt": "{Tags:[\"veterinarium_urgent\"]}"
+        },
+        "item": {
+          "predicates": {
+            "minecraft:custom_data": "{}"
+          }
+        }
+      }
+    }
+  }
+}
