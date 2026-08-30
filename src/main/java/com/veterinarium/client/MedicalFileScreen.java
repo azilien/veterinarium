@@ -317,9 +317,15 @@ public class MedicalFileScreen extends Screen {
             Component.translatable("gui.veterinarium.medical_file.protocol.step3a").getString(),
             Component.translatable("gui.veterinarium.medical_file.protocol.step3b").getString(),
             Component.translatable("gui.veterinarium.medical_file.protocol.step4").getString(),
-            Component.translatable("gui.veterinarium.medical_file.protocol.step4a").getString()
+            Component.translatable("gui.veterinarium.medical_file.protocol.step4a").getString(),
+            Component.translatable("gui.veterinarium.medical_file.protocol.step5").getString(),
+            Component.translatable("gui.veterinarium.medical_file.protocol.step5a").getString(),
+            Component.translatable("gui.veterinarium.medical_file.protocol.step5b").getString(),
+            Component.translatable("gui.veterinarium.medical_file.protocol.step6").getString(),
+            Component.translatable("gui.veterinarium.medical_file.protocol.step6a").getString(),
+            Component.translatable("gui.veterinarium.medical_file.protocol.step6b").getString()
         };
-        for(String s: steps) { gfx.drawString(this.font, Component.literal(s), x+12, ty, 0x000000, true); ty+=9; }
+        for(String s: steps) { gfx.drawString(this.font, Component.literal(s), x+12, ty, 0x000000, true); ty+=8; }
         ty+=4;
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.protocol.warning").getString()), x+12, ty, 0xCC0000, true); ty+=10;
         gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.protocol.range").getString()), x+12, ty, 0x000000, true);
@@ -402,33 +408,45 @@ public class MedicalFileScreen extends Screen {
         Player p = Minecraft.getInstance().player;
         int ty = y + 30;
         if (p==null) { gfx.drawString(this.font, Component.literal("§7Pas de joueur"), x+12, ty, 0x000000,true); return; }
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.detailed").getString()), x+12, ty, 0x000000,true); ty+=12;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.diagnosed", BestiaryProgress.getDiagTotal(p)).getString()), x+12, ty,0x000000,true); ty+=9;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.operations", BestiaryProgress.getOpsTotal(p)).getString()), x+12, ty,0x000000,true); ty+=9;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.sutures", BestiaryProgress.getSutureTotal(p)).getString()), x+12, ty,0x000000,true); ty+=9;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.healed_total", BestiaryProgress.getHealedTotal(p)).getString() + " /20"), x+12, ty,0x000000,true); ty+=9;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.analyses", BestiaryProgress.getAnalysisTotal(p)).getString()), x+12, ty,0x000000,true); ty+=12;
+        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.detailed").getString()), x+12, ty, 0x000000,true); ty+=10;
+        // stats en 2 colonnes
+        int col2 = x + w/2 + 10;
+        gfx.drawString(this.font, Component.translatable("gui.veterinarium.medical_file.progress.diagnosed", BestiaryProgress.getDiagTotal(p)).getString(), x+12, ty, 0x000000,true);
+        gfx.drawString(this.font, Component.translatable("gui.veterinarium.medical_file.progress.operations", BestiaryProgress.getOpsTotal(p)).getString(), col2, ty, 0x000000,true); ty+=8;
+        gfx.drawString(this.font, Component.translatable("gui.veterinarium.medical_file.progress.sutures", BestiaryProgress.getSutureTotal(p)).getString(), x+12, ty, 0x000000,true);
+        gfx.drawString(this.font, Component.translatable("gui.veterinarium.medical_file.progress.healed_total", BestiaryProgress.getHealedTotal(p)).getString() + " /20", col2, ty, 0x000000,true); ty+=8;
+        gfx.drawString(this.font, Component.translatable("gui.veterinarium.medical_file.progress.analyses", BestiaryProgress.getAnalysisTotal(p)).getString(), x+12, ty, 0x000000,true); ty+=10;
 
-        // liste créatures
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.creatures").getString()), x+12, ty,0x000000,true); ty+=10;
-        for(CreatureEntry ce: creatures) {
+        // créatures en 2 colonnes
+        gfx.drawString(this.font, Component.translatable("gui.veterinarium.medical_file.progress.creatures").getString(), x+12, ty,0x000000,true); ty+=8;
+        for(int i=0; i<creatures.length; i++) {
+            CreatureEntry ce = creatures[i];
             boolean seen = BestiaryProgress.hasSeen(p, ce.id);
             int healed = BestiaryProgress.getHealedFor(p, ce.id);
             String icon = seen ? (healed>0 ? "§a✔" : "§e○") : "§7?";
             String entName = Component.translatable("entity.veterinarium."+ce.id).getString();
-            gfx.drawString(this.font, Component.literal(String.format(" %s %s : %d soignés", icon, entName, healed)), x+12, ty, 0x000000,true); ty+=9;
+            int cx = (i < 3) ? x+12 : col2;
+            int cy = (i < 3) ? ty + i*8 : ty + (i-3)*8;
+            gfx.drawString(this.font, Component.literal(String.format("%s %s:%d", icon, entName.substring(0, Math.min(8, entName.length())), healed)), cx, cy, 0x000000,true);
         }
-        ty+=2;
-        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.pathologies", BestiaryProgress.getUnlockedWoundCount(p)).getString()), x+12, ty,0x000000,true); ty+=9;
-        for(WoundType wt: WoundType.values()) {
+        ty += 26;
+
+        // pathologies en 2 colonnes
+        gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.pathologies", BestiaryProgress.getUnlockedWoundCount(p)).getString()), x+12, ty,0x000000,true); ty+=8;
+        WoundType[] wounds = WoundType.values();
+        for(int i=0; i<wounds.length; i++) {
+            WoundType wt = wounds[i];
             boolean seen = BestiaryProgress.hasSeenWound(p, wt.getId());
-            gfx.drawString(this.font, Component.literal((seen?"§a✔ ":"§7? ") + wt.getDisplay()), x+14, ty, seen?0x000000:0x2B2B2B,true); ty+=9;
+            int cx = (i < 3) ? x+12 : col2;
+            int cy = (i < 3) ? ty + i*8 : ty + (i-3)*8;
+            gfx.drawString(this.font, Component.literal((seen?"§a✔ ":"§7? ") + wt.getDisplay()), cx, cy, seen?0x000000:0x2B2B2B,true);
         }
-        ty+=4;
+        ty += 26;
+
         float comp = BestiaryProgress.getCompletionPercent(p);
-        gfx.drawString(this.font, Component.literal(String.format(Component.translatable("gui.veterinarium.medical_file.progress.completion_line").getString(), comp)), x+12, ty, 0x8B0000,true); ty+=9;
-        if (comp>=100) gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.master").getString()), x+12, ty, 0xFFD700,true);
-        else gfx.drawString(this.font, Component.literal(Component.translatable("gui.veterinarium.medical_file.progress.objective").getString()), x+12, ty, 0x666666,true);
+        gfx.drawString(this.font, Component.literal(String.format(Component.translatable("gui.veterinarium.medical_file.progress.completion_line").getString(), comp)), x+12, ty, 0x8B0000,true);
+        if (comp>=100) gfx.drawString(this.font, Component.translatable("gui.veterinarium.medical_file.progress.master").getString(), col2, ty, 0xFFD700,true);
+        else gfx.drawString(this.font, Component.translatable("gui.veterinarium.medical_file.progress.objective").getString(), col2, ty, 0x666666,true);
     }
 
     @Override
