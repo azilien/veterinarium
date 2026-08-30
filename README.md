@@ -1,3 +1,5 @@
+<p align="center"><img src="src/main/resources/logo.png" width="300" alt="Veterinarium Logo"></p>
+
 # Veterinarium — Chronicles of the Wounded Beasts
 ### Mod Minecraft · Forge 1.21.1 · Java 21
 
