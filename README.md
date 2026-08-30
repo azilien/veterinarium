@@ -187,7 +187,7 @@ Welcome, First Blood, Successful Operation, Cicatrization, Healer, Hospital, Cap
 **Download on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/veterinarium)**
 
 1. Minecraft Java 1.21.1 + Forge 52.1.14
-2. Copy `build/libs/veterinarium-1.12.0.jar` into `mods/`
+2. Copy `build/libs/veterinarium-2.0.jar` into `mods/`
 3. Launch → Creative → `Veterinarium` tab
 
 ### Quick Test
@@ -372,7 +372,7 @@ Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital,
 **Télécharger sur [CurseForge](https://www.curseforge.com/minecraft/mc-mods/veterinarium)**
 
 1. Minecraft Java 1.21.1 + Forge 52.1.14
-2. Copie `build/libs/veterinarium-1.12.0.jar` dans `mods/`
+2. Copie `build/libs/veterinarium-2.0.jar` dans `mods/`
 3. Lance → Créatif → onglet `Veterinarium`
 
 ### Test Rapide
