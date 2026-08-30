@@ -27,15 +27,26 @@ public class ModCommands {
         CommandSourceStack src = ctx.getSource();
         ServerLevel level = src.getLevel();
         BlockPos origin = BlockPos.containing(src.getPosition());
-        // aplanit 16x16 à 15 blocs pour maison 15x15
-        BlockPos p1 = origin.offset(7, -1, -8);
-        BlockPos p2 = origin.offset(23, -1, 8);
+        // trouve le sol à 15 blocs (évite gouffre)
+        BlockPos hutPosTmp = origin.offset(15, 0, 0);
+        int groundY = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, hutPosTmp.getX(), hutPosTmp.getZ());
+        // si gouffre profond, téléporte le joueur sur terrain plat
+        if (origin.getY() < groundY - 10 || level.getBlockState(origin).isAir() && level.getBlockState(origin.below()).isAir()) {
+            if (src.getEntity() instanceof ServerPlayer pl) {
+                pl.teleportTo((double)hutPosTmp.getX() - 15, (double)groundY, (double)hutPosTmp.getZ());
+                origin = BlockPos.containing(pl.position());
+                hutPosTmp = origin.offset(15, 0, 0);
+                groundY = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, hutPosTmp.getX(), hutPosTmp.getZ());
+            }
+        }
+        // aplanit 16x16 à hauteur du sol
+        BlockPos hutPos = new BlockPos(hutPosTmp.getX(), groundY, hutPosTmp.getZ());
+        BlockPos p1 = hutPos.offset(-8, -1, -8);
+        BlockPos p2 = hutPos.offset(8, -1, 8);
         for (BlockPos p : BlockPos.betweenClosed(p1, p2)) level.setBlock(p, net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState(), 3);
-        p1 = origin.offset(7, 0, -8);
-        p2 = origin.offset(23, 6, 8);
+        p1 = hutPos.offset(-8, 0, -8);
+        p2 = hutPos.offset(8, 6, 8);
         for (BlockPos p : BlockPos.betweenClosed(p1, p2)) level.setBlock(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
-        // pose le hut et construit la maison 9x9 via buildHut puis étend à 15x15
-        BlockPos hutPos = origin.offset(15, 0, 0);
         level.setBlock(hutPos, com.veterinarium.registry.ModBlocks.HOSPITAL_HUT.get().defaultBlockState(), 3);
         // force construction (normalement sneak-clic)
         if (level.getBlockState(hutPos).getBlock() instanceof com.veterinarium.block.HospitalHutBlock hutBlock) {
@@ -96,9 +107,9 @@ public class ModCommands {
                 com.veterinarium.registry.ModItems.OPERATING_TABLE.get(), com.veterinarium.registry.ModItems.ANALYSIS_TABLE.get(), com.veterinarium.registry.ModItems.INFIRMARY.get(), com.veterinarium.registry.ModItems.HOSPITAL_HUT.get(), com.veterinarium.registry.ModItems.STRETCHER.get(), com.veterinarium.registry.ModItems.CONTAMINATOR.get()
             }) pl.getInventory().add(new ItemStack(it));
         }
-        // summons via command
-        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_wolf " + (origin.getX()+16) + " " + origin.getY() + " " + (origin.getZ()+1));
-        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_cat " + (origin.getX()+14) + " " + origin.getY() + " " + (origin.getZ()-1));
+        // summons à hauteur du sol du hut
+        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_wolf " + (hutPos.getX()+1) + " " + hutPos.getY() + " " + (hutPos.getZ()+1));
+        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_cat " + (hutPos.getX()-1) + " " + hutPos.getY() + " " + (hutPos.getZ()-1));
         src.sendSuccess(() -> Component.literal("Maison posee a 15 blocs - recule et F1 + F2"), false);
         return 1;
     }
