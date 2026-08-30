@@ -385,10 +385,6 @@ Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital,
 
 ---
 
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) / Voir [CHANGELOG.md](CHANGELOG.md)
-
 ## Roadmap
 
 - [x] v1.0 — MVP Blocks/Items/Zone heal
