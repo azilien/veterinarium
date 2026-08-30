@@ -14,6 +14,8 @@
 
 ---
 
+# English
+
 ## Concept
 
 `Ice & Fire + MineColonies + House M.D. + Ark + Palworld` in one mod.
@@ -27,8 +29,6 @@
 7. **Assign** to your `Hospital Hut` (zone heal) or `Stretcher` (portable)
 8. **Cure** Zombie Villagers with the `Antidote`
 
----
-
 ## Pathologies (6)
 
 | Type | Chance | Requirements | Risk without treatment |
@@ -39,8 +39,6 @@
 | **Infection** | 13% | Anesthetic + Bandage | Poison |
 | **Burn** | 12% | Anesthetic + Bandage | Continuous fire + Wither |
 | **Bleeding** | 13% | Bandage | 1 HP/5s bleed |
-
----
 
 ## Creatures (10)
 
@@ -66,10 +64,6 @@
 - **Fire** (default): fire damage on hit, aura particles
 - **Acid** (10 kills): Weakness + Poison on hit
 - **Shadow** (25 kills): Blindness + Wither on hit
-
-Each mutation has its own texture.
-
----
 
 ## Items (30)
 
@@ -98,23 +92,16 @@ Each mutation has its own texture.
 | **Adrenaline** | Emergency heal 4 HP, Speed II + Strength I |
 | **Blood Transfusion** | Heals 6 HP, Absorption II, removes Wither |
 
-### Spawn Eggs
-Wolf, Cat, Horse, Fox, Villager, Drake, Hellfire Ravager, Cow, Sheep, Chicken
-
----
-
 ## Blocks (6)
 
 | Block | Usage | Details |
 |-------|-------|---------|
-| **Operating Table** | Surgery table | 3 slots (bandage/anesthetic/compression), auto-supplied at 5 blocks, general anesthesia, **GUI** |
+| **Operating Table** | Surgery table | 3 slots, auto-supplied at 5 blocks, general anesthesia, **GUI** |
 | **Analysis Table** | Bestiary diagnostic | 10 pages, shows pathology + HP |
 | **Infirmary** | Passive heal | 0.5 HP/2s, 8 block radius |
 | **Hospital Hut** Lv1-5 | Heal + contracts | 1.5→3.5 HP/2s, daily contracts, ambulance |
 | **Stretcher** | Portable | 0.5 HP/2s, portable, blocks contagion |
-| **Contaminator** | Accelerates infection | 6 block radius, 12%/second, smoke+mycelium particles |
-
----
+| **Contaminator** | Accelerates infection | 6 block radius, 12%/second |
 
 ## Advanced Mechanics
 
@@ -127,55 +114,10 @@ Wolf, Cat, Horse, Fox, Villager, Drake, Hellfire Ravager, Cow, Sheep, Chicken
 ### Emergencies & Epidemics
 - **Radio call** every 6-11min: urgent wounded 80-150 blocks, 5-8min timer
 - **Contagion** 4%/2s at 4 blocks, blocked by Hut Lv3+ or Stretcher
-- **Contaminator**: block that accelerates infection, converts wounded → infected
+- **Contaminator**: accelerates infection, converts wounded → infected
 
-### Vet Spheres (Palworld-like)
-- Right-click healed creature → capture
-- Right-click with filled → release creature
-- Works with all wounded creatures
-
-### Organ Transplant
-- DNA Syringe on wounded → DNA extracted
-- DNA + Hellfire Serum + Operating Table → Hellfire Ravager
-
----
-
-## Achievements (13)
-
-| Achievement | Condition |
-|-------------|-----------|
-| **Welcome** | First diagnosis |
-| **First Blood** | First hemorrhage healed |
-| **Successful Operation** | First scalpel used |
-| **Cicatrization** | First suture |
-| **Healer** | 10 creatures healed |
-| **Hospital** | Place an Operating Table |
-| **Captured!** | First capture with sphere |
-| **Emergency** | First emergency completed |
-| **Mutation** | First Hellfire Ravager created |
-| **Dragon Saved** | First Drake healed |
-| **Second Chance** | Cure a Zombie Villager with Antidote |
-| **Unlock Recipes** | Craft a Scalpel |
-
----
-
-## Bestiary (Medical File)
-
-10 interactive pages (Cover + 6 creatures + Pathologies + Protocol + Recipes + Progression).
-
-Progression tracker: diagnosis/operations/sutures/heals, 0-100% bar.
-
----
-
-## Technical Architecture
-
-### Bilingual EN/FR
-- 340+ `Component.translatable()` keys
-- Complete `en_us.json` + `fr_fr.json`
-- All in-game messages translated
-
-### Automated GameTests (11/11)
-Template `veterinarium:hospital_hut`, tests: entity spawn, diagnostics, operations, sutures, spheres, emergencies, hospital hut.
+### Achievements (13)
+Welcome, First Blood, Successful Operation, Cicatrization, Healer, Hospital, Captured!, Emergency, Mutation, Dragon Saved, Second Chance, Unlock Recipes
 
 ### Config (`config/veterinarium-common.toml`)
 ```toml
@@ -185,38 +127,17 @@ Template `veterinarium:hospital_hut`, tests: entity spawn, diagnostics, operatio
 [sphere] sphereRequiresHealed=true
 ```
 
-### Custom Sounds (10)
-monitor_beep, scalpel_cut, suture, heal_success, mutation, sphere_capture, sphere_release, urgency_bell, epidemic, contaminator_ambient
-
----
-
-## Compatibility
-
-- **MineColonies**: Hut heals citizens 0.5x, `supplycamp` alternative recipe
+### Compatibility
+- **MineColonies**: Hut heals citizens 0.5x
 - **Ars Nouveau**: `source_gem` → heal +2 HP + absorption
 - **Ice & Fire**: 12% wounded dragons → scales on healing
 
----
-
-## Installation
-
-### Play
+### Installation
 1. Minecraft Java 1.21.1 + Forge 52.1.14
 2. Copy `build/libs/veterinarium-1.12.0.jar` into `mods/`
 3. Launch → Creative → `Veterinarium` tab
 
-```bash
-cp build/libs/veterinarium-1.12.0.jar ~/.minecraft/mods/
-```
-
-### Develop
-```bash
-JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew build
-JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runClient
-JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runGameTestServer  # 11/11 tests
-```
-
-### Quick Test (commands)
+### Quick Test
 ```
 /give @p veterinarium:scalpel
 /give @p veterinarium:suture_kit
@@ -224,13 +145,150 @@ JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runGameTestServer  # 11/1
 /give @p veterinarium:operating_table
 /give @p veterinarium:vet_sphere
 /give @p veterinarium:antidote
-/give @p veterinarium:antibiotic
 /summon veterinarium:wounded_wolf ~ ~ ~
-/summon veterinarium:wounded_cow ~ ~ ~
-/summon veterinarium:wounded_sheep ~ ~ ~
 ```
 
 ---
+
+# Français
+
+## Concept
+
+`Ice & Fire + MineColonies + House M.D. + Ark + Palworld` en un seul mod.
+
+1. **Trouve** une créature blessée (< 100% HP, pathologie aléatoire)
+2. **Diagnostique** avec la `Seringue` (HP + status + stocke pour Table d'Analyse)
+3. **Opère** avec le `Scalpel` (+1-4❤ selon tier, anesthésiant requis pour Fracture/Infection/Brûlure)
+4. **Suture** avec le `Kit de Suture` (+6❤ + Régénération, bandage requis pour Hémorragie/Saignement/Infection/Brûlure)
+5. **Anesthésie Générale** : la créature marche vers le Bloc Opératoire → Pose.SWIMMING → réveil 10s
+6. **Capture** avec la `Sphère Vétérinaire` — uniquement si soignée
+7. **Assigne** à ton `Hut Hôpital` (heal de zone) ou `Brancard` (portable)
+8. **Cure** les Zombie Villagers avec l'`Antidote`
+
+## Pathologies (6)
+
+| Type | Prob. | Requis pour soigner | Risque sans soin |
+|------|-------|---------------------|------------------|
+| **Contusion** | 25% | Scalpel → Suture | — |
+| **Hémorragie** | 20% | Bandage | Rechute 50% |
+| **Fracture** | 17% | Anesthésiant | Douleur 50% + cri |
+| **Infection** | 13% | Anesthésiant + Bandage | Poison |
+| **Brûlure** | 12% | Anesthésiant + Bandage | Feu continu + Wither |
+| **Saignement** | 13% | Bandage | Saignement 1❤/5s |
+
+## Créatures (10)
+
+### Blessées (spawn naturel 8%)
+| Créature | HP | Comportement spécial |
+|----------|-----|---------------------|
+| **Loup Blessé** | 12 | Apprivoisable après soin (os) |
+| **Chat Blessé** | 10 | Apprivoisable après soin (poisson) |
+| **Cheval Blessé** | 20 | Montable après soin |
+| **Renard Blessé** | 10 | Domestiquable après soin |
+| **Villageois Blessé** | 20 | Soignable, trade après guérison |
+| **Vache Blessée** | 14 | Traitable après soin (seau) |
+| **Mouton Blessé** | 10 | Tondable après soin (ciseaux) |
+| **Poulet Blessé** | 6 | Nourrissable après soin (graines) |
+
+### Boss / Special
+| Créature | HP | Mécanique |
+|----------|-----|-----------|
+| **Drake Boss** | 60 | Vol, souffle, rare overworld, urgences |
+| **Hellfire Ravager** | 40 | 8 dmg feu, **mutations Fire → Acid → Shadow** via kill counter |
+
+### Mutations Hellfire
+- **Fire** (défaut) : dégâts de feu au hit, aura particles
+- **Acid** (10 kills) : Weakness + Poison au hit
+- **Shadow** (25 kills) : Blindness + Wither au hit
+
+## Items (30)
+
+### Outils médicaux
+| Item | Durabilité | Usage |
+|------|-----------|-------|
+| **Scalpel** | 250 | Opère (+2❤) |
+| **Scalpel Diamant** | 500 | Opère (+3❤), Rareté Uncommon |
+| **Scalpel Netherite** | 1000 | Opère (+4❤), Rareté Rare, ignifugé |
+| **Kit de Suture** | 64 | Soigne (+6❤ + Régénération) |
+| **Seringue** | 32 | Diagnostic + Anesthésie Générale |
+| **Seringue ADN** | 16 | Extrait ADN sur créature blessée |
+| **Sérum Hellfire** | 16 | Mute soigné → Hellfire Ravager |
+| **Dossier Médical** | 1 | Bestiaire 10 pages EN/FR |
+| **Sphère Vétérinaire** | 16 | Capture (uniquement si soignée) |
+
+### Consommables
+| Item | Usage |
+|------|-------|
+| **Bandage** | Auto-fourni par table pour Hémorragie/Saignement/Infection/Brûlure |
+| **Anesthésiant** | Auto-fourni par table pour Fracture/Infection/Brûlure |
+| **Bandage de Compression** | Soin rapide si HP < 50% |
+| **Antidote** | Guérit Zombie Villager (Golden Apple + Sérum Hellfire + Nether Wart) |
+| **Antibiotique** | Guérit Poison, soigne 3❤, Régénération II |
+| **Anti-inflammatoire** | Supprime Lenteur/Nausée, soigne 2❤, Résistance |
+| **Adrénaline** | Urgence : soigne 4❤, Vitesse II + Force I |
+| **Transfusion Sanguine** | Soigne 6❤, Absorption II, supprime Wither |
+
+## Blocs (6)
+
+| Bloc | Usage | Détails |
+|------|-------|---------|
+| **Bloc Opératoire** | Table d'opération | 3 slots, auto-fourni à 5 blocs, anesthésie générale, **GUI** |
+| **Table d'Analyse** | Diagnostic Bestiaire | 10 pages, affiche pathologie + HP |
+| **Infirmerie** | Heal passif | 0.5❤/2s, rayon 8 blocs |
+| **Hut Hôpital** Lv1-5 | Heal + contrats | 1.5→3.5❤/2s, contrats journaliers, ambulancier |
+| **Brancard** | Portable | 0.5❤/2s, portable, bloque contagion |
+| **Contaminateur** | Accélère infection | 6 blocs rayon, 12%/seconde |
+
+## Mécaniques avancées
+
+### Anesthésie Générale
+1. Clic droit sur créature avec `Seringue` → tag `veterinarium_anesthetizing`
+2. La créature navigue vers le Bloc Opératoire le plus proche
+3. Arrivée à <1.5 blocs → Pose.SWIMMING + Resistance/Régénération/Lenteur/Nausée 10s
+4. Réveil automatique après 10s (Pose.STANDING)
+
+### Urgences & Épidémies
+- **Appel radio** toutes 6-11min : blessé urgent à 80-150 blocs, timer 5-8min
+- **Contagion** 4%/2s à 4 blocs, bloquée Hut Lv3+ ou Brancard
+- **Contaminateur** : accélère l'infection, convertit blessés → infectés
+
+### Succès (13)
+Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital, Captured!, Urgence, Mutation, Dragon Sauvé, Second Chance, Unlock Recipes
+
+### Config (`config/veterinarium-common.toml`)
+```toml
+[spawn] woundedSpawnChance=0.08  drakeWeight=4
+[urgency] urgencyCooldownMin=8000  urgencyCooldownMax=14000
+[epidemic] infectionSpreadChance=0.04  infectionSpreadRange=4.0
+[sphere] sphereRequiresHealed=true
+```
+
+### Compatibilité
+- **MineColonies** : Hut heal citoyens 0.5x
+- **Ars Nouveau** : `source_gem` → soin +2❤ + absorption
+- **Ice & Fire** : 12% dragons blessés → écailles à la guérison
+
+### Installation
+1. Minecraft Java 1.21.1 + Forge 52.1.14
+2. Copie `build/libs/veterinarium-1.12.0.jar` dans `mods/`
+3. Lance → Créatif → onglet `Veterinarium`
+
+### Test Rapide
+```
+/give @p veterinarium:scalpel
+/give @p veterinarium:suture_kit
+/give @p veterinarium:syringe
+/give @p veterinarium:operating_table
+/give @p veterinarium:vet_sphere
+/give @p veterinarium:antidote
+/summon veterinarium:wounded_wolf ~ ~ ~
+```
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) / Voir [CHANGELOG.md](CHANGELOG.md)
 
 ## Roadmap
 
@@ -243,17 +301,9 @@ JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew runGameTestServer  # 11/1
 - [x] v1.6 — Vet Spheres (Palworld-like)
 - [x] v1.7 — Emergencies & Epidemics
 - [x] v1.11 — Contaminator, General Anesthesia, Compression Bandage, Bilingual EN/FR
-- [x] v1.12 — Scalpel Tiers, Cure Zombie, Cow/Sheep/Chicken, Operating GUI, Hellfire Renderer, 4 Medications
+- [x] v1.12 — Scalpel Tiers, Cure Zombie, Cow/Sheep/Chicken, Operating GUI, 4 Medications
 - [ ] CurseForge upload
-
----
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for full version history.
-
----
 
 ## Licence
 
-MIT — Made with ❤️
+MIT — Made with ❤️ / Fait avec ❤️
