@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "minecraft:blaze_powder"},
+    {"item": "minecraft:nether_wart"},
+    {"item": "minecraft:potion", "potion": "minecraft:awkward"}
+  ],
+  "result": {
+    "id": "veterinarium:adrenaline",
+    "count": 1
+  }
+}

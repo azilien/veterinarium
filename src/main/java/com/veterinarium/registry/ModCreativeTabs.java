@@ -24,6 +24,14 @@ public class ModCreativeTabs {
                         pOutput.accept(ModItems.MEDICAL_FILE.get());
                         pOutput.accept(ModItems.BANDAGE.get());
                         pOutput.accept(ModItems.ANESTHETIC.get());
+                        pOutput.accept(ModItems.COMPRESSION_BANDAGE.get());
+                        pOutput.accept(ModItems.ANTIBIOTIC.get());
+                        pOutput.accept(ModItems.ANTI_INFLAMMATORY.get());
+                        pOutput.accept(ModItems.ADRENALINE.get());
+                        pOutput.accept(ModItems.BLOOD_TRANSFUSION.get());
+                        pOutput.accept(ModItems.ANTIDOTE.get());
+                        pOutput.accept(ModItems.SCALPEL_DIAMOND.get());
+                        pOutput.accept(ModItems.SCALPEL_NETHERITE.get());
                         pOutput.accept(ModItems.OPERATING_TABLE.get());
                         pOutput.accept(ModItems.ANALYSIS_TABLE.get());
                         pOutput.accept(ModItems.INFIRMARY.get());

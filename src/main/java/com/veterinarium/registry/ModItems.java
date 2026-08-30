@@ -97,6 +97,15 @@ public class ModItems {
     public static final RegistryObject<Item> CONTAMINATOR = ITEMS.register("contaminator",
             () -> new BlockItem(ModBlocks.CONTAMINATOR.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> ANTIBIOTIC = ITEMS.register("antibiotic",
+            () -> new AntibioticItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> ANTI_INFLAMMATORY = ITEMS.register("anti_inflammatory",
+            () -> new AntiInflammatoryItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> ADRENALINE = ITEMS.register("adrenaline",
+            () -> new AdrenalineItem(new Item.Properties().stacksTo(8)));
+    public static final RegistryObject<Item> BLOOD_TRANSFUSION = ITEMS.register("blood_transfusion",
+            () -> new BloodTransfusionItem(new Item.Properties().stacksTo(8)));
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

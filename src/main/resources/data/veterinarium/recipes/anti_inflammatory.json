@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "minecraft:glowstone_dust"},
+    {"item": "minecraft:potion", "potion": "minecraft:thick"}
+  ],
+  "result": {
+    "id": "veterinarium:anti_inflammatory",
+    "count": 2
+  }
+}
