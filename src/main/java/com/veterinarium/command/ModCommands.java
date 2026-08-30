@@ -107,9 +107,10 @@ public class ModCommands {
                 com.veterinarium.registry.ModItems.OPERATING_TABLE.get(), com.veterinarium.registry.ModItems.ANALYSIS_TABLE.get(), com.veterinarium.registry.ModItems.INFIRMARY.get(), com.veterinarium.registry.ModItems.HOSPITAL_HUT.get(), com.veterinarium.registry.ModItems.STRETCHER.get(), com.veterinarium.registry.ModItems.CONTAMINATOR.get()
             }) pl.getInventory().add(new ItemStack(it));
         }
-        // summons à hauteur du sol du hut
-        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_wolf " + (hutPos.getX()+1) + " " + hutPos.getY() + " " + (hutPos.getZ()+1));
-        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_cat " + (hutPos.getX()-1) + " " + hutPos.getY() + " " + (hutPos.getZ()-1));
+        // summons à l'intérieur de la maison (y+1)
+        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_wolf " + (hutPos.getX()+1) + " " + (hutPos.getY()+1) + " " + (hutPos.getZ()+1));
+        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_cat " + (hutPos.getX()-1) + " " + (hutPos.getY()+1) + " " + (hutPos.getZ()-1));
+        level.getServer().getCommands().performPrefixedCommand(src.withSuppressedOutput().withMaximumPermission(4), "summon veterinarium:wounded_cow " + hutPos.getX() + " " + (hutPos.getY()+1) + " " + hutPos.getZ());
         src.sendSuccess(() -> Component.literal("Maison posee a 15 blocs - recule et F1 + F2"), false);
         return 1;
     }
