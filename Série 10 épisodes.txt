@@ -1,0 +1,63 @@
+Série 10 épisodes — Veterinarium 1.12.0 (20-25min, hardcore, 1 contrat + 1 urgence / ép)
+
+EP1 : Premier patient
+- Spawn clinique abandonnée → premier ☠ Loup Hémorragie. Tuto Seringue → Scalpel (échec 50% sans anesthésiant) → Suture + bandage.
+- Fin : pose Brancard heal 0.5❤, tease Hut.
+- Thumbnail : Seringue sur loup ensanglanté.
+
+EP2 : Le Bloc Opératoire
+- Farm briques/bandages, Sneak-clic Hut 9x9 build. Upgrade Lv2 (8 briques+1 diamant). Sauve 2 chats, débloque bestiaire 2/6.
+- Thumbnail : Hut croix rouge vue drone.
+
+EP3 : Le Dossier Médical
+- 6 pathos dont Brûlure + Saignement. Soigne fracture (anesthésiant obligatoire) et infection. Bestiaire 60%.
+- Thumbnail : Livre ouvert "6 Blessures".
+
+EP4 : Urgence !
+- Radio : 🚨 URGENCE à coordinateurs → course contre timer, sauvetage cheval. 1er échec → mort + ☣ Contagion.
+- Thumbnail : Timer rouge + cheval.
+
+EP5 : Quarantaine
+- Épidémie INFECTION 4%/2s à 4 blocs. Construction zone quarantaine Hut Lv3 + Stretcher. Soigne 3 infectés en isolement.
+- Thumbnail : Vaches vertes Infecté + Hut.
+
+EP6 : ADN & Mutation
+- Extrait ADN Wounded Villager → Seringue ADN Remplie → craft Sérum Hellfire (blaze/wart/magma). Tease mutation.
+- Thumbnail : Seringue violette ADN.
+
+EP7 : Mutation Hellfire
+- Au Bloc Opératoire 5 blocs avec bandage+anesthésiant : mute loup soigné → ☢ Hellfire Ravager tame 70%, particules lave.
+- Système de mutations : Fire (défaut) → Acid (10 kills) → Shadow (25 kills). Effets au hit selon type.
+- Thumbnail : Loup → démon feu.
+
+EP8 : Sphère & Contaminateur
+- Sphère Vétérinaire ne capture que ❤ Soigné → armée de 4 loups capturés/libérés. Fail si ☠ = leçon.
+- Contaminateur : bloc qui accélère l'infection dans 6 blocs, convertit les blessés en infectés.
+- Thumbnail : 4 sphères vertes + Contaminateur toxique.
+
+EP9 : Boss Drake & Anesthésie Générale
+- Contrat journalier. Soigne 1 Drake Boss → vol, souffle, récompense dragon_breath. Capture sphère.
+- Anesthésie générale : créature marche vers Bloc Opératoire → Pose.SWIMMING allongée 10s → réveil.
+- Thumbnail : Drake bleu + créature endormie sur table.
+
+EP10 : Hôpital Lv5 & Finale
+- Farm Netherite → Hut Lv5 32 blocs 3.5❤/2s. Contrat final Capture 3 + 2 urgences simultanées. Armée Hellfire + Drakes vs raid.
+- Outro : Bestiaire 100%, pitch CurseForge 1.12.0.
+- Thumbnail : Résumé visuel bestiaire 100%.
+
+---
+
+NOUVEAUTÉS v1.12.0 (depuis v1.11.0) :
+- Scalpel Tiers : Diamant (+3❤, 500 dur) + Netherite (+4❤, 1000 dur, ignifugé)
+- Antidote : guérit Zombie Villager (Golden Apple + Sérum Hellfire + Nether Wart)
+- Vache/Mouton/Poulet blessés : traire/tondre/nourrir après soin
+- Operating Table GUI : menu container + écran, clic droit = GUI
+- Hellfire Renderer : textures par mutation (Fire/Acid/Shadow)
+- 4 médicaments : Antibiotique (Poison→OK, +3❤), Anti-inflammatoire (Lenteur/Nausée→OK, +2❤), Adrénaline (+4❤, Vitesse II, Force I), Transfusion Sanguine (+6❤, Absorption II, Wither→OK)
+- Advancement "Second Chance" : guérir Zombie Villager
+- Refactor WoundedCreatureHelper : utilitaire partagé, -80 lignes
+- Fix : evolution skip Hellfire (>= au lieu de ==), debug log supprimé
+- GUI fix : pagination dots + boutons ne se chevauchent plus
+- Pages réordonnées : Recettes en 1er dans le Bestiaire
+- Toutes références Asfax supprimées
+- 11/11 GameTests ✅, sync Prisme local + distant
