@@ -1,4 +1,5 @@
 # Veterinarium — Chronicles of the Wounded Beasts
+### Mod Minecraft · Forge 1.21.1 · Java 21
 
 > You no longer tame creatures, you **heal** them.
 > Tu ne domptes plus les créatures, tu les **soignes**.
