@@ -405,4 +405,4 @@ See [CHANGELOG.md](CHANGELOG.md) / Voir [CHANGELOG.md](CHANGELOG.md)
 
 ## Licence
 
-MIT — Made with ❤️ / Fait avec ❤️
+Creative Commons 4.0 — Made with ❤️ / Fait avec ❤️

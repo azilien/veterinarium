@@ -1,7 +1,7 @@
 # See https://docs.minecraftforge.net/en/1.21.x/gettingstarted/modfiles/#modstoml
 modLoader="javafml"
 loaderVersion="[0,)"
-license="MIT"
+license="CC-BY-4.0"
 
 [[mods]]
 modId="veterinarium"
