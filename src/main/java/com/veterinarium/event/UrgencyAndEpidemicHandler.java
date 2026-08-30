@@ -107,7 +107,7 @@ public class UrgencyAndEpidemicHandler {
                     for (var p : level.players()) {
                         if (p.distanceToSqr(target) < 5000) { // ~70 blocs
                             p.displayClientMessage(Component.translatable("message.veterinarium.urgency.contagion", target.getName().getString(), carrier.getName().getString()), false);
-                            level.playSound(null, p.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.PLAYERS, 0.6f, 0.8f);
+                            level.playSound(null, p.blockPosition(), com.veterinarium.registry.ModSounds.EPIDEMIC.get(), SoundSource.PLAYERS, 0.6f, 0.8f);
                         }
                     }
                     break; // 1 infection max par carrier par tick
@@ -408,8 +408,7 @@ public class UrgencyAndEpidemicHandler {
             for (var p : level.players()) {
                 p.displayClientMessage(msg, false);
                 p.sendSystemMessage(msg);
-                level.playSound(null, p.blockPosition(), SoundEvents.BELL_BLOCK, SoundSource.PLAYERS, 1.0f, 1.2f);
-                level.playSound(null, p.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.PLAYERS, 1.0f, 1.5f);
+                level.playSound(null, p.blockPosition(), com.veterinarium.registry.ModSounds.URGENCY_BELL.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
             }
             return true;
         }

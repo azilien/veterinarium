@@ -2,6 +2,7 @@ package com.veterinarium.registry;
 
 import com.veterinarium.Veterinarium;
 import com.veterinarium.block.entity.AnalysisTableBlockEntity;
+import com.veterinarium.block.entity.ContaminatorBlockEntity;
 import com.veterinarium.block.entity.HospitalHutBlockEntity;
 import com.veterinarium.block.entity.OperatingTableBlockEntity;
 import net.minecraft.core.registries.Registries;
@@ -29,6 +30,10 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<com.veterinarium.block.entity.StretcherBlockEntity>> STRETCHER =
             BLOCK_ENTITIES.register("stretcher",
                     () -> BlockEntityType.Builder.of(com.veterinarium.block.entity.StretcherBlockEntity::new, ModBlocks.STRETCHER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<ContaminatorBlockEntity>> CONTAMINATOR =
+            BLOCK_ENTITIES.register("contaminator",
+                    () -> BlockEntityType.Builder.of(ContaminatorBlockEntity::new, ModBlocks.CONTAMINATOR.get()).build(null));
 
     public static void register(IEventBus bus) {
         BLOCK_ENTITIES.register(bus);

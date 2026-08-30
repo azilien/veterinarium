@@ -37,6 +37,8 @@
   "item.veterinarium.wounded_fox_spawn_egg": "Oeuf de Renard Blessé",
   "item.veterinarium.wounded_villager_spawn_egg": "Oeuf de Villageois Blessé",
   "block.veterinarium.stretcher": "Brancard",
+  "block.veterinarium.contaminator": "Contaminateur",
+  "item.veterinarium.contaminator": "Contaminateur",
   "item.veterinarium.stretcher": "Brancard",
   "advancements.veterinarium.unlock_all.title": "Infirmier vétérinaire",
   "advancements.veterinarium.unlock_all.description": "Obtenez un outil vétérinaire pour débloquer toutes les recettes",

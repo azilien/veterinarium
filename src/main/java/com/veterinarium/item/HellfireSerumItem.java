@@ -134,8 +134,7 @@ public class HellfireSerumItem extends Item {
             // effets
             sl.sendParticles(net.minecraft.core.particles.ParticleTypes.EXPLOSION, target.getX(), target.getY()+1, target.getZ(), 1, 0,0,0,0);
             sl.sendParticles(net.minecraft.core.particles.ParticleTypes.LAVA, target.getX(), target.getY()+1, target.getZ(), 10, 0.5,0.5,0.5,0.1);
-            level.playSound(null, target.blockPosition(), SoundEvents.WITHER_SPAWN, SoundSource.PLAYERS, 1.0f, 0.8f);
-            level.playSound(null, target.blockPosition(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.0f, 1.2f);
+            level.playSound(null, target.blockPosition(), com.veterinarium.registry.ModSounds.MUTATION.get(), SoundSource.PLAYERS, 1.0f, 0.8f);
             // supprime ancienne entité (garde si c'est un Wounded non healed? mais ici on supprime)
             target.discard();
             // stats bestiaire

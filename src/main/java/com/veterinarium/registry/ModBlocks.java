@@ -2,6 +2,7 @@ package com.veterinarium.registry;
 
 import com.veterinarium.Veterinarium;
 import com.veterinarium.block.AnalysisTableBlock;
+import com.veterinarium.block.ContaminatorBlock;
 import com.veterinarium.block.HospitalHutBlock;
 import com.veterinarium.block.InfirmaryBlock;
 import com.veterinarium.block.OperatingTableBlock;
@@ -32,6 +33,9 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> STRETCHER = BLOCKS.register("stretcher",
             () -> new StretcherBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).strength(1.0f).noOcclusion()));
+
+    public static final RegistryObject<Block> CONTAMINATOR = BLOCKS.register("contaminator",
+            () -> new ContaminatorBlock(BlockBehaviour.Properties.of().strength(2.0f).requiresCorrectToolForDrops().noOcclusion()));
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

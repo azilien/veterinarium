@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GPG",
+    "EBE",
+    "GNG"
+  ],
+  "key": {
+    "G": {"item": "minecraft:fermented_spider_eye"},
+    "P": {"item": "minecraft:potion"},
+    "E": {"item": "minecraft:ender_pearl"},
+    "B": {"item": "minecraft:brewing_stand"},
+    "N": {"item": "minecraft:nether_wart"}
+  },
+  "result": {
+    "id": "veterinarium:contaminator",
+    "count": 1
+  }
+}
