@@ -30,6 +30,7 @@ public class Veterinarium {
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
+        com.veterinarium.menu.ModMenuTypes.MENUS.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, com.veterinarium.config.VeterinariumConfig.COMMON_SPEC, "veterinarium-common.toml");
 

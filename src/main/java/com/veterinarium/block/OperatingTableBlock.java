@@ -88,6 +88,12 @@ public class OperatingTableBlock extends Block implements EntityBlock {
             }
         }
         player.displayClientMessage(Component.literal("§c[Bloc Opératoire] §7Prêt. Place §eBandage§7/§dAnesthésiant§7/§aCompression§7 (clic) — la table fournira auto à 5 blocs."), true);
+        if (level instanceof net.minecraft.server.level.ServerLevel) {
+            player.openMenu(new net.minecraft.world.SimpleMenuProvider(
+                    (windowId, playerInv, p) -> new com.veterinarium.menu.OperatingTableMenu(windowId, playerInv, be),
+                    Component.translatable("container.veterinarium.operating_table")
+            ));
+        }
         level.playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.4f, 1.2f);
         return InteractionResult.SUCCESS;
     }
