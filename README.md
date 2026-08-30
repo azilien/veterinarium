@@ -188,7 +188,9 @@ Welcome, First Blood, Successful Operation, Cicatrization, Healer, Hospital, Cap
 
 1. Minecraft Java 1.21.1 + Forge 52.1.14
 2. Copy `build/libs/veterinarium-2.0.jar` into `mods/`
-3. Launch → Creative → `Veterinarium` tab
+3. Launch the game — works in Survival, Creative, Hardcore and Multiplayer
+   - In Creative, open the inventory and find the `Veterinarium` tab (creative inventory tab with all mod items)
+   - In Survival, craft items via recipes (see Medical File → Recipes page)
 
 ### Quick Test
 ```
@@ -373,7 +375,9 @@ Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital,
 
 1. Minecraft Java 1.21.1 + Forge 52.1.14
 2. Copie `build/libs/veterinarium-2.0.jar` dans `mods/`
-3. Lance → Créatif → onglet `Veterinarium`
+3. Lance le jeu — fonctionne en Survie, Créatif, Hardcore et Multijoueur
+   - En Créatif, ouvre l'inventaire et trouve l'onglet `Veterinarium` (onglet de l'inventaire créatif avec tous les items du mod)
+   - En Survie, craft les items via les recettes (voir Dossier Médical → page Recettes)
 
 ### Test Rapide
 ```
