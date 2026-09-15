@@ -5,7 +5,7 @@ Les modifications notables de ce projet seront documentées dans ce fichier.
 
 ---
 
-## [2.0] — 2026-08-30
+## [2.1] — 2026-08-30
 
 ### Added / Ajouté
 - **4 Medications**: Antibiotic (cures Poison, +3 HP), Anti-inflammatory (removes Slowness/Nausea, +2 HP), Adrenaline (+4 HP, Speed II + Strength I), Blood Transfusion (+6 HP, Absorption II) / 4 Médicaments : Antibiotique, Anti-inflammatoire, Adrénaline, Transfusion Sanguine
