@@ -69,3 +69,7 @@ if (file('local-dev.gradle').exists()) {
 tasks.named('jar') {
     archiveClassifier = 'forge'
 }
+
+tasks.named('jar') {
+    archiveClassifier = 'forge'
+}
