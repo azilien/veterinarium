@@ -8,8 +8,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class OperatingTableMenu extends AbstractContainerMenu {
     private final OperatingTableBlockEntity blockEntity;
@@ -21,11 +20,10 @@ public class OperatingTableMenu extends AbstractContainerMenu {
     public OperatingTableMenu(int containerId, Inventory playerInventory, BlockEntity blockEntity) {
         super(ModMenuTypes.OPERATING_TABLE.get(), containerId);
         this.blockEntity = (OperatingTableBlockEntity) blockEntity;
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
-            this.addSlot(new SlotItemHandler(h, 0, 48, 35));
-            this.addSlot(new SlotItemHandler(h, 1, 84, 35));
-            this.addSlot(new SlotItemHandler(h, 2, 120, 35));
-        });
+        var h = this.blockEntity.getHandler();
+        this.addSlot(new SlotItemHandler(h, 0, 48, 35));
+        this.addSlot(new SlotItemHandler(h, 1, 84, 35));
+        this.addSlot(new SlotItemHandler(h, 2, 120, 35));
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
     }

@@ -14,16 +14,16 @@ import com.veterinarium.entity.WoundedWolfEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.Registries;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-            DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Veterinarium.MODID);
+            DeferredRegister.create(Registries.ENTITY_TYPE, Veterinarium.MODID);
 
-    public static final RegistryObject<EntityType<WoundedWolfEntity>> WOUNDED_WOLF =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedWolfEntity>> WOUNDED_WOLF =
             ENTITY_TYPES.register("wounded_wolf",
                     () -> EntityType.Builder.of(WoundedWolfEntity::new, MobCategory.CREATURE)
                             .sized(0.6F, 0.85F)
@@ -31,7 +31,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("wounded_wolf"));
 
-    public static final RegistryObject<EntityType<WoundedCatEntity>> WOUNDED_CAT =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedCatEntity>> WOUNDED_CAT =
             ENTITY_TYPES.register("wounded_cat",
                     () -> EntityType.Builder.of(WoundedCatEntity::new, MobCategory.CREATURE)
                             .sized(0.6F, 0.7F)
@@ -39,7 +39,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("wounded_cat"));
 
-    public static final RegistryObject<EntityType<WoundedHorseEntity>> WOUNDED_HORSE =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedHorseEntity>> WOUNDED_HORSE =
             ENTITY_TYPES.register("wounded_horse",
                     () -> EntityType.Builder.of(WoundedHorseEntity::new, MobCategory.CREATURE)
                             .sized(1.4F, 1.6F)
@@ -47,7 +47,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("wounded_horse"));
 
-    public static final RegistryObject<EntityType<WoundedFoxEntity>> WOUNDED_FOX =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedFoxEntity>> WOUNDED_FOX =
             ENTITY_TYPES.register("wounded_fox",
                     () -> EntityType.Builder.of(WoundedFoxEntity::new, MobCategory.CREATURE)
                             .sized(0.6F, 0.7F)
@@ -55,7 +55,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("wounded_fox"));
 
-    public static final RegistryObject<EntityType<WoundedVillagerEntity>> WOUNDED_VILLAGER =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedVillagerEntity>> WOUNDED_VILLAGER =
             ENTITY_TYPES.register("wounded_villager",
                     () -> EntityType.Builder.of(WoundedVillagerEntity::new, MobCategory.CREATURE)
                             .sized(0.6F, 1.95F)
@@ -63,7 +63,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("wounded_villager"));
 
-    public static final RegistryObject<EntityType<HellfireRavagerEntity>> HELLFIRE_RAVAGER =
+    public static final DeferredHolder<EntityType<?>, EntityType<HellfireRavagerEntity>> HELLFIRE_RAVAGER =
             ENTITY_TYPES.register("hellfire_ravager",
                     () -> EntityType.Builder.of(HellfireRavagerEntity::new, MobCategory.CREATURE)
                             .sized(0.9F, 1.1F)
@@ -72,7 +72,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("hellfire_ravager"));
 
-    public static final RegistryObject<EntityType<WoundedDrakeEntity>> WOUNDED_DRAKE =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedDrakeEntity>> WOUNDED_DRAKE =
             ENTITY_TYPES.register("wounded_drake",
                     () -> EntityType.Builder.of(WoundedDrakeEntity::new, MobCategory.CREATURE)
                             .sized(1.8F, 1.2F)
@@ -81,7 +81,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("wounded_drake"));
 
-    public static final RegistryObject<EntityType<WoundedCowEntity>> WOUNDED_COW =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedCowEntity>> WOUNDED_COW =
             ENTITY_TYPES.register("wounded_cow",
                     () -> EntityType.Builder.of(WoundedCowEntity::new, MobCategory.CREATURE)
                             .sized(0.9F, 1.4F)
@@ -89,7 +89,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("wounded_cow"));
 
-    public static final RegistryObject<EntityType<WoundedSheepEntity>> WOUNDED_SHEEP =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedSheepEntity>> WOUNDED_SHEEP =
             ENTITY_TYPES.register("wounded_sheep",
                     () -> EntityType.Builder.of(WoundedSheepEntity::new, MobCategory.CREATURE)
                             .sized(0.8F, 1.0F)
@@ -97,7 +97,7 @@ public class ModEntities {
                             .clientTrackingRange(10)
                             .build("wounded_sheep"));
 
-    public static final RegistryObject<EntityType<WoundedChickenEntity>> WOUNDED_CHICKEN =
+    public static final DeferredHolder<EntityType<?>, EntityType<WoundedChickenEntity>> WOUNDED_CHICKEN =
             ENTITY_TYPES.register("wounded_chicken",
                     () -> EntityType.Builder.of(WoundedChickenEntity::new, MobCategory.CREATURE)
                             .sized(0.4F, 0.7F)

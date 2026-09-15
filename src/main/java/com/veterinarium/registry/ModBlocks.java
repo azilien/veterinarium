@@ -10,31 +10,31 @@ import com.veterinarium.block.StretcherBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.Registries;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, Veterinarium.MODID);
+            DeferredRegister.create(Registries.BLOCK, Veterinarium.MODID);
 
-    public static final RegistryObject<Block> OPERATING_TABLE = BLOCKS.register("operating_table",
+    public static final DeferredHolder<Block, Block> OPERATING_TABLE = BLOCKS.register("operating_table",
             () -> new OperatingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(3.5f).requiresCorrectToolForDrops().noOcclusion()));
 
-    public static final RegistryObject<Block> ANALYSIS_TABLE = BLOCKS.register("analysis_table",
+    public static final DeferredHolder<Block, Block> ANALYSIS_TABLE = BLOCKS.register("analysis_table",
             () -> new AnalysisTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARTOGRAPHY_TABLE).strength(2.5f)));
 
-    public static final RegistryObject<Block> INFIRMARY = BLOCKS.register("infirmary",
+    public static final DeferredHolder<Block, Block> INFIRMARY = BLOCKS.register("infirmary",
             () -> new InfirmaryBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).strength(1.5f).noOcclusion()));
 
-    public static final RegistryObject<Block> HOSPITAL_HUT = BLOCKS.register("hospital_hut",
+    public static final DeferredHolder<Block, Block> HOSPITAL_HUT = BLOCKS.register("hospital_hut",
             () -> new HospitalHutBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BRICKS).strength(3.0f).requiresCorrectToolForDrops()));
 
-    public static final RegistryObject<Block> STRETCHER = BLOCKS.register("stretcher",
+    public static final DeferredHolder<Block, Block> STRETCHER = BLOCKS.register("stretcher",
             () -> new StretcherBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).strength(1.0f).noOcclusion()));
 
-    public static final RegistryObject<Block> CONTAMINATOR = BLOCKS.register("contaminator",
+    public static final DeferredHolder<Block, Block> CONTAMINATOR = BLOCKS.register("contaminator",
             () -> new ContaminatorBlock(BlockBehaviour.Properties.of().strength(2.0f).requiresCorrectToolForDrops().noOcclusion()));
 
     public static void register(IEventBus eventBus) {

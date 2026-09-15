@@ -5,10 +5,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ import java.util.List;
  * se soignent 2x plus vite et le Builder peut crafter nos blocs (via recettes conditionnelles).
  * On détecte les citoyens par réflexion sur le nom de classe pour éviter NoClassDefFoundError.
  */
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class MineColoniesIntegration {
 
     public static boolean isLoaded() {
@@ -26,10 +28,9 @@ public class MineColoniesIntegration {
     }
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
+    public static void onLevelTick(LevelTickEvent.Post event) {
         if (!isLoaded()) return;
-        if (event.phase != TickEvent.Phase.END) return;
-        Level level = event.level;
+        Level level = event.getLevel();
         if (level.isClientSide) return;
         if (level.getGameTime() % 60 != 0) return; // toutes les 3s
 

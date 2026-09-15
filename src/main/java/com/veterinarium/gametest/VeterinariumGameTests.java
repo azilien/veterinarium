@@ -13,6 +13,8 @@ import com.veterinarium.registry.ModItems;
 import com.veterinarium.registry.ModBlocks;
 import com.veterinarium.wound.WoundType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
@@ -21,8 +23,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.core.registries.Registries;
 
 @GameTestHolder("veterinarium")
 public class VeterinariumGameTests {
@@ -160,13 +163,13 @@ public class VeterinariumGameTests {
     // 6) Registration items
     @GameTest(template = "veterinarium:hospital_hut")
     public static void testItemRegistration(GameTestHelper helper) {
-        helper.assertTrue(ForgeRegistries.ITEMS.getValue(ModItems.SCALPEL.getId()) != null, "scalpel");
-        helper.assertTrue(ForgeRegistries.ITEMS.getValue(ModItems.SYRINGE.getId()) != null, "syringe");
-        helper.assertTrue(ForgeRegistries.ITEMS.getValue(ModItems.SUTURE_KIT.getId()) != null, "suture");
-        helper.assertTrue(ForgeRegistries.ITEMS.getValue(ModItems.BANDAGE.getId()) != null, "bandage");
-        helper.assertTrue(ForgeRegistries.ITEMS.getValue(ModItems.ANESTHETIC.getId()) != null, "anesthetic");
-        helper.assertTrue(ForgeRegistries.ITEMS.getValue(ModItems.MEDICAL_FILE.getId()) != null, "medical_file");
-        helper.assertTrue(ForgeRegistries.ITEMS.getValue(ModItems.HOSPITAL_HUT.getId()) != null, "hut");
+        helper.assertTrue(BuiltInRegistries.ITEM.get(ModItems.SCALPEL.getId()) != null, "scalpel");
+        helper.assertTrue(BuiltInRegistries.ITEM.get(ModItems.SYRINGE.getId()) != null, "syringe");
+        helper.assertTrue(BuiltInRegistries.ITEM.get(ModItems.SUTURE_KIT.getId()) != null, "suture");
+        helper.assertTrue(BuiltInRegistries.ITEM.get(ModItems.BANDAGE.getId()) != null, "bandage");
+        helper.assertTrue(BuiltInRegistries.ITEM.get(ModItems.ANESTHETIC.getId()) != null, "anesthetic");
+        helper.assertTrue(BuiltInRegistries.ITEM.get(ModItems.MEDICAL_FILE.getId()) != null, "medical_file");
+        helper.assertTrue(BuiltInRegistries.ITEM.get(ModItems.HOSPITAL_HUT.getId()) != null, "hut");
         helper.succeed();
     }
 

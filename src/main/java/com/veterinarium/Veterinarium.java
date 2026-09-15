@@ -7,13 +7,12 @@ import com.veterinarium.registry.ModCreativeTabs;
 import com.veterinarium.registry.ModEntities;
 import com.veterinarium.registry.ModItems;
 import com.veterinarium.registry.ModSounds;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.slf4j.Logger;
 
 @Mod(Veterinarium.MODID)
@@ -21,8 +20,7 @@ public class Veterinarium {
     public static final String MODID = "veterinarium";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public Veterinarium(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
+    public Veterinarium(IEventBus modEventBus, ModContainer modContainer) {
 
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
@@ -32,10 +30,10 @@ public class Veterinarium {
         ModCreativeTabs.register(modEventBus);
         com.veterinarium.menu.ModMenuTypes.MENUS.register(modEventBus);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, com.veterinarium.config.VeterinariumConfig.COMMON_SPEC, "veterinarium-common.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, com.veterinarium.config.VeterinariumConfig.COMMON_SPEC, "veterinarium-common.toml");
 
         modEventBus.addListener(this::commonSetup);
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
 
         LOGGER.info("Veterinarium chargé - Prêt à soigner les bêtes blessées !");
     }

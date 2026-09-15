@@ -1,44 +1,44 @@
 package com.veterinarium.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class VeterinariumConfig {
-    public static final ForgeConfigSpec COMMON_SPEC;
+    public static final ModConfigSpec COMMON_SPEC;
     public static final Common COMMON;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         COMMON = new Common(builder);
         COMMON_SPEC = builder.build();
     }
 
     public static class Common {
         // Spawn naturel
-        public final ForgeConfigSpec.DoubleValue woundedSpawnChance;
-        public final ForgeConfigSpec.IntValue drakeWeight;
+        public final ModConfigSpec.DoubleValue woundedSpawnChance;
+        public final ModConfigSpec.IntValue drakeWeight;
 
         // Urgences
-        public final ForgeConfigSpec.IntValue urgencyCooldownMin;
-        public final ForgeConfigSpec.IntValue urgencyCooldownMax;
-        public final ForgeConfigSpec.IntValue urgencyTimerMin;
-        public final ForgeConfigSpec.IntValue urgencyTimerMax;
-        public final ForgeConfigSpec.IntValue urgencyDistanceMin;
-        public final ForgeConfigSpec.IntValue urgencyDistanceMax;
+        public final ModConfigSpec.IntValue urgencyCooldownMin;
+        public final ModConfigSpec.IntValue urgencyCooldownMax;
+        public final ModConfigSpec.IntValue urgencyTimerMin;
+        public final ModConfigSpec.IntValue urgencyTimerMax;
+        public final ModConfigSpec.IntValue urgencyDistanceMin;
+        public final ModConfigSpec.IntValue urgencyDistanceMax;
 
         // Épidémie
-        public final ForgeConfigSpec.DoubleValue infectionSpreadChance;
-        public final ForgeConfigSpec.DoubleValue infectionSpreadRange;
-        public final ForgeConfigSpec.IntValue infectionQuarantineHutLevel;
+        public final ModConfigSpec.DoubleValue infectionSpreadChance;
+        public final ModConfigSpec.DoubleValue infectionSpreadRange;
+        public final ModConfigSpec.IntValue infectionQuarantineHutLevel;
 
         // Hut / Heal (info, pas utilisé direct mais exposé)
-        public final ForgeConfigSpec.DoubleValue hutHealBase;
-        public final ForgeConfigSpec.IntValue infirmaryRange;
+        public final ModConfigSpec.DoubleValue hutHealBase;
+        public final ModConfigSpec.IntValue infirmaryRange;
 
         // Sphère
-        public final ForgeConfigSpec.BooleanValue sphereRequiresHealed;
-        public final ForgeConfigSpec.DoubleValue sphereFailChanceIfNotFullHealth;
+        public final ModConfigSpec.BooleanValue sphereRequiresHealed;
+        public final ModConfigSpec.DoubleValue sphereFailChanceIfNotFullHealth;
 
-        public Common(ForgeConfigSpec.Builder b) {
+        public Common(ModConfigSpec.Builder b) {
             b.push("spawn");
             woundedSpawnChance = b.comment("Chance qu'un animal vanilla spawn blessé (0.0-1.0) - défaut 0.08").defineInRange("woundedSpawnChance", 0.08, 0.0, 1.0);
             drakeWeight = b.comment("Poids spawn WoundedDrake en overworld (0 désactive) - défaut 4").defineInRange("drakeWeight", 4, 0, 100);

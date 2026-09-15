@@ -6,16 +6,17 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
      * Compat Ice & Fire : wounded dragons rares.
  * Sans dépendance dure (réflexion sur nom de classe).
  */
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class IceAndFireIntegration {
     public static boolean isLoaded() { return ModList.get().isLoaded("iceandfire"); }
 
@@ -64,7 +65,7 @@ public class IceAndFireIntegration {
         if (cn.contains("fire") && player.level().random.nextFloat()<0.5f) {
             // essaye de spawn ecaille feu via item registry si présent
             var loc = net.minecraft.resources.ResourceLocation.tryParse("iceandfire:dragon_scale_fire");
-            var item = net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(loc);
+            var item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(loc);
             if (item != null) dragon.spawnAtLocation(item, 1);
         }
         player.displayClientMessage(Component.literal("§6★ Dragon soigné ! Écaille récupérée pour sérum."), false);

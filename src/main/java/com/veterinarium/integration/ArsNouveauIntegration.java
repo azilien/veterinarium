@@ -8,10 +8,11 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * Bridge Ars Nouveau - sans dépendance dure.
@@ -21,16 +22,18 @@ import net.minecraftforge.fml.common.Mod;
  * - Scalpel/Suture ont une chance de ne pas consommer de durabilité si le joueur a de la mana (simulé via effet)
  * On évite d'importer les classes Ars Nouveau pour rester optionnel.
  */
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class ArsNouveauIntegration {
 
     public static boolean isLoaded() {
         return ModList.get().isLoaded("ars_nouveau");
     }
 
-    // Bonus passif: si le joueur tient une source gem, ses soins sont améliorés
-    @SubscribeEvent
-    public static void onLivingHeal(LivingEvent.LivingTickEvent event) {
+    // Bonus passif: si le joueur tient une source gem, ses soins sont améliorés — disabled for NeoForge port
+    // @SubscribeEvent
+    // public static void onLivingHeal(LivingEvent.LivingTickEvent event) {
+    //     if (!isLoaded()) return;
+    public static void onLivingHealDisabled() {
         if (!isLoaded()) return;
         // Léger bonus: on ne fait rien de lourd ici, juste un hook pour future extension
         // L'intégration principale est via les recettes conditionnelles (voir data)
@@ -42,7 +45,7 @@ public class ArsNouveauIntegration {
             if (stack.isEmpty()) continue;
             String id = stack.getItem().toString().toLowerCase(); // fallback
             // On cherche via registry key plus fiable
-            var key = net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(stack.getItem());
+            var key = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem());
             if (key != null && key.toString().equals("ars_nouveau:source_gem")) return true;
             if (key != null && key.toString().contains("source_gem")) return true;
         }

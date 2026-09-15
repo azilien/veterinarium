@@ -15,13 +15,15 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class UrgencyAndEpidemicHandler {
 
     // cooldown partagé (ticks) avant prochaine urgence
@@ -35,9 +37,8 @@ public class UrgencyAndEpidemicHandler {
     private static int getQuarantineLevel() { try { return com.veterinarium.config.VeterinariumConfig.COMMON.infectionQuarantineHutLevel.get(); } catch (Exception e) { return 3; } }
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        Level level = event.level;
+    public static void onLevelTick(LevelTickEvent.Post event) {
+        Level level = event.getLevel();
         if (level.isClientSide) return;
         // Navigation anesthésie: tous les ticks pour pathfinding fluide
         handleAnesthesiaWalk(level);
@@ -435,7 +436,7 @@ public class UrgencyAndEpidemicHandler {
         // si drake existe, 5% de chance
         if (sl.random.nextFloat() < 0.08f) {
             try {
-                var drakeOpt = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getValue(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("veterinarium", "wounded_drake"));
+                var drakeOpt = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("veterinarium", "wounded_drake"));
                 if (drakeOpt != null) type = drakeOpt;
             } catch (Exception ignored) {}
         }

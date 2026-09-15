@@ -23,14 +23,13 @@ public class HospitalHutBlockEntity extends BlockEntity {
     private int contractProgress = 0;
     private boolean contractClaimed = false;
     // Stock healer (personnel soignant)
-    private final net.minecraftforge.items.ItemStackHandler healerInv = new net.minecraftforge.items.ItemStackHandler(6) {
+    private final net.neoforged.neoforge.items.ItemStackHandler healerInv = new net.neoforged.neoforge.items.ItemStackHandler(6) {
         @Override protected void onContentsChanged(int slot) { setChanged(); if (level!=null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); }
         @Override public boolean isItemValid(int slot, net.minecraft.world.item.ItemStack stack) {
             return stack.is(com.veterinarium.registry.ModItems.BANDAGE.get()) || stack.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()) || stack.is(com.veterinarium.registry.ModItems.VET_SPHERE.get()) || stack.is(net.minecraft.world.item.Items.EMERALD);
         }
     };
-    private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.ItemStackHandler> healerHandler = net.minecraftforge.common.util.LazyOptional.of(() -> healerInv);
-    public net.minecraftforge.items.ItemStackHandler getHealerInv() { return healerInv; }
+    public net.neoforged.neoforge.items.ItemStackHandler getHealerInv() { return healerInv; }
 
     public HospitalHutBlockEntity(BlockPos pos, BlockState state) {
         super(com.veterinarium.registry.ModBlockEntities.HOSPITAL_HUT.get(), pos, state);
@@ -118,31 +117,7 @@ public class HospitalHutBlockEntity extends BlockEntity {
                     return true;
                 }
             }
-            // aussi chest à proximité
-            if (be instanceof net.minecraft.world.level.block.entity.ChestBlockEntity chest) {
-                var handler = chest.getCapability(net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER, null);
-                if (handler.isPresent()) {
-                    var h = handler.orElse(null);
-                    if (h != null) {
-                        int foundB=0, foundA=0;
-                        for(int i=0;i<h.getSlots();i++) {
-                            var s = h.getStackInSlot(i);
-                            if (s.is(com.veterinarium.registry.ModItems.BANDAGE.get())) foundB+=s.getCount();
-                            if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get())) foundA+=s.getCount();
-                        }
-                        if (foundB>=needBandage && foundA>=needAnesthetic) {
-                            // consomme (simplifié: extrait)
-                            int needB=needBandage, needAn=needAnesthetic;
-                            for(int i=0;i<h.getSlots() && (needB>0 || needAn>0);i++) {
-                                var s = h.getStackInSlot(i);
-                                if (s.is(com.veterinarium.registry.ModItems.BANDAGE.get()) && needB>0) { int take=Math.min(s.getCount(), needB); h.extractItem(i, take, false); needB-=take; }
-                                if (s.is(com.veterinarium.registry.ModItems.ANESTHETIC.get()) && needAn>0) { int take=Math.min(s.getCount(), needAn); h.extractItem(i, take, false); needAn-=take; }
-                            }
-                            return true;
-                        }
-                    }
-                }
-            }
+            // Chest handling disabled for NeoForge port
         }
         return false;
     }
@@ -525,12 +500,5 @@ public class HospitalHutBlockEntity extends BlockEntity {
         contractProgress = tag.contains("ContractProgress") ? tag.getInt("ContractProgress") : 0;
         contractClaimed = tag.getBoolean("ContractClaimed");
         if (tag.contains("HealerInv")) healerInv.deserializeNBT(registries, tag.getCompound("HealerInv"));
-    }
-    @Override public void onLoad() { super.onLoad(); healerHandler = net.minecraftforge.common.util.LazyOptional.of(() -> healerInv); }
-    @Override public void invalidateCaps() { super.invalidateCaps(); healerHandler.invalidate(); }
-    @SuppressWarnings("unchecked")
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, net.minecraft.core.Direction side) {
-        if (cap == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) return healerHandler.cast();
-        return super.getCapability(cap, side);
     }
 }

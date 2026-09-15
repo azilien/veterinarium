@@ -9,11 +9,12 @@ import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class WoundedSpawnHandler {
     // 8% par défaut, overridable via veterinarium-common.toml
     private static final double WOUND_CHANCE_FALLBACK = 0.08;

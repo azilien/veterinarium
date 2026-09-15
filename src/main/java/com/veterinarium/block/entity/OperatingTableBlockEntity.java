@@ -7,8 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class OperatingTableBlockEntity extends BlockEntity {
     private final ItemStackHandler handler = new ItemStackHandler(3) {
@@ -22,7 +21,6 @@ public class OperatingTableBlockEntity extends BlockEntity {
             return false;
         }
     };
-    private LazyOptional<ItemStackHandler> lazyHandler = LazyOptional.of(() -> handler);
 
     public OperatingTableBlockEntity(BlockPos pos, BlockState state) {
         super(com.veterinarium.registry.ModBlockEntities.OPERATING_TABLE.get(), pos, state);
@@ -65,21 +63,4 @@ public class OperatingTableBlockEntity extends BlockEntity {
         if (tag.contains("Inv")) handler.deserializeNBT(registries, tag.getCompound("Inv"));
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        lazyHandler = LazyOptional.of(() -> handler);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyHandler.invalidate();
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, net.minecraft.core.Direction side) {
-        if (cap == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) return lazyHandler.cast();
-        return super.getCapability(cap, side);
-    }
 }

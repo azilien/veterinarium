@@ -26,7 +26,7 @@ public class BestiaryProgress {
             String name = e.getType().toString(); // fallback
             // essaye registry key
             try {
-                var key = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(e.getType());
+                var key = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType());
                 if (key != null) return key.getPath(); // ex: wolf, horse
             } catch (Exception ignored) {}
             return name;

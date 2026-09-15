@@ -76,7 +76,7 @@ public class VetSphereItem extends Item {
         // Capture
         String entityId = "";
         try {
-            var key = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(target.getType());
+            var key = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());
             if (key != null) entityId = key.toString();
         } catch (Exception e) { entityId = target.getType().toString(); }
         String customName = target.hasCustomName() ? target.getCustomName().getString() : target.getName().getString();

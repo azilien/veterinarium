@@ -1,71 +1,115 @@
-// This is a minimal setup of a Forge mod workspace.
-// For complex examples (including AccessTransformers, Jar-in-Jar, and Mixin), see our examples repository.
-// https://github.com/MinecraftForge/MDKExamples
-
 plugins {
-    id 'java'
-    id 'idea'
+    id 'java-library'
     id 'eclipse'
-    id 'net.minecraftforge.gradle' version '[7.0.3,8)'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.1.38'
 }
 
-version = '2.2'
-group = 'com.veterinarium'
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
 
-// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+    exclude("**/*.bbmodel")
+    exclude("src/generated/**/.cache")
+}
+
+repositories {
+    maven { url = "https://maven.neoforged.net/releases" }
+    mavenCentral()
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-// Include generated resources
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+        workingDirectory project.layout.projectDirectory.dir('run').dir(name)
+        modSource project.sourceSets.main
+    }
 
-minecraft {
-    mappings channel: 'official', version: '1.21.1'
+    client {
+        systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+    }
 
-    runs {
-        configureEach {
-            workingDir = layout.projectDirectory.dir('run')
+    server {
+        systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+        argument '--nogui'
+    }
 
-            systemProperty 'forge.enabledGameTestNamespaces', 'veterinarium'
+    gameTestServer {
+        systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+    }
+
+    data {
+        arguments.addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+}
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+}
+
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
+    }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
         }
-
-        register('client')
-
-        register('server') {
-            args '--nogui'
-        }
-
-        register('gameTestServer')
-
-        register('data') {
-            workingDir = layout.projectDirectory.dir('run-data')
-
-            args '--mod', 'veterinarium', '--all', '--output', layout.projectDirectory.dir('src/generated/resources'), '--existing', layout.projectDirectory.dir('src/main/resources')
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
         }
     }
 }
 
-repositories {
-    minecraft.mavenizer(it) // In Kotlin, it = this
-    maven fg.forgeMaven
-    maven fg.minecraftLibsMaven
-    mavenCentral()
-}
-
-dependencies {
-    implementation minecraft.dependency('net.minecraftforge:forge:1.21.1-52.1.14')
-}
-
 tasks.withType(JavaCompile).configureEach {
-    // Use the UTF-8 charset for Java compilation
-    // This is done by default in Java 18+, but this ensures it no matter the Java or Gradle version
     options.encoding = 'UTF-8'
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+tasks.named('jar') {
+    archiveClassifier = 'neoforge'
 }
 
 // Local-only PrismLauncher sync (see local-dev.gradle)
 if (file('local-dev.gradle').exists()) {
     apply from: 'local-dev.gradle'
-}
-
-tasks.named('jar') {
-    archiveClassifier = 'forge'
 }

@@ -4,115 +4,115 @@ import com.veterinarium.Veterinarium;
 import com.veterinarium.item.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.Registries;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, Veterinarium.MODID);
+            DeferredRegister.create(Registries.ITEM, Veterinarium.MODID);
 
     // BlockItems
-    public static final RegistryObject<Item> OPERATING_TABLE = ITEMS.register("operating_table",
+    public static final DeferredHolder<Item, Item> OPERATING_TABLE = ITEMS.register("operating_table",
             () -> new BlockItem(ModBlocks.OPERATING_TABLE.get(), new Item.Properties()));
-    public static final RegistryObject<Item> ANALYSIS_TABLE = ITEMS.register("analysis_table",
+    public static final DeferredHolder<Item, Item> ANALYSIS_TABLE = ITEMS.register("analysis_table",
             () -> new BlockItem(ModBlocks.ANALYSIS_TABLE.get(), new Item.Properties()));
-    public static final RegistryObject<Item> INFIRMARY = ITEMS.register("infirmary",
+    public static final DeferredHolder<Item, Item> INFIRMARY = ITEMS.register("infirmary",
             () -> new BlockItem(ModBlocks.INFIRMARY.get(), new Item.Properties()));
 
     // Tools
-    public static final RegistryObject<Item> SCALPEL = ITEMS.register("scalpel",
+    public static final DeferredHolder<Item, Item> SCALPEL = ITEMS.register("scalpel",
             () -> new ScalpelItem(new Item.Properties().durability(250)));
-    public static final RegistryObject<Item> SCALPEL_DIAMOND = ITEMS.register("scalpel_diamond",
+    public static final DeferredHolder<Item, Item> SCALPEL_DIAMOND = ITEMS.register("scalpel_diamond",
             () -> new ScalpelItem(new Item.Properties().durability(500).rarity(net.minecraft.world.item.Rarity.UNCOMMON), 3.0f));
-    public static final RegistryObject<Item> SCALPEL_NETHERITE = ITEMS.register("scalpel_netherite",
+    public static final DeferredHolder<Item, Item> SCALPEL_NETHERITE = ITEMS.register("scalpel_netherite",
             () -> new ScalpelItem(new Item.Properties().durability(1000).rarity(net.minecraft.world.item.Rarity.RARE).fireResistant(), 4.0f));
 
-    public static final RegistryObject<Item> SUTURE_KIT = ITEMS.register("suture_kit",
+    public static final DeferredHolder<Item, Item> SUTURE_KIT = ITEMS.register("suture_kit",
             () -> new SutureKitItem(new Item.Properties().durability(64)));
 
-    public static final RegistryObject<Item> SYRINGE = ITEMS.register("syringe",
+    public static final DeferredHolder<Item, Item> SYRINGE = ITEMS.register("syringe",
             () -> new SyringeItem(new Item.Properties().durability(32)));
 
-    public static final RegistryObject<Item> MEDICAL_FILE = ITEMS.register("medical_file",
+    public static final DeferredHolder<Item, Item> MEDICAL_FILE = ITEMS.register("medical_file",
             () -> new MedicalFileItem(new Item.Properties().stacksTo(1)));
 
     // Consumables / Crafting
-    public static final RegistryObject<Item> BANDAGE = ITEMS.register("bandage",
+    public static final DeferredHolder<Item, Item> BANDAGE = ITEMS.register("bandage",
             () -> new Item(new Item.Properties()));
 
-    public static final RegistryObject<Item> ANESTHETIC = ITEMS.register("anesthetic",
+    public static final DeferredHolder<Item, Item> ANESTHETIC = ITEMS.register("anesthetic",
             () -> new Item(new Item.Properties()));
 
-    public static final RegistryObject<Item> WOUNDED_WOLF_SPAWN_EGG = ITEMS.register("wounded_wolf_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_WOLF, 0xD7C9B5, 0xB22222, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> WOUNDED_WOLF_SPAWN_EGG = ITEMS.register("wounded_wolf_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WOUNDED_WOLF, 0xD7C9B5, 0xB22222, new Item.Properties()));
 
-    public static final RegistryObject<Item> WOUNDED_CAT_SPAWN_EGG = ITEMS.register("wounded_cat_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_CAT, 0xE6C8A0, 0xFF5555, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> WOUNDED_CAT_SPAWN_EGG = ITEMS.register("wounded_cat_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WOUNDED_CAT, 0xE6C8A0, 0xFF5555, new Item.Properties()));
 
-    public static final RegistryObject<Item> WOUNDED_HORSE_SPAWN_EGG = ITEMS.register("wounded_horse_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_HORSE, 0xF0E6D2, 0xAA0000, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> WOUNDED_HORSE_SPAWN_EGG = ITEMS.register("wounded_horse_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WOUNDED_HORSE, 0xF0E6D2, 0xAA0000, new Item.Properties()));
 
-    public static final RegistryObject<Item> WOUNDED_FOX_SPAWN_EGG = ITEMS.register("wounded_fox_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_FOX, 0xD76F2D, 0x8B0000, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> WOUNDED_FOX_SPAWN_EGG = ITEMS.register("wounded_fox_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WOUNDED_FOX, 0xD76F2D, 0x8B0000, new Item.Properties()));
 
-    public static final RegistryObject<Item> WOUNDED_VILLAGER_SPAWN_EGG = ITEMS.register("wounded_villager_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_VILLAGER, 0x8ACB8A, 0xFF4444, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> WOUNDED_VILLAGER_SPAWN_EGG = ITEMS.register("wounded_villager_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WOUNDED_VILLAGER, 0x8ACB8A, 0xFF4444, new Item.Properties()));
 
-    public static final RegistryObject<Item> HOSPITAL_HUT = ITEMS.register("hospital_hut",
+    public static final DeferredHolder<Item, Item> HOSPITAL_HUT = ITEMS.register("hospital_hut",
             () -> new BlockItem(ModBlocks.HOSPITAL_HUT.get(), new Item.Properties()));
 
-    public static final RegistryObject<Item> STRETCHER = ITEMS.register("stretcher",
+    public static final DeferredHolder<Item, Item> STRETCHER = ITEMS.register("stretcher",
             () -> new com.veterinarium.item.StretcherItem(ModBlocks.STRETCHER.get(), new Item.Properties()));
 
-    public static final RegistryObject<Item> DNA_SYRINGE = ITEMS.register("dna_syringe",
+    public static final DeferredHolder<Item, Item> DNA_SYRINGE = ITEMS.register("dna_syringe",
             () -> new DnaSyringeItem(new Item.Properties().stacksTo(16)));
 
-    public static final RegistryObject<Item> DNA_SYRINGE_FILLED = ITEMS.register("dna_syringe_filled",
+    public static final DeferredHolder<Item, Item> DNA_SYRINGE_FILLED = ITEMS.register("dna_syringe_filled",
             () -> new DnaSyringeFilledItem(new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item> HELLFIRE_SERUM = ITEMS.register("hellfire_serum",
+    public static final DeferredHolder<Item, Item> HELLFIRE_SERUM = ITEMS.register("hellfire_serum",
             () -> new HellfireSerumItem(new Item.Properties().stacksTo(16)));
 
-    public static final RegistryObject<Item> HELLFIRE_RAVAGER_SPAWN_EGG = ITEMS.register("hellfire_ravager_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.HELLFIRE_RAVAGER, 0x2B0000, 0xFF4500, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> HELLFIRE_RAVAGER_SPAWN_EGG = ITEMS.register("hellfire_ravager_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.HELLFIRE_RAVAGER, 0x2B0000, 0xFF4500, new Item.Properties()));
 
-    public static final RegistryObject<Item> WOUNDED_DRAKE_SPAWN_EGG = ITEMS.register("wounded_drake_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_DRAKE, 0x1A1A2E, 0xFF6B35, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> WOUNDED_DRAKE_SPAWN_EGG = ITEMS.register("wounded_drake_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WOUNDED_DRAKE, 0x1A1A2E, 0xFF6B35, new Item.Properties()));
 
-    public static final RegistryObject<Item> VET_SPHERE = ITEMS.register("vet_sphere",
+    public static final DeferredHolder<Item, Item> VET_SPHERE = ITEMS.register("vet_sphere",
             () -> new VetSphereItem(new Item.Properties().stacksTo(16)));
 
-    public static final RegistryObject<Item> VET_SPHERE_FILLED = ITEMS.register("vet_sphere_filled",
+    public static final DeferredHolder<Item, Item> VET_SPHERE_FILLED = ITEMS.register("vet_sphere_filled",
             () -> new VetSphereFilledItem(new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item> COMPRESSION_BANDAGE = ITEMS.register("compression_bandage",
+    public static final DeferredHolder<Item, Item> COMPRESSION_BANDAGE = ITEMS.register("compression_bandage",
             () -> new CompressionBandageItem(new Item.Properties().stacksTo(16)));
 
-    public static final RegistryObject<Item> ANTIDOTE = ITEMS.register("antidote",
+    public static final DeferredHolder<Item, Item> ANTIDOTE = ITEMS.register("antidote",
             () -> new AntidoteItem(new Item.Properties().stacksTo(4)));
 
-    public static final RegistryObject<Item> CONTAMINATOR = ITEMS.register("contaminator",
+    public static final DeferredHolder<Item, Item> CONTAMINATOR = ITEMS.register("contaminator",
             () -> new BlockItem(ModBlocks.CONTAMINATOR.get(), new Item.Properties()));
 
-    public static final RegistryObject<Item> ASFAX_BLOUSE = ITEMS.register("asfax_blouse",
+    public static final DeferredHolder<Item, Item> ASFAX_BLOUSE = ITEMS.register("asfax_blouse",
             () -> new AsfaxBlouseItem(new Item.Properties().stacksTo(1).durability(100)));
 
-    public static final RegistryObject<Item> ASFAX_SPAWN_EGG = ITEMS.register("asfax_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_VILLAGER, 0xFFFFFF, 0xFF0000, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> ASFAX_SPAWN_EGG = ITEMS.register("asfax_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WOUNDED_VILLAGER, 0xFFFFFF, 0xFF0000, new Item.Properties()));
 
-    public static final RegistryObject<Item> ASFAX_CLINIC = ITEMS.register("asfax_clinic",
+    public static final DeferredHolder<Item, Item> ASFAX_CLINIC = ITEMS.register("asfax_clinic",
             () -> new BlockItem(ModBlocks.HOSPITAL_HUT.get(), new Item.Properties()));
 
-    public static final RegistryObject<Item> ANTIBIOTIC = ITEMS.register("antibiotic",
+    public static final DeferredHolder<Item, Item> ANTIBIOTIC = ITEMS.register("antibiotic",
             () -> new AntibioticItem(new Item.Properties().stacksTo(16)));
-    public static final RegistryObject<Item> ANTI_INFLAMMATORY = ITEMS.register("anti_inflammatory",
+    public static final DeferredHolder<Item, Item> ANTI_INFLAMMATORY = ITEMS.register("anti_inflammatory",
             () -> new AntiInflammatoryItem(new Item.Properties().stacksTo(16)));
-    public static final RegistryObject<Item> ADRENALINE = ITEMS.register("adrenaline",
+    public static final DeferredHolder<Item, Item> ADRENALINE = ITEMS.register("adrenaline",
             () -> new AdrenalineItem(new Item.Properties().stacksTo(8)));
-    public static final RegistryObject<Item> BLOOD_TRANSFUSION = ITEMS.register("blood_transfusion",
+    public static final DeferredHolder<Item, Item> BLOOD_TRANSFUSION = ITEMS.register("blood_transfusion",
             () -> new BloodTransfusionItem(new Item.Properties().stacksTo(8)));
 
     public static void register(IEventBus eventBus) {

@@ -57,7 +57,7 @@ public class VetSphereFilledItem extends Item {
         EntityType<?> type = null;
         try {
             var key = net.minecraft.resources.ResourceLocation.tryParse(entityId);
-            if (key != null) type = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getValue(key);
+            if (key != null) type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(key);
             if (type == null) type = EntityType.byString(entityId).orElse(null);
         } catch (Exception ignored) {}
         if (type == null) {
