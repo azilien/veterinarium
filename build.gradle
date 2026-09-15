@@ -65,3 +65,7 @@ tasks.withType(JavaCompile).configureEach {
 if (file('local-dev.gradle').exists()) {
     apply from: 'local-dev.gradle'
 }
+
+tasks.named('jar') {
+    archiveClassifier = 'forge'
+}
