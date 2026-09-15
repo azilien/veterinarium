@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " W ",
+    "WBW",
+    "WWW"
+  ],
+  "key": {
+    "W": {"item": "minecraft:white_wool"},
+    "B": {"item": "veterinarium:bandage"}
+  },
+  "result": {
+    "id": "veterinarium:asfax_blouse",
+    "count": 1
+  }
+}

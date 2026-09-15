@@ -49,6 +49,9 @@ public class ModCreativeTabs {
                         pOutput.accept(ModItems.HELLFIRE_SERUM.get());
                         pOutput.accept(ModItems.VET_SPHERE.get());
                         pOutput.accept(ModItems.VET_SPHERE_FILLED.get());
+                        pOutput.accept(ModItems.ASFAX_BLOUSE.get());
+                        pOutput.accept(ModItems.ASFAX_SPAWN_EGG.get());
+                        pOutput.accept(ModItems.ASFAX_CLINIC.get());
                     })
                     .build());
 

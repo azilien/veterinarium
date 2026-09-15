@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WWW",
+    "WHW",
+    "WWW"
+  ],
+  "key": {
+    "W": {"item": "minecraft:white_wool"},
+    "H": {"item": "veterinarium:hospital_hut"}
+  },
+  "result": {
+    "id": "veterinarium:asfax_clinic",
+    "count": 1
+  }
+}

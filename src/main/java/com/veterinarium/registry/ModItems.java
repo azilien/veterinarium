@@ -97,6 +97,15 @@ public class ModItems {
     public static final RegistryObject<Item> CONTAMINATOR = ITEMS.register("contaminator",
             () -> new BlockItem(ModBlocks.CONTAMINATOR.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> ASFAX_BLOUSE = ITEMS.register("asfax_blouse",
+            () -> new AsfaxBlouseItem(new Item.Properties().stacksTo(1).durability(100)));
+
+    public static final RegistryObject<Item> ASFAX_SPAWN_EGG = ITEMS.register("asfax_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WOUNDED_VILLAGER, 0xFFFFFF, 0xFF0000, new Item.Properties()));
+
+    public static final RegistryObject<Item> ASFAX_CLINIC = ITEMS.register("asfax_clinic",
+            () -> new BlockItem(ModBlocks.HOSPITAL_HUT.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> ANTIBIOTIC = ITEMS.register("antibiotic",
             () -> new AntibioticItem(new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> ANTI_INFLAMMATORY = ITEMS.register("anti_inflammatory",

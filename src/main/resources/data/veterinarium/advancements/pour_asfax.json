@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "veterinarium:asfax_blouse"
+    },
+    "title": {
+      "translate": "advancements.veterinarium.pour_asfax.title"
+    },
+    "description": {
+      "translate": "advancements.veterinarium.pour_asfax.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "veterinarium:healer",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

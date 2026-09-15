@@ -119,6 +119,11 @@ public class SutureKitItem extends Item {
                     }
                 }
                 target.heal(6.0f);
+                // Blouse d'Asfax bonus +2HP
+                if (player.getItemBySlot(EquipmentSlot.CHEST).is(com.veterinarium.registry.ModItems.ASFAX_BLOUSE.get()) || player.getInventory().contains(new ItemStack(com.veterinarium.registry.ModItems.ASFAX_BLOUSE.get()))) {
+                    target.heal(2.0f);
+                    player.displayClientMessage(Component.translatable("message.veterinarium.blouse.bonus"), false);
+                }
                 target.removeEffect(MobEffects.POISON);
                 target.removeEffect(MobEffects.WITHER);
                 target.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 1));
@@ -129,6 +134,17 @@ public class SutureKitItem extends Item {
                     level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.WOOL_PLACE, SoundSource.PLAYERS, 1.0f, 0.9f);
                 }
                 player.displayClientMessage(Component.translatable("message.veterinarium.suture.success", target.getName().getString()), true);
+                // Advancement Pour Asfax - 20 soins
+                if (player instanceof net.minecraft.server.level.ServerPlayer sp) {
+                    try {
+                        var adv = sp.server.getAdvancements().get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("veterinarium", "pour_asfax"));
+                        if (adv != null && !sp.getAdvancements().getOrStartProgress(adv).isDone()) {
+                            if (com.veterinarium.data.BestiaryProgress.getHealedTotal(sp) >= 20) {
+                                sp.getAdvancements().award(adv, "impossible");
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                }
 
                 // Si c'est nos entités blessées custom, marque healed pour texture
                 if (target instanceof com.veterinarium.entity.WoundedWolfEntity woundedWolf) {

@@ -5,6 +5,17 @@ Les modifications notables de ce projet seront documentées dans ce fichier.
 
 ---
 
+## [2.2] — 2026-08-30
+
+### Added / Ajouté
+- **Asfax Custom Pack**: PNJ Asfax (spawn egg), Clinique d'Asfax (hut décorée), Blouse d'Asfax (+2❤ bonus), Avancement caché "Pour Asfax" (20 soins hardcore) / Pack custom Asfax
+- **Photo function improved**: hut at 15 blocks, manual placement for clean screenshots / Fonction photo améliorée
+
+### Fixed / Corrigé
+- Missing textures for all medications and entities / Textures manquantes ajoutées
+
+---
+
 ## [2.1] — 2026-08-30
 
 ### Added / Ajouté

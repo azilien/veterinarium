@@ -9,7 +9,7 @@
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green)
 ![Forge](https://img.shields.io/badge/Forge-52.1.14-orange)
 ![Java](https://img.shields.io/badge/Java-21-blue)
-![Version](https://img.shields.io/badge/Version-2.1-success)
+![Version](https://img.shields.io/badge/Version-2.2-success)
 ![Tests](https://img.shields.io/badge/Tests-11/11-passing-brightgreen)
 ![Lang](https://img.shields.io/badge/Lang-EN/FR-blueviolet)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange)](https://www.curseforge.com/minecraft/mc-mods/veterinarium)
@@ -189,7 +189,7 @@ Welcome, First Blood, Successful Operation, Cicatrization, Healer, Hospital, Cap
 **Download on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/veterinarium)**
 
 1. Minecraft Java 1.21.1 + Forge 52.1.14
-2. Copy `build/libs/veterinarium-2.1.jar` into `mods/`
+2. Copy `build/libs/veterinarium-2.2.jar` into `mods/`
 3. Launch → Creative → `Veterinarium` tab
 
 ### Quick Test
@@ -374,7 +374,7 @@ Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital,
 **Télécharger sur [CurseForge](https://www.curseforge.com/minecraft/mc-mods/veterinarium)**
 
 1. Minecraft Java 1.21.1 + Forge 52.1.14
-2. Copie `build/libs/veterinarium-2.1.jar` dans `mods/`
+2. Copie `build/libs/veterinarium-2.2.jar` dans `mods/`
 3. Lance → Créatif → onglet `Veterinarium`
 
 ### Test Rapide
@@ -403,6 +403,7 @@ Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital,
 - [x] v1.11 — Contaminator, General Anesthesia, Compression Bandage, Bilingual EN/FR
 - [x] v1.12 — Scalpel Tiers, Cure Zombie, Cow/Sheep/Chicken, Operating GUI
 - [x] v2.1 — Medications, Bestiary unique, GUI fixes, security cleanup
+- [x] v2.2 — Asfax Pack (PNJ, Clinique, Blouse, Avancement) + Photo hut 15 blocs + Textures
 
 ## Licence
 
