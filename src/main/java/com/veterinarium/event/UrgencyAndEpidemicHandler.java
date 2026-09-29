@@ -40,8 +40,11 @@ public class UrgencyAndEpidemicHandler {
     public static void onLevelTick(LevelTickEvent.Post event) {
         Level level = event.getLevel();
         if (level.isClientSide) return;
-        // Navigation anesthésie: tous les ticks pour pathfinding fluide
-        handleAnesthesiaWalk(level);
+        // Navigation anesthésie: toutes les 10 ticks (repath 2Hz).
+        // moveTo() à chaque tick restart le pathfinding en boucle -> déplacement saccadé frame-par-frame.
+        if (level.getGameTime() % 10 == 0) {
+            handleAnesthesiaWalk(level);
+        }
         if (level.getGameTime() % 40 == 0) {
             handleInfectionSpread(level);
             handleUrgentExpiry(level);
@@ -68,6 +71,7 @@ public class UrgencyAndEpidemicHandler {
     }
 
     private static void handleInfectionSpread(Level level) {
+        if (level.players().isEmpty()) return;
         // Cherche porteurs infection actifs
         List<LivingEntity> carriers = level.getEntitiesOfClass(LivingEntity.class,
                 new AABB(-30000000, -64, -30000000, 30000000, 320, 30000000),
@@ -158,9 +162,11 @@ public class UrgencyAndEpidemicHandler {
     }
 
     private static void handleAnesthesiaWalk(Level level) {
+        if (level.players().isEmpty()) return;
         List<LivingEntity> walking = level.getEntitiesOfClass(LivingEntity.class,
                 new AABB(-30000000, -64, -30000000, 30000000, 320, 30000000),
                 e -> e.getTags().contains("veterinarium_anesthetizing"));
+        if (walking.isEmpty()) return;
         for (LivingEntity e : walking) {
             // Vérifier expiry (timeout 20s)
             long expiry = e.getPersistentData().getLong("VetAnesthesiaExpiry");
@@ -192,9 +198,14 @@ public class UrgencyAndEpidemicHandler {
                     sl.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER, e.getX(), e.getY()+1.0, e.getZ(), 5, 0.3,0.3,0.3,0.1);
                 }
             } else {
-                // En route: navigation vers la table
+                // En route: navigation vers la table. Ne repath que si le chemin est fini
+                // ou toutes les 40 ticks — sinon le pathfinding restart en boucle (saccades).
                 if (e instanceof Mob mob) {
-                    mob.getNavigation().moveTo(tx + 0.5, ty + 0.5, tz + 0.5, 0.5); // vitesse lente
+                    long lastRepath = e.getPersistentData().getLong("VetRepath");
+                    if (mob.getNavigation().isDone() || level.getGameTime() - lastRepath >= 40) {
+                        mob.getNavigation().moveTo(tx + 0.5, ty + 0.5, tz + 0.5, 0.5); // vitesse lente
+                        e.getPersistentData().putLong("VetRepath", level.getGameTime());
+                    }
                 }
                 // Particules Zzz pendant la marche
                 if (level instanceof ServerLevel sl && level.getGameTime() % 10 == 0) {
@@ -208,6 +219,7 @@ public class UrgencyAndEpidemicHandler {
         e.removeTag("veterinarium_anesthetizing");
         e.removeTag("veterinarium_anesthetized");
         e.getPersistentData().remove("VetAnesthesiaExpiry");
+        e.getPersistentData().remove("VetRepath");
         e.getPersistentData().remove("VetTableX");
         e.getPersistentData().remove("VetTableY");
         e.getPersistentData().remove("VetTableZ");
@@ -302,6 +314,7 @@ public class UrgencyAndEpidemicHandler {
 
     private static void handleWoundParticles(Level level) {
         if (!(level instanceof ServerLevel sl)) return;
+        if (level.players().isEmpty()) return;
         // particules wound-spécifiques toutes les 2s pour immersion
         List<LivingEntity> wounded = level.getEntitiesOfClass(LivingEntity.class,
                 new AABB(-30000000, -64, -30000000, 30000000, 320, 30000000),
@@ -433,11 +446,10 @@ public class UrgencyAndEpidemicHandler {
         else if (r < 0.75f) type = ModEntities.WOUNDED_HORSE.get();
         else if (r < 0.88f) type = ModEntities.WOUNDED_VILLAGER.get();
         else type = ModEntities.HELLFIRE_RAVAGER.get(); // rare urgence ravager blessé (phase mutation)
-        // si drake existe, 5% de chance
+        // si drake existe, 8% de chance (référence directe, pas de lookup registre)
         if (sl.random.nextFloat() < 0.08f) {
             try {
-                var drakeOpt = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("veterinarium", "wounded_drake"));
-                if (drakeOpt != null) type = drakeOpt;
+                type = ModEntities.WOUNDED_DRAKE.get();
             } catch (Exception ignored) {}
         }
         var e = type.create(sl);
