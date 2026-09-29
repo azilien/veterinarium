@@ -9,7 +9,7 @@
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green)
 ![Forge](https://img.shields.io/badge/Forge-52.1.14-orange)
 ![Java](https://img.shields.io/badge/Java-21-blue)
-![Version](https://img.shields.io/badge/Version-2.2-success)
+![Version](https://img.shields.io/badge/Version-2.3-success)
 ![Tests](https://img.shields.io/badge/Tests-11/11-passing-brightgreen)
 ![Lang](https://img.shields.io/badge/Lang-EN/FR-blueviolet)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange)](https://www.curseforge.com/minecraft/mc-mods/veterinarium)
@@ -188,8 +188,8 @@ Welcome, First Blood, Successful Operation, Cicatrization, Healer, Hospital, Cap
 ### Installation
 **Download on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/veterinarium)**
 
-1. Minecraft Java 1.21.1 + Forge 52.1.14
-2. Copy `build/libs/veterinarium-2.2.jar` into `mods/`
+1. Minecraft Java 1.21.1 + Forge 52.1.14 **or** NeoForge 21.1.133
+2. Copy `build/libs/veterinarium-2.3-forge.jar` (Forge) or `veterinarium-2.3-neoforge.jar` (NeoForge) into `mods/`
 3. Launch → Creative → `Veterinarium` tab
 
 ### Quick Test
@@ -373,8 +373,8 @@ Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital,
 ### Installation
 **Télécharger sur [CurseForge](https://www.curseforge.com/minecraft/mc-mods/veterinarium)**
 
-1. Minecraft Java 1.21.1 + Forge 52.1.14
-2. Copie `build/libs/veterinarium-2.2.jar` dans `mods/`
+1. Minecraft Java 1.21.1 + Forge 52.1.14 **ou** NeoForge 21.1.133
+2. Copie `build/libs/veterinarium-2.3-forge.jar` (Forge) ou `veterinarium-2.3-neoforge.jar` (NeoForge) dans `mods/`
 3. Lance → Créatif → onglet `Veterinarium`
 
 ### Test Rapide
@@ -404,6 +404,7 @@ Bienvenue, Premier Sang, Opération Réussie, Cicatrisation, Soigneur, Hôpital,
 - [x] v1.12 — Scalpel Tiers, Cure Zombie, Cow/Sheep/Chicken, Operating GUI
 - [x] v2.1 — Medications, Bestiary unique, GUI fixes, security cleanup
 - [x] v2.2 — Asfax Pack (PNJ, Clinique, Blouse, Avancement) + Photo hut 15 blocs + Textures
+- [x] v2.3 — Fix déplacement saccadé (anesthésie repath throttled) + port NeoForge 21.1.133
 
 ## Licence
 

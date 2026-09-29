@@ -5,6 +5,17 @@ Les modifications notables de ce projet seront documentées dans ce fichier.
 
 ---
 
+## [2.3] — 2026-09-29
+
+### Fixed / Corrigé
+- Frame-by-frame movement: anesthesia pathfinding repathed every tick, now throttled (10-tick cadence, repath only when done or every 40 ticks) / Déplacement saccadé : pathfinding anesthésie throttled
+- World-wide entity scans now early-out when no player online / Scans monde entier avec early-out
+
+### Added / Ajouté
+- **NeoForge 21.1.133 port** (branch `neoforge-1.21.1`): 2 jars `veterinarium-2.3-forge.jar` / `veterinarium-2.3-neoforge.jar` / Port NeoForge, 2 jars distincts
+
+---
+
 ## [2.2] — 2026-08-30
 
 ### Added / Ajouté

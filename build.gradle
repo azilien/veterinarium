@@ -9,7 +9,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '[7.0.3,8)'
 }
 
-version = '2.2'
+version = '2.3'
 group = 'com.veterinarium'
 
 // Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
@@ -64,10 +64,6 @@ tasks.withType(JavaCompile).configureEach {
 // Local-only PrismLauncher sync (see local-dev.gradle)
 if (file('local-dev.gradle').exists()) {
     apply from: 'local-dev.gradle'
-}
-
-tasks.named('jar') {
-    archiveClassifier = 'forge'
 }
 
 tasks.named('jar') {
